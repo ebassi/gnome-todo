@@ -25,6 +25,7 @@
                 <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="gtd_storage_popover__action_button_clicked" object="GtdStoragePopover" swapped="yes" />
                 <style>
                   <class name="suggested-action"/>
                 </style>
@@ -40,6 +41,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="gtd_storage_popover__action_button_clicked" object="GtdStoragePopover" swapped="yes" />
               </object>
               <packing>
                 <property name="left_attach">0</property>
