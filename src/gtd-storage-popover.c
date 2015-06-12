@@ -27,6 +27,7 @@ typedef struct
 {
   GtkWidget            *change_location_button;
   GtkWidget            *location_provider_image;
+  GtkWidget            *new_list_create_button;
   GtkWidget            *stack;
   GtkWidget            *storage_selector;
 
@@ -48,6 +49,21 @@ enum {
   PROP_MANAGER,
   LAST_PROP
 };
+
+static void
+gtd_storage_popover__text_changed_cb (GtdStoragePopover *popover,
+                                      GParamSpec        *spec,
+                                      GtkEntry          *entry)
+{
+  GtdStoragePopoverPrivate *priv;
+
+  g_return_if_fail (GTD_IS_STORAGE_POPOVER (popover));
+  g_return_if_fail (GTK_IS_ENTRY (entry));
+
+  priv = popover->priv;
+
+  gtk_widget_set_sensitive (priv->new_list_create_button, gtk_entry_get_text_length (entry) > 0);
+}
 
 static void
 gtd_storage_popover__change_location_clicked (GtdStoragePopover *popover,
@@ -190,11 +206,13 @@ gtd_storage_popover_class_init (GtdStoragePopoverClass *klass)
 
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, change_location_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, location_provider_image);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, new_list_create_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, storage_selector);
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__change_location_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__storage_selected);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__text_changed_cb);
 }
 
 static void
