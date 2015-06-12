@@ -696,7 +696,6 @@ gtd_storage_selector_set_selected_storage (GtdStorageSelector *selector,
         {
           gtd_storage_row_set_selected (l->data, gtd_storage_row_get_storage (l->data) == storage);
           g_signal_emit (selector, signals[STORAGE_SELECTED], 0, storage);
-          break;
         }
     }
 
