@@ -124,6 +124,7 @@
               <object class="GtkButton" id="back_button">
                 <property name="visible">True</property>
                 <property name="halign">start</property>
+                <signal name="clicked" handler="gtd_storage_popover__change_location_clicked" object="GtdStoragePopover" swapped="yes" />
                 <child>
                   <object class="GtkImage" id="back_image">
                     <property name="visible">True</property>

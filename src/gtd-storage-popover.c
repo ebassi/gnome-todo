@@ -25,6 +25,7 @@
 
 typedef struct
 {
+  GtkWidget            *change_location_button;
   GtkWidget            *location_provider_image;
   GtkWidget            *stack;
   GtkWidget            *storage_selector;
@@ -49,7 +50,8 @@ enum {
 };
 
 static void
-gtd_storage_popover__change_location_clicked (GtdStoragePopover *popover)
+gtd_storage_popover__change_location_clicked (GtdStoragePopover *popover,
+                                              GtkWidget         *button)
 {
   GtdStoragePopoverPrivate *priv;
 
@@ -57,7 +59,10 @@ gtd_storage_popover__change_location_clicked (GtdStoragePopover *popover)
 
   priv = popover->priv;
 
-  gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "selector");
+  if (button == priv->change_location_button)
+    gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "selector");
+  else
+    gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
 }
 
 static void
@@ -183,6 +188,7 @@ gtd_storage_popover_class_init (GtdStoragePopoverClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/todo/ui/storage-popover.ui");
 
+  gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, change_location_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, location_provider_image);
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtdStoragePopover, storage_selector);
