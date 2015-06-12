@@ -81,7 +81,7 @@ gtd_storage_popover__storage_selected (GtdStoragePopover *popover,
       gtk_image_set_from_gicon (GTK_IMAGE (priv->location_provider_image),
                                 gtd_storage_get_icon (storage),
                                 GTK_ICON_SIZE_BUTTON);
-      //gtk_widget_set_tooltip_text ()
+      gtk_widget_set_tooltip_text (priv->change_location_button, gtd_storage_get_name (storage));
     }
 }
 
