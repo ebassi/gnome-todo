@@ -623,7 +623,7 @@ gtd_storage_create_task_list (GtdStorage  *storage,
    * The only special case is "local" provider, which is treated
    * differently here.
    */
-  if (g_strcmp0 (priv->provider_name, "local") == 0)
+  if (g_strcmp0 (priv->provider, "local") == 0)
     {
       extension = e_source_get_extension (source, E_SOURCE_EXTENSION_TASK_LIST);
 
