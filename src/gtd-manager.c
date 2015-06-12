@@ -585,7 +585,7 @@ gtd_manager__on_client_connected (GObject      *source_object,
   /* Update ready flag */
   priv->load_sources--;
   gtd_object_set_ready (GTD_OBJECT (user_data),
-                        priv->load_sources == 0);
+                        priv->load_sources <= 0);
 
   if (!error)
     {
