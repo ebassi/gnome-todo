@@ -160,6 +160,7 @@
                 <property name="can_focus">True</property>
                 <property name="show_local">True</property>
                 <property name="select_default">True</property>
+                <property name="show_stub_rows">False</property>
                 <signal name="storage-selected" handler="gtd_storage_popover__storage_selected" object="GtdStoragePopover" swapped="yes" />
               </object>
               <packing>
