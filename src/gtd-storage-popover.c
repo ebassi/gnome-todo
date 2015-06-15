@@ -158,6 +158,10 @@ gtd_storage_popover__storage_selected (GtdStoragePopover *popover,
                                 gtd_storage_get_icon (storage),
                                 GTK_ICON_SIZE_BUTTON);
       gtk_widget_set_tooltip_text (priv->change_location_button, gtd_storage_get_name (storage));
+
+      /* Go back immediately after selecting a storage */
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
+      gtk_widget_grab_focus (priv->new_list_name_entry);
     }
 }
 
