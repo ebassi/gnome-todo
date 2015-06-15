@@ -39,6 +39,7 @@ typedef struct
 
   gint                      select_default : 1;
   gint                      show_local_storage : 1;
+  gint                      show_stub_rows : 1;
 } GtdStorageSelectorPrivate;
 
 struct _GtdStorageSelector
@@ -56,6 +57,7 @@ enum {
   PROP_MANAGER,
   PROP_SELECT_DEFAULT,
   PROP_SHOW_LOCAL,
+  PROP_SHOW_STUB_ROWS,
   LAST_PROP
 };
 
@@ -382,6 +384,10 @@ gtd_storage_selector_get_property (GObject    *object,
       g_value_set_boolean (value, self->priv->show_local_storage);
       break;
 
+    case PROP_SHOW_STUB_ROWS:
+      g_value_set_boolean (value, self->priv->show_stub_rows);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -426,6 +432,9 @@ gtd_storage_selector_set_property (GObject      *object,
       gtd_storage_selector_show_local (self, g_value_get_boolean (value));
       break;
 
+    case PROP_SHOW_STUB_ROWS:
+      gtd_storage_selector_set_show_stub_rows (self, g_value_get_boolean (value));
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -488,6 +497,20 @@ gtd_storage_selector_class_init (GtdStorageSelectorClass *klass)
                               G_PARAM_READWRITE));
 
   /**
+   * GtdStorageSelector::show-stub-rows:
+   *
+   * Whether it should show stub rows for non-added accounts.
+   */
+  g_object_class_install_property (
+        object_class,
+        PROP_SHOW_STUB_ROWS,
+        g_param_spec_boolean ("show-stub-rows",
+                              _("Show stub rows"),
+                              _("Whether should show stub rows for non-added accounts"),
+                              TRUE,
+                              G_PARAM_READWRITE));
+
+  /**
    * GtdStorageSelector::select-default:
    *
    * Whether it should auto selects the default storage location row.
@@ -517,6 +540,7 @@ static void
 gtd_storage_selector_init (GtdStorageSelector *self)
 {
   self->priv = gtd_storage_selector_get_instance_private (self);
+  self->priv->show_stub_rows = TRUE;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
@@ -700,4 +724,92 @@ gtd_storage_selector_set_selected_storage (GtdStorageSelector *selector,
     }
 
   g_list_free (children);
+}
+
+/**
+ * gtd_storage_selector_get_show_stub_rows:
+ * @selector: a #GtdStorageSelector
+ *
+ * Retrieves the ::show-stub-rows property.
+ *
+ * Returns: %TRUE if it shows stub rows, %FALSE if it hides them.
+ */
+gboolean
+gtd_storage_selector_get_show_stub_rows (GtdStorageSelector *selector)
+{
+  g_return_val_if_fail (GTD_IS_STORAGE_SELECTOR (selector), FALSE);
+
+  return selector->priv->show_stub_rows;
+}
+
+/**
+ * gtd_storage_selector_set_show_stub_rows:
+ * @selector: a #GtdStorageSelector
+ * @show_stub_rows: %TRUE to show stub rows, %FALSE to hide them.
+ *
+ * Sets the #GtdStorageSelector::show-stub-rows property.
+ *
+ * Returns:
+ */
+void
+gtd_storage_selector_set_show_stub_rows (GtdStorageSelector *selector,
+                                         gboolean            show_stub_rows)
+{
+  GtdStorageSelectorPrivate *priv;
+
+  g_return_if_fail (GTD_IS_STORAGE_SELECTOR (selector));
+
+  priv = selector->priv;
+
+  if (priv->show_stub_rows != show_stub_rows)
+    {
+      priv->show_stub_rows = show_stub_rows;
+
+      /*
+       * If we're showing the stub rows, it must check which ones should be shown.
+       * We don't want to show stub rows for
+       */
+      if (show_stub_rows)
+        {
+          GList *children;
+          GList *l;
+          gint google_counter;
+          gint exchange_counter;
+          gint owncloud_counter;
+
+          children = gtk_container_get_children (GTK_CONTAINER (priv->listbox));
+          google_counter = 0;
+          exchange_counter = 0;
+          owncloud_counter = 0;
+
+          for (l = children; l != NULL; l = l->next)
+            {
+              if (GTD_IS_STORAGE_ROW (l->data))
+                {
+                  GtdStorage *storage = gtd_storage_row_get_storage (l->data);
+
+                  if (g_strcmp0 (gtd_storage_get_provider (storage), "google") == 0)
+                    google_counter++;
+                  else if (g_strcmp0 (gtd_storage_get_provider (storage), "exchange") == 0)
+                    exchange_counter++;
+                  else if (g_strcmp0 (gtd_storage_get_provider (storage), "owncloud") == 0)
+                    owncloud_counter++;
+                }
+            }
+
+          gtk_widget_set_visible (priv->google_stub_row, google_counter == 0);
+          gtk_widget_set_visible (priv->exchange_stub_row, exchange_counter == 0);
+          gtk_widget_set_visible (priv->owncloud_stub_row, owncloud_counter == 0);
+
+          g_list_free (children);
+        }
+      else
+        {
+          gtk_widget_hide (priv->exchange_stub_row);
+          gtk_widget_hide (priv->google_stub_row);
+          gtk_widget_hide (priv->owncloud_stub_row);
+        }
+
+      g_object_notify (G_OBJECT (selector), "show-stub-rows");
+    }
 }

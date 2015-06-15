@@ -45,6 +45,11 @@ GtdStorage*        gtd_storage_selector_get_selected_storage     (GtdStorageSele
 void               gtd_storage_selector_set_selected_storage     (GtdStorageSelector *selector,
                                                                   GtdStorage         *storage);
 
+gboolean           gtd_storage_selector_get_show_stub_rows       (GtdStorageSelector *selector);
+
+void               gtd_storage_selector_set_show_stub_rows       (GtdStorageSelector *selector,
+                                                                  gboolean            show_stub_rows);
+
 G_END_DECLS
 
 #endif /* GTD_STORAGE_SELECTOR_H */
