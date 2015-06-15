@@ -713,7 +713,7 @@ gtd_manager__source_registry_finish_cb (GObject      *source_object,
       /* Mark for skip also currently disabled sources */
       e_credentials_prompter_set_auto_prompt_disabled_for (priv->credentials_prompter,
                                                            source,
-                                                           !e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+                                                           !e_source_has_extension (source, E_SOURCE_EXTENSION_TASK_LIST));
     }
 
   g_list_free_full (sources, g_object_unref);

@@ -64,6 +64,8 @@ gtd_task_list_finalize (GObject *object)
 {
   GtdTaskList *self = (GtdTaskList*) object;
 
+  g_clear_pointer (&self->priv->origin, g_free);
+
   G_OBJECT_CLASS (gtd_task_list_parent_class)->finalize (object);
 }
 
@@ -290,7 +292,7 @@ gtd_task_list_get_color (GtdTaskList *list)
   g_return_val_if_fail (GTD_IS_TASK_LIST (list), NULL);
   g_return_val_if_fail (E_IS_SOURCE (list->priv->source), NULL);
 
-  selectable = E_SOURCE_SELECTABLE (e_source_get_extension (list->priv->source, E_SOURCE_EXTENSION_CALENDAR));
+  selectable = E_SOURCE_SELECTABLE (e_source_get_extension (list->priv->source, E_SOURCE_EXTENSION_TASK_LIST));
 
   if (!gdk_rgba_parse (&color, e_source_selectable_get_color (selectable)))
     gdk_rgba_parse (&color, "#ffffff"); /* calendar default colour */
@@ -298,6 +300,13 @@ gtd_task_list_get_color (GtdTaskList *list)
   return gdk_rgba_copy (&color);
 }
 
+/**
+ * gtd_task_list_set_color:
+ *
+ * sets the color of @list.
+ *
+ * Returns:
+ */
 void
 gtd_task_list_set_color (GtdTaskList   *list,
                          const GdkRGBA *color)
@@ -313,7 +322,7 @@ gtd_task_list_set_color (GtdTaskList   *list,
       ESourceSelectable *selectable;
       gchar *color_str;
 
-      selectable = E_SOURCE_SELECTABLE (e_source_get_extension (list->priv->source, E_SOURCE_EXTENSION_CALENDAR));
+      selectable = E_SOURCE_SELECTABLE (e_source_get_extension (list->priv->source, E_SOURCE_EXTENSION_TASK_LIST));
       color_str = gdk_rgba_to_string (color);
 
       e_source_selectable_set_color (selectable, color_str);
