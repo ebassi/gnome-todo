@@ -87,6 +87,59 @@ enum
 static guint signals[NUM_SIGNALS] = { 0, };
 
 static void
+gtd_manager__setup_url (GtdManager *manager,
+                        GtdStorage *storage)
+{
+  GtdManagerPrivate *priv;
+  GList *sources;
+  GList *l;
+
+  g_return_if_fail (GTD_IS_MANAGER (manager));
+  g_return_if_fail (GTD_IS_STORAGE (storage));
+
+  priv = manager->priv;
+
+  if (!priv->source_registry)
+    return;
+
+  /*
+   * Search for the ESource whose parent source has an ESourceGoa extension.
+   * The ESourceGoa, then, must have the same account uid that of @storage.
+   */
+  sources = e_source_registry_list_sources (priv->source_registry, E_SOURCE_EXTENSION_TASK_LIST);
+
+  for (l = sources; l != NULL; l = l->next)
+    {
+      const gchar *parent_uid;
+      ESource *source;
+      ESource *goa_source;
+
+      source = l->data;
+      goa_source = e_source_registry_find_extension (priv->source_registry,
+                                                     source,
+                                                     E_SOURCE_EXTENSION_GOA);
+
+      if (goa_source)
+        {
+          ESourceGoa *goa_ext;
+
+          goa_ext = e_source_get_extension (goa_source, E_SOURCE_EXTENSION_GOA);
+
+          /* Found an ESourceGoa with the same uid of storage */
+          if (g_strcmp0 (e_source_goa_get_account_id (goa_ext), gtd_storage_get_id (storage)) == 0)
+            {
+              gtd_storage_set_url (storage, e_source_goa_get_calendar_url (goa_ext));
+              break;
+            }
+        }
+
+      g_clear_object (&goa_source);
+    }
+
+  g_list_free_full (sources, g_object_unref);
+}
+
+static void
 gtd_manager__goa_account_removed_cb (GoaClient  *client,
                                      GoaObject  *object,
                                      GtdManager *manager)
@@ -183,6 +236,8 @@ gtd_manager__goa_account_added_cb (GoaClient  *client,
       gtd_storage_set_enabled (storage, !goa_account_get_calendar_disabled (account));
       gtd_storage_set_is_default (storage, g_strcmp0 (gtd_storage_get_id (storage), default_location) == 0);
 
+      gtd_manager__setup_url (manager, storage);
+
       priv->storage_locations = g_list_insert_sorted (priv->storage_locations,
                                                       storage,
                                                       (GCompareFunc) gtd_storage_compare);
@@ -238,6 +293,8 @@ gtd_manager__goa_client_finish_cb (GObject      *client,
 
               gtd_storage_set_enabled (storage, !goa_account_get_calendar_disabled (account));
               gtd_storage_set_is_default (storage, g_strcmp0 (gtd_storage_get_id (storage), default_location) == 0);
+
+              gtd_manager__setup_url (GTD_MANAGER (user_data), storage);
 
               priv->storage_locations = g_list_insert_sorted (priv->storage_locations,
                                                               storage,
@@ -724,6 +781,15 @@ gtd_manager__source_registry_finish_cb (GObject      *source_object,
 
   /* While load_sources > 0, GtdManager::ready = FALSE */
   priv->load_sources = g_list_length (sources);
+
+
+  /*
+   * When ESourceRegistry is loaded, it enabled loading the GtdStorage::url properties.
+   * Load them now.
+   */
+  for (l = priv->storage_locations; l != NULL; l = l->next)
+    gtd_manager__setup_url (GTD_MANAGER (user_data), l->data);
+
 
   g_debug ("%s: number of sources to load: %d",
            G_STRFUNC,
