@@ -28,6 +28,7 @@ typedef struct
   gchar                 *name;
   gchar                 *provider;
   gchar                 *provider_name;
+  gchar                 *url;
 
   gint                   enabled : 1;
   gint                   is_default : 1;
@@ -52,6 +53,7 @@ enum {
   PROP_NAME,
   PROP_PROVIDER,
   PROP_PROVIDER_NAME,
+  PROP_URL,
   LAST_PROP
 };
 
@@ -108,6 +110,10 @@ gtd_storage_get_property (GObject    *object,
       g_value_set_string (value, self->priv->provider_name);
       break;
 
+    case PROP_URL:
+      g_value_set_string (value, self->priv->url);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -150,6 +156,10 @@ gtd_storage_set_property (GObject      *object,
 
     case PROP_PROVIDER_NAME:
       gtd_storage_set_provider_name (self, g_value_get_string (value));
+      break;
+
+    case PROP_URL:
+      gtd_storage_set_url (self, g_value_get_string (value));
       break;
 
     default:
@@ -261,6 +271,20 @@ gtd_storage_class_init (GtdStorageClass *klass)
         g_param_spec_string ("provider-name",
                              _("Provider name of the storage"),
                              _("The name of the provider of the storage location."),
+                             NULL,
+                             G_PARAM_READWRITE));
+
+  /**
+   * GtdStorage::url:
+   *
+   * The url of this storage.
+   */
+  g_object_class_install_property (
+        object_class,
+        PROP_URL,
+        g_param_spec_string ("url",
+                             _("Url of the storage"),
+                             _("The url of the storage location."),
                              NULL,
                              G_PARAM_READWRITE));
 }
@@ -554,6 +578,49 @@ gtd_storage_set_provider_name (GtdStorage  *storage,
       storage->priv->provider_name = g_strdup (provider_name);
 
       g_object_notify (G_OBJECT (storage), "provider-name");
+    }
+}
+
+/**
+ * gtd_storage_get_url:
+ * @storage: a #GtdStorage
+ *
+ * Retrieves the URL of @storage.
+ *
+ * Returns: (transfer none): the url of @storage, or %NULL if none is set.
+ */
+const gchar*
+gtd_storage_get_url (GtdStorage *storage)
+{
+  g_return_val_if_fail (GTD_IS_STORAGE (storage), NULL);
+
+  return storage->priv->url;
+}
+
+/**
+ * gtd_storage_set_url:
+ *
+ * Sets the #GtdStorage::url property of @storage.
+ *
+ * Returns:
+ */
+void
+gtd_storage_set_url (GtdStorage  *storage,
+                     const gchar *url)
+{
+  GtdStoragePrivate *priv;
+
+  g_return_if_fail (GTD_IS_STORAGE (storage));
+
+  priv = storage->priv;
+
+  if (g_strcmp0 (priv->url, url) != 0)
+    {
+      g_clear_pointer (&priv->url, g_free);
+
+      priv->url = g_strdup (url);
+
+      g_object_notify (G_OBJECT (storage), "url");
     }
 }
 
