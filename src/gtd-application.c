@@ -33,7 +33,6 @@
 typedef struct
 {
   GtkCssProvider *provider;
-  GSettings      *settings;
   GtdManager     *manager;
 
   GtkWidget      *window;
@@ -154,9 +153,7 @@ finish_initial_setup (GtdApplication *application)
 
   run_window (application);
 
-  g_settings_set_boolean (application->priv->settings,
-                          "first-run",
-                          FALSE);
+  gtd_manager_set_is_first_run (application->priv->manager, FALSE);
 
   g_clear_pointer (&application->priv->initial_setup, gtk_widget_destroy);
 }
@@ -194,7 +191,7 @@ gtd_application_activate (GApplication *application)
   GtdApplicationPrivate *priv = GTD_APPLICATION (application)->priv;
   gboolean first_run;
 
-  first_run = g_settings_get_boolean (priv->settings, "first-run");
+  first_run = gtd_manager_get_is_first_run (priv->manager);
 
   if (!priv->provider)
    {
@@ -238,9 +235,6 @@ gtd_application_finalize (GObject *object)
 {
   GtdApplication *self = GTD_APPLICATION (object);
 
-  /* Clear settings */
-  g_clear_object (&(self->priv->settings));
-
   G_OBJECT_CLASS (gtd_application_parent_class)->finalize (object);
 }
 
@@ -281,8 +275,6 @@ gtd_application_init (GtdApplication *self)
 {
   GtdApplicationPrivate *priv = gtd_application_get_instance_private (self);
 
-  priv->settings = g_settings_new ("org.gnome.todo");
-
   self->priv = priv;
 }
 
@@ -292,39 +284,4 @@ gtd_application_get_manager (GtdApplication *app)
   g_return_val_if_fail (GTD_IS_APPLICATION (app), NULL);
 
   return app->priv->manager;
-}
-
-/**
- * gtd_application_get_storage_location:
- *
- * Retrieves the default storage location for new #GtdTaskList.
- *
- * Returns: (transfer full): a newly allocated string containing the default
- * storage location. "local" is the default.
- */
-gchar*
-gtd_application_get_storage_location (GtdApplication *app)
-{
-  g_return_val_if_fail (GTD_IS_APPLICATION (app), NULL);
-
-  return g_settings_get_string (app->priv->settings, "storage-location");
-}
-
-/**
- * gtd_application_set_storage_location:
- *
- * Sets the default storage location for the application. New lists will
- * be created there by default.
- *
- * Returns:
- */
-void
-gtd_application_set_storage_location (GtdApplication *application,
-                                      const gchar    *location)
-{
-  g_return_if_fail (GTD_IS_APPLICATION (application));
-
-  g_settings_set_string (application->priv->settings,
-                         "storage-location",
-                         location);
 }

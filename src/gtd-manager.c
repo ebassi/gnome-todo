@@ -1240,3 +1240,75 @@ gtd_manager_get_storage_locations (GtdManager *manager)
 
   return g_list_copy (manager->priv->storage_locations);
 }
+
+/**
+ * gtd_manager_get_default_storage:
+ * @manager: a #GtdManager
+ *
+ * Retrieves the default storage location id. Default is "local".
+ *
+ * Returns: (transfer full): the default storage id. Free with @g_free after use.
+ */
+gchar*
+gtd_manager_get_default_storage (GtdManager *manager)
+{
+  g_return_val_if_fail (GTD_IS_MANAGER (manager), NULL);
+
+  return g_settings_get_string (manager->priv->settings, "srotage-location");
+}
+
+/**
+ * gtd_manager_set_default_storage:
+ * @manager: a #GtdManager
+ * @default_storage: the default storage location.
+ *
+ * Sets the default storage location id.
+ *
+ * Returns:
+ */
+void
+gtd_manager_set_default_storage (GtdManager  *manager,
+                                 const gchar *default_storage)
+{
+  g_return_if_fail (GTD_IS_MANAGER (manager));
+
+  g_settings_set_string (manager->priv->settings,
+                         "storage-location",
+                         default_storage);
+}
+
+/**
+ * gtd_manager_get_is_first_run:
+ * @manager: a #GtdManager
+ *
+ * Retrieves the 'first-run' setting.
+ *
+ * Returns: %TRUE if GNOME To Do was never run before, %FALSE otherwise.
+ */
+gboolean
+gtd_manager_get_is_first_run (GtdManager *manager)
+{
+  g_return_val_if_fail (GTD_IS_MANAGER (manager), FALSE);
+
+  return g_settings_get_boolean (manager->priv->settings, "first-run");
+}
+
+/**
+ * gtd_manager_set_is_first_run:
+ * @manager: a #GtdManager
+ * @is_first_run: %TRUE to make it first run, %FALSE otherwise.
+ *
+ * Sets the 'first-run' setting.
+ *
+ * Returns:
+ */
+void
+gtd_manager_set_is_first_run (GtdManager *manager,
+                              gboolean    is_first_run)
+{
+  g_return_if_fail (GTD_IS_MANAGER (manager));
+
+  g_settings_set_boolean (manager->priv->settings,
+                          "first-run",
+                          is_first_run);
+}

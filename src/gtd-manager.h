@@ -62,6 +62,17 @@ GoaClient*              gtd_manager_get_goa_client        (GtdManager           
 
 gboolean                gtd_manager_is_goa_client_ready   (GtdManager           *manager);
 
+/* Settings */
+gchar*                  gtd_manager_get_default_storage   (GtdManager           *manager);
+
+void                    gtd_manager_set_default_storage   (GtdManager           *manager,
+                                                           const gchar          *default_storage);
+
+gboolean                gtd_manager_get_is_first_run      (GtdManager           *manager);
+
+void                    gtd_manager_set_is_first_run      (GtdManager           *manager,
+                                                           gboolean              is_first_run);
+
 G_END_DECLS
 
 #endif /* GTD_MANAGER_H */

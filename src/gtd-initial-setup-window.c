@@ -30,7 +30,6 @@ typedef struct
   GtkWidget                 *done_button;
   GtkWidget                 *storage_selector;
 
-  GtdApplication            *application;
   GtdManager                *manager;
 } GtdInitialSetupWindowPrivate;
 
@@ -71,7 +70,7 @@ gtd_initial_setup_window__location_selected (GtdInitialSetupWindow *window,
   gtk_widget_set_sensitive (priv->done_button, storage != NULL);
 
   if (storage)
-    gtd_application_set_storage_location (priv->application, gtd_storage_get_id (storage));
+    gtd_manager_set_default_storage (priv->manager, gtd_storage_get_id (storage));
 }
 
 static void
@@ -240,16 +239,10 @@ gtd_initial_setup_window_init (GtdInitialSetupWindow *self)
 GtkWidget*
 gtd_initial_setup_window_new (GtdApplication *application)
 {
-  GtdInitialSetupWindow *window;
-
   g_return_val_if_fail (GTD_IS_APPLICATION (application), NULL);
 
-  window = g_object_new (GTD_TYPE_INITIAL_SETUP_WINDOW,
-                         "application", application,
-                         "manager", gtd_application_get_manager (application),
-                         NULL);
-
-  window->priv->application = application;
-
-  return GTK_WIDGET (window);
+  return g_object_new (GTD_TYPE_INITIAL_SETUP_WINDOW,
+                       "application", application,
+                       "manager", gtd_application_get_manager (application),
+                       NULL);
 }
