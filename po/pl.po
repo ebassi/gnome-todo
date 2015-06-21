@@ -1,0 +1,685 @@
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Aviary.pl
+# Jeśli masz jakiekolwiek uwagi odnoszące się do tłumaczenia lub chcesz
+# pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
+# gnomepl@aviary.pl
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Piotr Drąg <piotrdrag@gmail.com>, 2015.
+# Aviary.pl <gnomepl@aviary.pl>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-todo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-21 15:25+0200\n"
+"PO-Revision-Date: 2015-06-21 15:27+0200\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+"Language-Team: Polish <gnomepl@aviary.pl>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Poedit-Language: Polish\n"
+"X-Poedit-Country: Poland\n"
+
+#: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:1
+#: ../data/org.gnome.Todo.desktop.in.in.h:1
+msgid "Todo"
+msgstr "Zadania"
+
+#: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:2
+msgid "Todo manager for GNOME"
+msgstr "Menedżer zadań dla środowiska GNOME"
+
+#: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:3
+msgid ""
+"GNOME Todo is a simple task management application designed to integrate "
+"with GNOME."
+msgstr ""
+"Menedżer zadań GNOME to prosty program do zarządzania zadaniami, "
+"zaprojektowany do integracji ze środowiskiem GNOME."
+
+#: ../data/gtk/menus.ui.h:1
+msgid "New List…"
+msgstr "Nowa lista…"
+
+#: ../data/gtk/menus.ui.h:2
+msgid "Change default storage location…"
+msgstr "Zmień domyślne położenie zadań…"
+
+#: ../data/gtk/menus.ui.h:3
+msgid "_About"
+msgstr "_O programie"
+
+#: ../data/gtk/menus.ui.h:4
+msgid "_Quit"
+msgstr "Za_kończ"
+
+#: ../data/org.gnome.Todo.desktop.in.in.h:2
+msgid "Manage your personal tasks"
+msgstr "Zarządzanie zadaniami"
+
+#: ../data/org.gnome.Todo.desktop.in.in.h:3
+msgid "Task;Productivity;"
+msgstr "Zadanie;Produktywność;Biuro;"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Zmaksymalizowane okno"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Stan maksymalizacji okna"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Rozmiar okna"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Rozmiar okna (szerokość i wysokość)."
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Położenie okna"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Położenie okna (na osi X i Y)."
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:7
+msgid "First run of GNOME To Do"
+msgstr "Pierwsze uruchomienie Menedżera zadań GNOME"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:8
+msgid ""
+"Whether it's the first run of GNOME To Do (to run the initial setup) or not"
+msgstr ""
+"Czy jest to pierwsze uruchomienie Menedżera zadań GNOME (aby wykonać "
+"początkowe ustawienie)"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:9
+msgid "Default location to add new lists to"
+msgstr "Domyślne położenie, do którego dodawać nowe listy"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:10
+msgid "The identifier of the default location to add new lists to"
+msgstr "Identyfikator domyślnego położenia, do którego dodawać nowe listy"
+
+#: ../data/ui/edit-pane.ui.h:1
+msgid "Details"
+msgstr "Szczegóły"
+
+#: ../data/ui/edit-pane.ui.h:2
+msgid "Notes"
+msgstr "Uwagi"
+
+#: ../data/ui/edit-pane.ui.h:3
+msgid "Due Date"
+msgstr "Termin"
+
+#: ../data/ui/edit-pane.ui.h:4
+msgid "Priority"
+msgstr "Priorytet"
+
+#: ../data/ui/edit-pane.ui.h:5
+msgid "None"
+msgstr "Brak"
+
+#: ../data/ui/edit-pane.ui.h:6
+msgid "Low"
+msgstr "Niski"
+
+#: ../data/ui/edit-pane.ui.h:7
+msgid "Medium"
+msgstr "Średni"
+
+#: ../data/ui/edit-pane.ui.h:8
+msgid "High"
+msgstr "Wysoki"
+
+#: ../data/ui/edit-pane.ui.h:9
+msgid "Delete"
+msgstr "Usuń"
+
+#: ../data/ui/initial-setup.ui.h:1
+msgid "Welcome"
+msgstr "Witamy"
+
+#: ../data/ui/initial-setup.ui.h:2
+msgid "Login to online accounts to access your tasks"
+msgstr "Zalogowanie do kont online umożliwi dostęp do zadań"
+
+#: ../data/ui/initial-setup.ui.h:3 ../data/ui/storage-popover.ui.h:2
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: ../data/ui/initial-setup.ui.h:4 ../data/ui/list-view.ui.h:2
+#: ../src/gtd-list-view.c:241
+msgid "Done"
+msgstr "Gotowe"
+
+#: ../data/ui/list-view.ui.h:1
+msgid "Show or hide completed tasks"
+msgstr "Wyświetla lub ukrywa ukończone zadania"
+
+#: ../data/ui/storage-dialog.ui.h:1
+msgid "Select the default storage location to create task lists:"
+msgstr "Proszę wybrać domyślne położenie zadań do tworzenia list:"
+
+#: ../data/ui/storage-popover.ui.h:1
+msgid "Create"
+msgstr "Utwórz"
+
+#: ../data/ui/storage-popover.ui.h:3
+msgid "List Name"
+msgstr "Nazwa listy"
+
+#: ../data/ui/storage-popover.ui.h:4
+msgid "Select a storage location"
+msgstr "Wybór położenia zadań"
+
+#: ../data/ui/storage-row.ui.h:1
+msgid "Off"
+msgstr "Wyłącz"
+
+#: ../data/ui/storage-selector.ui.h:1
+msgid "Click to add a new Google account"
+msgstr "Kliknięcie dodaje nowe konto Google"
+
+#: ../data/ui/storage-selector.ui.h:2
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/storage-selector.ui.h:3
+msgid "Click to add a new ownCloud account"
+msgstr "Kliknięcie dodaje nowe konto ownCloud"
+
+#: ../data/ui/storage-selector.ui.h:4
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/storage-selector.ui.h:5
+msgid "Click to add a new Microsoft Exchange account"
+msgstr "Kliknięcie dodaje nowe konto Microsoft Exchange"
+
+#: ../data/ui/storage-selector.ui.h:6
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/storage-selector.ui.h:7
+msgid "Or you can just store your tasks on this computer"
+msgstr "Można też przechowywać zadania na tym komputerze"
+
+#: ../data/ui/task-row.ui.h:1
+msgid "New task…"
+msgstr "Nowe zadanie…"
+
+#: ../data/ui/window.ui.h:1 ../src/gtd-list-view.c:174
+msgid "Undo"
+msgstr "Cofnij"
+
+#: ../data/ui/window.ui.h:2
+msgid "Lists"
+msgstr "Listy"
+
+#: ../data/ui/window.ui.h:3 ../src/gtd-task-row.c:100
+msgid "Today"
+msgstr "Dzisiaj"
+
+#: ../data/ui/window.ui.h:4
+msgid "Scheduled"
+msgstr "Zaplanowane"
+
+#: ../data/ui/window.ui.h:5
+msgid "Rename"
+msgstr "Zmień nazwę"
+
+#: ../data/ui/window.ui.h:6
+msgid "New List"
+msgstr "Nowa lista"
+
+#: ../src/gtd-application.c:90
+msgid "Copyright © %Id The Todo authors"
+msgstr "Copyright © %Id Autorzy Menedżera zadań"
+
+#: ../src/gtd-application.c:95
+msgid "Copyright © %Id–%Id The Todo authors"
+msgstr "Copyright © %Id–%Id Autorzy Menedżera zadań"
+
+#: ../src/gtd-application.c:100 ../src/gtd-application.c:126
+msgid "To Do"
+msgstr "Zadania"
+
+#: ../src/gtd-application.c:107
+msgid "translator-credits"
+msgstr ""
+"Piotr Drąg <piotrdrag@gmail.com>, 2015\n"
+"Aviary.pl <gnomepl@aviary.pl>, 2015"
+
+#: ../src/gtd-application.c:215
+msgid "Error loading CSS from resource"
+msgstr "Błąd podczas wczytywania pliku CSS z zasobu"
+
+#: ../src/gtd-edit-pane.c:136 ../src/gtd-task-row.c:124
+msgid "No date set"
+msgstr "Nie ustawiono daty"
+
+#: ../src/gtd-edit-pane.c:251
+msgid "Manager of this application"
+msgstr "Menedżer tego programu"
+
+#: ../src/gtd-edit-pane.c:252
+msgid "The manager of the application"
+msgstr "Menedżer programu"
+
+#: ../src/gtd-edit-pane.c:265
+msgid "Task being edited"
+msgstr "Modyfikowane zadanie"
+
+#: ../src/gtd-edit-pane.c:266
+msgid "The task that is actually being edited"
+msgstr "Obecnie modyfikowane zadanie"
+
+#: ../src/gtd-initial-setup-window.c:216
+msgid "Manager of the task"
+msgstr "Menedżer zadania"
+
+#: ../src/gtd-initial-setup-window.c:217
+msgid "The singleton manager instance of the task"
+msgstr "Pojedyncze wystąpienie menedżera zadania"
+
+#: ../src/gtd-list-view.c:158
+#, c-format
+msgid "Task <b>%s</b> removed"
+msgstr "Usunięto zadanie <b>%s</b>"
+
+#: ../src/gtd-list-view.c:592 ../src/gtd-storage-dialog.c:153
+#: ../src/gtd-storage-popover.c:264 ../src/gtd-storage-selector.c:522
+#: ../src/gtd-window.c:476
+msgid "Manager of this window's application"
+msgstr "Menedżer programu tego okna"
+
+#: ../src/gtd-list-view.c:593 ../src/gtd-storage-dialog.c:154
+#: ../src/gtd-storage-popover.c:265 ../src/gtd-storage-selector.c:523
+#: ../src/gtd-window.c:477
+msgid "The manager of the window's application"
+msgstr "Menedżer programu okna"
+
+#: ../src/gtd-list-view.c:606
+msgid "Whether the list is readonly"
+msgstr "Czy lista jest tylko do odczytu"
+
+#: ../src/gtd-list-view.c:607
+msgid ""
+"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
+msgstr ""
+"Czy lista jest tylko do odczytu, tzn. rząd Nowe zadanie nie jest wyświetlany"
+
+#: ../src/gtd-list-view.c:620
+msgid "Whether task rows show the list name"
+msgstr "Czy rzędy zadań wyświetlają nazwę listy"
+
+#: ../src/gtd-list-view.c:621
+msgid "Whether task rows show the list name at the end of the row"
+msgstr "Czy rzędy zadań wyświetlają nazwę listy na końcu rzędu"
+
+#: ../src/gtd-list-view.c:634
+msgid "Whether completed tasks are shown"
+msgstr "Czy wyświetlać ukończone zadania"
+
+#: ../src/gtd-list-view.c:635
+msgid "Whether completed tasks are visible or not"
+msgstr "Czy ukończone zadania są widoczne"
+
+#: ../src/gtd-manager.c:331
+msgid "Error loading GNOME Online Accounts"
+msgstr "Błąd podczas wczytywania Kont online GNOME"
+
+#: ../src/gtd-manager.c:360
+msgid "Error saving task list"
+msgstr "Błąd podczas zapisywania listy zadań"
+
+#: ../src/gtd-manager.c:387
+msgid "Error removing task list"
+msgstr "Błąd podczas usuwania listy zadań"
+
+#: ../src/gtd-manager.c:419
+msgid "Error creating task"
+msgstr "Błąd podczas tworzenia zadania"
+
+#: ../src/gtd-manager.c:451
+msgid "Error removing task"
+msgstr "Błąd podczas usuwania zadania"
+
+#: ../src/gtd-manager.c:477
+msgid "Error updating task"
+msgstr "Błąd podczas aktualizowania zadania"
+
+#: ../src/gtd-manager.c:506
+msgid "Failed to prompt for credentials"
+msgstr "Zapytanie o dane uwierzytelniające się nie powiodło"
+
+#: ../src/gtd-manager.c:529
+msgid "Failed to prompt for credentials for"
+msgstr "Nie powiodło się zapytanie o dane uwierzytelniające dla"
+
+#: ../src/gtd-manager.c:581
+msgid "Authentication failure"
+msgstr "Niepowodzenie uwierzytelnienia"
+
+#: ../src/gtd-manager.c:622
+msgid "Error fetching tasks from list"
+msgstr "Błąd podczas pobierania zadań z listy"
+
+#: ../src/gtd-manager.c:684
+msgid "Task list source successfully connected"
+msgstr "Pomyślnie połączono ze źródłem listy zadań"
+
+#: ../src/gtd-manager.c:691
+msgid "Failed to connect to task list source"
+msgstr "Połączenie ze źródłem listy zadań się nie powiodło"
+
+#: ../src/gtd-manager.c:721
+msgid "Skipping already loaded task list "
+msgstr "Pomijanie już wczytanej listy zadań "
+
+#: ../src/gtd-manager.c:759
+msgid "Error loading task manager"
+msgstr "Błąd podczas wczytywania menedżera zadań"
+
+#: ../src/gtd-manager.c:891
+msgid "Local"
+msgstr "Lokalne"
+
+#: ../src/gtd-manager.c:892
+msgid "On This Computer"
+msgstr "Na tym komputerze"
+
+#: ../src/gtd-manager.c:925
+msgid "The online accounts client of the manager"
+msgstr "Klient kont online menedżera"
+
+#: ../src/gtd-manager.c:926
+msgid ""
+"The read-only GNOME online accounts client loaded and owned by the manager"
+msgstr ""
+"Klient kont online GNOME tylko do odczytu, wczytany i posiadany przez "
+"menedżera"
+
+#: ../src/gtd-manager.c:939
+msgid "Whether GNOME Online Accounts client is ready"
+msgstr "Czy klient Kont online GNOME jest gotowy"
+
+#: ../src/gtd-manager.c:940
+msgid "Whether the read-only GNOME online accounts client is loaded"
+msgstr "Czy klient kont online GNOME tylko do odczytu jest wczytany"
+
+#: ../src/gtd-manager.c:953
+msgid "The source registry of the manager"
+msgstr "Rejestr źródeł menedżera"
+
+#: ../src/gtd-manager.c:954
+msgid "The read-only source registry loaded and owned by the manager"
+msgstr "Rejestr źródeł tylko do odczytu, wczytany i posiadany przez menedżera"
+
+#: ../src/gtd-object.c:152
+msgid "Unique identifier of the object"
+msgstr "Unikalny identyfikator obiektu"
+
+#: ../src/gtd-object.c:153
+msgid "The unique identifier of the object, defined by the backend"
+msgstr "Unikalny identyfikator obiektu, określony przez mechanizm"
+
+#: ../src/gtd-object.c:166
+msgid "Ready state of the object"
+msgstr "Stan gotowości obiektu"
+
+#: ../src/gtd-object.c:167
+msgid "Whether the object is marked as ready or not"
+msgstr "Czy obiekt jest oznaczony jako gotowy"
+
+#: ../src/gtd-storage.c:189
+msgid "Whether the storage is enabled"
+msgstr "Czy położenie zadań jest włączone"
+
+#: ../src/gtd-storage.c:190
+msgid "Whether the storage is available to be used."
+msgstr "Czy położenie zadań jest dostępne do użytku."
+
+#: ../src/gtd-storage.c:203
+msgid "Icon of the storage"
+msgstr "Ikona położenia zadań"
+
+#: ../src/gtd-storage.c:204
+msgid "The icon representing the storage location."
+msgstr "Ikona przedstawiająca położenie zadań."
+
+#: ../src/gtd-storage.c:217
+msgid "Identifier of the storage"
+msgstr "Identyfikator położenia zadań"
+
+#: ../src/gtd-storage.c:218
+msgid "The unique identifier of the storage location."
+msgstr "Unikalny identyfikator położenia zadań."
+
+#: ../src/gtd-storage.c:231
+msgid "Whether the storage is the default"
+msgstr "Czy położenie zadań jest domyślne"
+
+#: ../src/gtd-storage.c:232
+msgid "Whether the storage is the default storage location to be used."
+msgstr "Czy to położenie zadań jest domyślnie używane."
+
+#: ../src/gtd-storage.c:245
+msgid "Name of the storage"
+msgstr "Nazwa położenia zadań"
+
+#: ../src/gtd-storage.c:246
+msgid "The user-visible name of the storage location."
+msgstr "Nazwa położenia zadań widoczna dla użytkownika."
+
+#: ../src/gtd-storage.c:259
+msgid "Parent of the storage"
+msgstr "Element nadrzędny położenia zadań"
+
+#: ../src/gtd-storage.c:260
+msgid "The parent source identifier of the storage location."
+msgstr "Identyfikator nadrzędnego źródła położenia zadań."
+
+#: ../src/gtd-storage.c:273
+msgid "Provider type of the storage"
+msgstr "Typ dostawcy położenia zadań"
+
+#: ../src/gtd-storage.c:274
+msgid "The provider type of the storage location."
+msgstr "Typ dostawcy położenia zadań."
+
+#: ../src/gtd-storage.c:287
+msgid "Provider name of the storage"
+msgstr "Nazwa dostawcy położenia zadań"
+
+#: ../src/gtd-storage.c:288
+msgid "The name of the provider of the storage location."
+msgstr "Nazwa dostawcy położenia zadań."
+
+#: ../src/gtd-storage.c:680
+msgid "Error creating new task list"
+msgstr "Błąd podczas tworzenia nowej listy zadań"
+
+#: ../src/gtd-storage-row.c:148
+msgid "Storage of the row"
+msgstr "Położenie zadań rzędu"
+
+#: ../src/gtd-storage-row.c:149
+msgid "The storage that this row holds"
+msgstr "Położenie zadań w tym rzędzie"
+
+#: ../src/gtd-storage-selector.c:536
+msgid "Show local storage row"
+msgstr "Wyświetlanie rzędu lokalnego położenia zadań"
+
+#: ../src/gtd-storage-selector.c:537
+msgid "Whether should show a local storage row instead of a checkbox"
+msgstr "Czy wyświetlać rząd lokalnego położenia zadań zamiast pola wyboru"
+
+#: ../src/gtd-storage-selector.c:550
+msgid "Show stub rows"
+msgstr "Wyświetlanie nieużywanych rzędów"
+
+#: ../src/gtd-storage-selector.c:551
+msgid "Whether should show stub rows for non-added accounts"
+msgstr "Czy wyświetlać rzędy niedodanych kont"
+
+#: ../src/gtd-storage-selector.c:564
+msgid "Selects default storage row"
+msgstr "Wybiera domyślny rząd położenia zadań"
+
+#: ../src/gtd-storage-selector.c:565
+msgid "Whether should select the default storage row"
+msgstr "Czy wybrać domyślny rząd położenia zadań"
+
+#: ../src/gtd-task.c:254
+msgid "Whether the task is completed or not"
+msgstr "Czy zadanie jest ukończone"
+
+#: ../src/gtd-task.c:255
+msgid "Whether the task is marked as completed by the user"
+msgstr "Czy zadanie zostało oznaczone jako ukończone przez użytkownika"
+
+#: ../src/gtd-task.c:268
+msgid "Component of the task"
+msgstr "Składnik zadania"
+
+#: ../src/gtd-task.c:269
+msgid "The #ECalComponent this task handles."
+msgstr "#ECalComponent obsługiwany przez to zadanie."
+
+#: ../src/gtd-task.c:282
+msgid "Description of the task"
+msgstr "Opis zadania"
+
+#: ../src/gtd-task.c:283
+msgid "Optional string describing the task"
+msgstr "Opcjonalny ciąg opisujący zadanie"
+
+#: ../src/gtd-task.c:297
+msgid "End date of the task"
+msgstr "Data zakończenia zadania"
+
+#: ../src/gtd-task.c:298
+msgid "The day the task is supposed to be completed"
+msgstr "Dzień, w którym zadanie powinno zostać ukończone"
+
+#: ../src/gtd-task.c:311
+msgid "List of the task"
+msgstr "Lista zadania"
+
+#: ../src/gtd-task.c:312
+msgid "The list that owns this task"
+msgstr "Lista, która posiada to zadanie"
+
+#: ../src/gtd-task.c:325
+msgid "Priority of the task"
+msgstr "Priorytet zadania"
+
+#: ../src/gtd-task.c:326
+msgid ""
+"The priority of the task. 0 means no priority set, and tasks will be sorted "
+"alfabetically."
+msgstr ""
+"Priorytet zadania. 0 oznacza brak priorytetu, a zadania będą porządkowane "
+"alfabetycznie."
+
+#: ../src/gtd-task.c:341
+msgid "Title of the task"
+msgstr "Tytuł zadania"
+
+#: ../src/gtd-task.c:342
+msgid "The title of the task"
+msgstr "Tytuł zadania"
+
+#: ../src/gtd-task-list.c:152
+msgid "Color of the list"
+msgstr "Kolor listy"
+
+#: ../src/gtd-task-list.c:153
+msgid "The color of the list"
+msgstr "Kolor listy"
+
+#: ../src/gtd-task-list.c:166
+msgid "Name of the list"
+msgstr "Nazwa listy"
+
+#: ../src/gtd-task-list.c:167
+msgid "The name of the list"
+msgstr "Nazwa listy"
+
+#: ../src/gtd-task-list.c:180
+msgid "Data origin of the list"
+msgstr "Data początku listy"
+
+#: ../src/gtd-task-list.c:181
+msgid "The data origin location of the list"
+msgstr "Położenie daty początku listy"
+
+#: ../src/gtd-task-list.c:194
+msgid "Source of the list"
+msgstr "Źródło listy"
+
+#: ../src/gtd-task-list.c:195
+msgid "The parent source that handles the list"
+msgstr "Nadrzędne źródło obsługujące listę"
+
+#: ../src/gtd-task-list-item.c:231
+msgid "No tasks"
+msgstr "Brak zadań"
+
+#: ../src/gtd-task-list-item.c:443
+msgid "Mode of this item"
+msgstr "Tryb tego elementu"
+
+#: ../src/gtd-task-list-item.c:444
+msgid "The mode of this item, inherited from the parent's mode"
+msgstr "Tryb tego elementu, odziedziczony z trybu elementu nadrzędnego"
+
+#: ../src/gtd-task-list-item.c:459
+msgid "Task list of the item"
+msgstr "Lista zadań elementu"
+
+#: ../src/gtd-task-list-item.c:460
+msgid "The task list associated with this item"
+msgstr "Lista zadań powiązana z tym elementem"
+
+#: ../src/gtd-task-row.c:104
+msgid "Tomorrow"
+msgstr "Jutro"
+
+#: ../src/gtd-task-row.c:108
+msgid "Yesterday"
+msgstr "Wczoraj"
+
+#: ../src/gtd-task-row.c:324
+msgid "If the row is used to add a new task"
+msgstr "Czy rząd jest używane do dodania nowego zadania"
+
+#: ../src/gtd-task-row.c:325
+msgid "Whether the row is used to add a new task"
+msgstr "Czy rząd jest używane do dodania nowego zadania"
+
+#: ../src/gtd-task-row.c:338
+msgid "Task of the row"
+msgstr "Zadanie rzędu"
+
+#: ../src/gtd-task-row.c:339
+msgid "The task that this row represents"
+msgstr "Zadanie przedstawiane przez ten rząd"
+
+#: ../src/gtd-window.c:230
+msgid "Setting new color for task list"
+msgstr "Ustawianie nowego koloru listy zadań"
+
+#: ../src/gtd-window.c:276
+msgid "Loading your task lists…"
+msgstr "Wczytywanie list zadań…"
