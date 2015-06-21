@@ -6,6 +6,7 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/initial-setup.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/list-view.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/source-dialog.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/storage-dialog.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/storage-popover.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/storage-row.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/storage-selector.ui</file>
