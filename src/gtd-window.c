@@ -19,6 +19,7 @@
 #include "gtd-application.h"
 #include "gtd-list-view.h"
 #include "gtd-manager.h"
+#include "gtd-storage-dialog.h"
 #include "gtd-task-list.h"
 #include "gtd-task-list-item.h"
 #include "gtd-window.h"
@@ -38,6 +39,7 @@ typedef struct
   GtkRevealer                   *notification_revealer;
   GtkSpinner                    *notification_spinner;
   GtkStackSwitcher              *stack_switcher;
+  GtdStorageDialog              *storage_dialog;
   GtdListView                   *list_view;
 
   /* mode */
@@ -80,6 +82,10 @@ typedef struct
 
 #define LOADING_LISTS_NOTIFICATION_ID            "loading-lists-id"
 
+static void          gtd_window__change_storage_action           (GSimpleAction         *simple,
+                                                                  GVariant              *parameter,
+                                                                  gpointer               user_data);
+
 static gboolean      gtd_window__execute_notification_data       (NotificationData      *data);
 
 
@@ -88,6 +94,10 @@ static void          gtd_window_consume_notification             (GtdWindow     
 void                 notification_data_free                      (NotificationData      *data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtdWindow, gtd_window, GTK_TYPE_APPLICATION_WINDOW)
+
+static const GActionEntry gtd_window_entries[] = {
+  { "change-storage", gtd_window__change_storage_action }
+};
 
 enum {
   PROP_0,
@@ -102,6 +112,20 @@ notification_data_free (NotificationData *data)
   g_free (data->text);
   g_free (data->label);
   g_free (data);
+}
+
+static void
+gtd_window__change_storage_action (GSimpleAction *simple,
+                                   GVariant      *parameter,
+                                   gpointer       user_data)
+{
+  GtdWindowPrivate *priv;
+
+  g_return_if_fail (GTD_IS_WINDOW (user_data));
+
+  priv = GTD_WINDOW (user_data)->priv;
+
+  gtk_dialog_run (GTK_DIALOG (priv->storage_dialog));
 }
 
 static void
@@ -342,6 +366,11 @@ gtd_window_constructed (GObject *object)
                           priv->new_list_popover,
                           "manager",
                           G_BINDING_DEFAULT);
+  g_object_bind_property (object,
+                          "manager",
+                          priv->storage_dialog,
+                          "manager",
+                          G_BINDING_DEFAULT);
 }
 
 GtkWidget*
@@ -463,6 +492,7 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_revealer);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_spinner);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack_switcher);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, storage_dialog);
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_color_set);
@@ -476,6 +506,12 @@ gtd_window_init (GtdWindow *self)
   self->priv = gtd_window_get_instance_private (self);
 
   self->priv->notification_queue = g_queue_new ();
+
+  /* add actions */
+  g_action_map_add_action_entries (G_ACTION_MAP (self),
+                                   gtd_window_entries,
+                                   G_N_ELEMENTS (gtd_window_entries),
+                                   self);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
