@@ -98,6 +98,43 @@ display_header_func (GtkListBoxRow *row,
 }
 
 static void
+gtd_storage_selector__default_storage_changed (GtdStorageSelector *selector,
+                                               GtdStorage         *current,
+                                               GtdStorage         *previous)
+{
+  GtdStorageSelectorPrivate *priv;
+  GList *children;
+  GList *l;
+
+  g_return_if_fail (GTD_IS_STORAGE_SELECTOR (selector));
+  g_return_if_fail (GTD_IS_STORAGE (previous));
+  g_return_if_fail (GTD_IS_STORAGE (current));
+
+  priv = selector->priv;
+
+  if (!priv->select_default)
+    return;
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->listbox));
+
+  for (l = children; l != NULL; l = l->next)
+    {
+      GtdStorage *storage;
+
+      if (!GTD_IS_STORAGE_ROW (l->data))
+        continue;
+
+      storage = gtd_storage_row_get_storage (l->data);
+
+      gtd_storage_row_set_selected (l->data, storage == current);
+    }
+
+  g_list_free (children);
+
+  g_signal_emit (selector, signals[STORAGE_SELECTED], 0, current);
+}
+
+static void
 gtd_storage_selector__listbox_row_activated (GtdStorageSelector *selector,
                                              GtkWidget          *row)
 {
@@ -412,6 +449,11 @@ gtd_storage_selector_set_property (GObject      *object,
       gtd_storage_selector__fill_accounts (self);
 
       g_signal_connect_swapped (self->priv->manager,
+                                "default-storage-changed",
+                                G_CALLBACK (gtd_storage_selector__default_storage_changed),
+                                object);
+
+      g_signal_connect_swapped (self->priv->manager,
                                 "storage-added",
                                 G_CALLBACK (gtd_storage_selector__add_storage),
                                 object);
@@ -580,7 +622,9 @@ gtd_storage_selector_show_local (GtdStorageSelector *selector,
       priv->show_local_storage = show;
 
       gtk_widget_set_visible (priv->local_check, !show);
-      gtk_widget_set_visible (priv->local_row, show);
+
+      if (priv->local_row)
+        gtk_widget_set_visible (priv->local_row, show);
 
       g_object_notify (G_OBJECT (selector), "show-local");
     }

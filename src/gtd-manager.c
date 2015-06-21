@@ -66,6 +66,7 @@ const gchar *supported_providers[] = {
 
 enum
 {
+  DEFAULT_STORAGE_CHANGED,
   LIST_ADDED,
   LIST_CHANGED,
   LIST_REMOVED,
@@ -128,7 +129,7 @@ gtd_manager__setup_url (GtdManager *manager,
           /* Found an ESourceGoa with the same uid of storage */
           if (g_strcmp0 (e_source_goa_get_account_id (goa_ext), gtd_storage_get_id (storage)) == 0)
             {
-              gtd_storage_set_url (storage, e_source_goa_get_calendar_url (goa_ext));
+              gtd_storage_set_parent (storage, e_source_get_uid (source));
               break;
             }
         }
@@ -955,6 +956,25 @@ gtd_manager_class_init (GtdManagerClass *klass)
                             G_PARAM_READABLE));
 
   /**
+   * GtdManager::default-storage-changed:
+   *
+   * The ::default-storage-changed signal is emmited when a new #GtdStorage
+   * is set as default.
+   */
+  signals[DEFAULT_STORAGE_CHANGED] =
+                  g_signal_new ("default-storage-changed",
+                                GTD_TYPE_MANAGER,
+                                G_SIGNAL_RUN_LAST,
+                                0,
+                                NULL,
+                                NULL,
+                                NULL,
+                                G_TYPE_NONE,
+                                2,
+                                GTD_TYPE_STORAGE,
+                                GTD_TYPE_STORAGE);
+
+  /**
    * GtdManager::list-added:
    *
    * The ::list-added signal is emmited after a #GtdTaskList
@@ -1311,16 +1331,27 @@ gtd_manager_get_storage_locations (GtdManager *manager)
  * gtd_manager_get_default_storage:
  * @manager: a #GtdManager
  *
- * Retrieves the default storage location id. Default is "local".
+ * Retrieves the default storage location. Default is "local".
  *
- * Returns: (transfer full): the default storage id. Free with @g_free after use.
+ * Returns: (transfer none): the default storage.
  */
-gchar*
+GtdStorage*
 gtd_manager_get_default_storage (GtdManager *manager)
 {
+  GtdManagerPrivate *priv;
+  GtdStorage *storage;
+  GList *l;
+  gchar *storage_id;
+
   g_return_val_if_fail (GTD_IS_MANAGER (manager), NULL);
 
-  return g_settings_get_string (manager->priv->settings, "srotage-location");
+  priv = manager->priv;
+  storage = NULL;
+  storage_id = g_settings_get_string (priv->settings, "storage-location");
+
+  g_free (storage_id);
+
+  return storage;
 }
 
 /**
@@ -1333,14 +1364,34 @@ gtd_manager_get_default_storage (GtdManager *manager)
  * Returns:
  */
 void
-gtd_manager_set_default_storage (GtdManager  *manager,
-                                 const gchar *default_storage)
+gtd_manager_set_default_storage (GtdManager *manager,
+                                 GtdStorage *default_storage)
 {
   g_return_if_fail (GTD_IS_MANAGER (manager));
 
-  g_settings_set_string (manager->priv->settings,
-                         "storage-location",
-                         default_storage);
+  if (!gtd_storage_get_is_default (default_storage))
+    {
+      GtdStorage *previus_default = NULL;
+      GList *l;
+
+      g_settings_set_string (manager->priv->settings,
+                             "storage-location",
+                             gtd_storage_get_id (default_storage));
+
+      for (l = manager->priv->storage_locations; l != NULL; l = l->next)
+        {
+          if (gtd_storage_get_is_default (l->data))
+            previus_default = l->data;
+
+          gtd_storage_set_is_default (l->data, l->data == default_storage);
+        }
+
+      g_signal_emit (manager,
+                     signals[DEFAULT_STORAGE_CHANGED],
+                     0,
+                     default_storage,
+                     previus_default);
+    }
 }
 
 /**

@@ -70,7 +70,7 @@ gtd_initial_setup_window__location_selected (GtdInitialSetupWindow *window,
   gtk_widget_set_sensitive (priv->done_button, storage != NULL);
 
   if (storage)
-    gtd_manager_set_default_storage (priv->manager, gtd_storage_get_id (storage));
+    gtd_manager_set_default_storage (priv->manager, storage);
 }
 
 static void
