@@ -161,6 +161,7 @@ gtd_task_list_item__render_thumbnail (GtdTaskListItem *item)
    * no undone tasks here.
    */
   if (!tasks ||
+      (g_list_length (tasks) == 0) ||
       (tasks && !gtd_task_get_complete (tasks->data)))
     {
       /* Draw the task name for each selected row. */
