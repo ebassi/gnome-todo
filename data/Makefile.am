@@ -27,7 +27,12 @@ EXTRA_DIST=                     \
   todo.gresource.xml \
   gtk/menus.ui \
   ui/edit-pane.ui \
+  ui/initial-setup.ui \
   ui/list-view.ui \
+  ui/storage-dialog.ui \
+  ui/storage-popover.ui \
+  ui/storage-row.ui \
+  ui/storage-selector.ui \
   ui/task-list-item.ui \
   ui/task-row.ui \
   ui/window.ui \
