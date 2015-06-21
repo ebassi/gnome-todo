@@ -335,7 +335,7 @@ gtd_task_row_class_init (GtdTaskRowClass *klass)
           object_class,
           PROP_TASK,
           g_param_spec_object ("task",
-                               _("Task of therow"),
+                               _("Task of the row"),
                                _("The task that this row represents"),
                                GTD_TYPE_TASK,
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
