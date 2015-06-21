@@ -704,7 +704,6 @@ gtd_storage_create_task_list (GtdStorage  *storage,
       extension = e_source_get_extension (source, E_SOURCE_EXTENSION_TASK_LIST);
 
       e_source_set_parent (source, priv->parent);
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (extension), "local");
     }
 
   /* Create task list */
