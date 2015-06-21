@@ -8,6 +8,10 @@
         <attribute name="action">app.new</attribute>
         <attribute name="accel">&lt;Primary&gt;n</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">Change default storage location…</attribute>
+        <attribute name="action">win.change-storage</attribute>
+      </item>
     </section>
     <section>
       <item>
