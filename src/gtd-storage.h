@@ -54,6 +54,11 @@ const gchar*       gtd_storage_get_name                          (GtdStorage    
 void               gtd_storage_set_name                          (GtdStorage         *storage,
                                                                   const gchar        *name);
 
+const gchar*       gtd_storage_get_parent                        (GtdStorage         *storage);
+
+void               gtd_storage_set_parent                        (GtdStorage         *storage,
+                                                                  const gchar        *url);
+
 const gchar*       gtd_storage_get_provider                      (GtdStorage         *storage);
 
 void               gtd_storage_set_provider                      (GtdStorage         *storage,
@@ -63,11 +68,6 @@ const gchar*       gtd_storage_get_provider_name                 (GtdStorage    
 
 void               gtd_storage_set_provider_name                 (GtdStorage         *storage,
                                                                   const gchar        *provider_name);
-
-const gchar*       gtd_storage_get_url                           (GtdStorage         *storage);
-
-void               gtd_storage_set_url                           (GtdStorage         *storage,
-                                                                  const gchar        *url);
 
 gint               gtd_storage_compare                           (GtdStorage         *a,
                                                                   GtdStorage         *b);

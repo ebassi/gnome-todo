@@ -26,9 +26,9 @@ typedef struct
   GIcon                 *icon;
   gchar                 *id;
   gchar                 *name;
+  gchar                 *parent;
   gchar                 *provider;
   gchar                 *provider_name;
-  gchar                 *url;
 
   gint                   enabled : 1;
   gint                   is_default : 1;
@@ -51,9 +51,9 @@ enum {
   PROP_ID,
   PROP_IS_DEFAULT,
   PROP_NAME,
+  PROP_PARENT,
   PROP_PROVIDER,
   PROP_PROVIDER_NAME,
-  PROP_URL,
   LAST_PROP
 };
 
@@ -66,6 +66,7 @@ gtd_storage_finalize (GObject *object)
   g_clear_object (&priv->icon);
   g_clear_pointer (&priv->id, g_free);
   g_clear_pointer (&priv->name, g_free);
+  g_clear_pointer (&priv->parent, g_free);
   g_clear_pointer (&priv->provider, g_free);
   g_clear_pointer (&priv->provider_name, g_free);
 
@@ -102,16 +103,16 @@ gtd_storage_get_property (GObject    *object,
       g_value_set_string (value, self->priv->name);
       break;
 
+    case PROP_PARENT:
+      g_value_set_string (value, self->priv->parent);
+      break;
+
     case PROP_PROVIDER:
       g_value_set_string (value, self->priv->provider);
       break;
 
     case PROP_PROVIDER_NAME:
       g_value_set_string (value, self->priv->provider_name);
-      break;
-
-    case PROP_URL:
-      g_value_set_string (value, self->priv->url);
       break;
 
     default:
@@ -150,16 +151,16 @@ gtd_storage_set_property (GObject      *object,
       gtd_storage_set_name (self, g_value_get_string (value));
       break;
 
+    case PROP_PARENT:
+      gtd_storage_set_parent (self, g_value_get_string (value));
+      break;
+
     case PROP_PROVIDER:
       gtd_storage_set_provider (self, g_value_get_string (value));
       break;
 
     case PROP_PROVIDER_NAME:
       gtd_storage_set_provider_name (self, g_value_get_string (value));
-      break;
-
-    case PROP_URL:
-      gtd_storage_set_url (self, g_value_get_string (value));
       break;
 
     default:
@@ -247,6 +248,20 @@ gtd_storage_class_init (GtdStorageClass *klass)
                              G_PARAM_READWRITE));
 
   /**
+   * GtdStorage::parent:
+   *
+   * The parent source of this storage.
+   */
+  g_object_class_install_property (
+        object_class,
+        PROP_PARENT,
+        g_param_spec_string ("parent",
+                             _("Parent of the storage"),
+                             _("The parent source identifier of the storage location."),
+                             NULL,
+                             G_PARAM_READWRITE));
+
+  /**
    * GtdStorage::provider:
    *
    * The provider of this storage.
@@ -271,20 +286,6 @@ gtd_storage_class_init (GtdStorageClass *klass)
         g_param_spec_string ("provider-name",
                              _("Provider name of the storage"),
                              _("The name of the provider of the storage location."),
-                             NULL,
-                             G_PARAM_READWRITE));
-
-  /**
-   * GtdStorage::url:
-   *
-   * The url of this storage.
-   */
-  g_object_class_install_property (
-        object_class,
-        PROP_URL,
-        g_param_spec_string ("url",
-                             _("Url of the storage"),
-                             _("The url of the storage location."),
                              NULL,
                              G_PARAM_READWRITE));
 }
@@ -479,6 +480,49 @@ gtd_storage_set_name (GtdStorage  *storage,
 }
 
 /**
+ * gtd_storage_get_parent:
+ * @storage: a #GtdStorage
+ *
+ * Retrieves the parent source identifier of @storage.
+ *
+ * Returns: (transfer none): the parent uid of @storage, or %NULL if none is set.
+ */
+const gchar*
+gtd_storage_get_parent (GtdStorage *storage)
+{
+  g_return_val_if_fail (GTD_IS_STORAGE (storage), NULL);
+
+  return storage->priv->parent;
+}
+
+/**
+ * gtd_storage_set_parent:
+ *
+ * Sets the #GtdStorage::parent property of @storage.
+ *
+ * Returns:
+ */
+void
+gtd_storage_set_parent (GtdStorage  *storage,
+                        const gchar *parent)
+{
+  GtdStoragePrivate *priv;
+
+  g_return_if_fail (GTD_IS_STORAGE (storage));
+
+  priv = storage->priv;
+
+  if (g_strcmp0 (priv->parent, parent) != 0)
+    {
+      g_clear_pointer (&priv->parent, g_free);
+
+      priv->parent = g_strdup (parent);
+
+      g_object_notify (G_OBJECT (storage), "parent");
+    }
+}
+
+/**
  * gtd_storage_get_provider:
  * @storage: a #GtdStorage
  *
@@ -582,49 +626,6 @@ gtd_storage_set_provider_name (GtdStorage  *storage,
 }
 
 /**
- * gtd_storage_get_url:
- * @storage: a #GtdStorage
- *
- * Retrieves the URL of @storage.
- *
- * Returns: (transfer none): the url of @storage, or %NULL if none is set.
- */
-const gchar*
-gtd_storage_get_url (GtdStorage *storage)
-{
-  g_return_val_if_fail (GTD_IS_STORAGE (storage), NULL);
-
-  return storage->priv->url;
-}
-
-/**
- * gtd_storage_set_url:
- *
- * Sets the #GtdStorage::url property of @storage.
- *
- * Returns:
- */
-void
-gtd_storage_set_url (GtdStorage  *storage,
-                     const gchar *url)
-{
-  GtdStoragePrivate *priv;
-
-  g_return_if_fail (GTD_IS_STORAGE (storage));
-
-  priv = storage->priv;
-
-  if (g_strcmp0 (priv->url, url) != 0)
-    {
-      g_clear_pointer (&priv->url, g_free);
-
-      priv->url = g_strdup (url);
-
-      g_object_notify (G_OBJECT (storage), "url");
-    }
-}
-
-/**
  * gtd_storage_compare:
  * @a: a #GtdStorage
  * @b: a #GtdStorage
@@ -701,6 +702,9 @@ gtd_storage_create_task_list (GtdStorage  *storage,
     {
       /* TODO: create source for GOA account */
       extension = e_source_get_extension (source, E_SOURCE_EXTENSION_TASK_LIST);
+
+      e_source_set_parent (source, priv->parent);
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (extension), "local");
     }
 
   /* Create task list */
