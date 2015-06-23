@@ -8,16 +8,14 @@ INTLTOOL_FILES = \
 	intltool-merge.in \
 	intltool-update.in
 
-dist_doc_DATA = \
+EXTRA_DIST = \
+	$(INTLTOOL_FILES) \
 	README \
 	COPYING \
 	AUTHORS \
 	ChangeLog \
 	INSTALL \
 	NEWS
-
-EXTRA_DIST = \
-	$(INTLTOOL_FILES)
 
 DISTCLEANFILES = \
 	intltool-extract \
