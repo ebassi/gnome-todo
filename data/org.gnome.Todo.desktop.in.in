@@ -7,6 +7,6 @@ Terminal=false
 Type=Application
 StartupNotify=true
 OnlyShowIn=GNOME;
-Categories=GNOME;GTK;Utility;Extra;
+Categories=GNOME;GTK;Utility;
 _Keywords=Task;Productivity;
 DBusActivatable=true
