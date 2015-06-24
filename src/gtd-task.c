@@ -150,7 +150,7 @@ gtd_task_get_property (GObject    *object,
       break;
 
     case PROP_DESCRIPTION:
-      g_value_set_string (value, self->priv->description);
+      g_value_set_string (value, gtd_task_get_description (self));
       break;
 
     case PROP_DUE_DATE:
