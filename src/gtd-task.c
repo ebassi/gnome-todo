@@ -506,8 +506,7 @@ gtd_task_get_description (GtdTask *task)
 
   if (g_strcmp0 (task->priv->description, desc) != 0)
     {
-      if (task->priv->description)
-        g_free (task->priv->description);
+      g_clear_pointer (&task->priv->description, g_free);
 
       task->priv->description = g_strdup (desc);
     }
@@ -540,12 +539,13 @@ gtd_task_set_description (GtdTask     *task,
       GSList note;
       ECalComponentText text;
 
-      if (task->priv->description)
-        g_free (task->priv->description);
+      g_clear_pointer (&task->priv->description, g_free);
 
       task->priv->description = g_strdup (description);
+
       text.value = task->priv->description;
       text.altrep = NULL;
+
       note.data = &text;
       note.next = NULL;
 
