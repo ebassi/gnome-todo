@@ -451,6 +451,11 @@ gtd_list_view__task_added (GtdTaskList *list,
 
   /* Add the new task to the list */
   gtd_list_view__add_task (GTD_LIST_VIEW (user_data), task);
+
+  g_signal_connect (task,
+                    "notify::complete",
+                    G_CALLBACK (gtd_list_view__task_completed),
+                    user_data);
 }
 
 static void
