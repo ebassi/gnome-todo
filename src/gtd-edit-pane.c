@@ -78,9 +78,7 @@ gtd_edit_pane__delete_button_clicked (GtkButton *button,
 
   g_signal_emit (user_data, signals[REMOVE_TASK], 0, priv->task);
 
-  g_clear_pointer (&priv->notes_binding, g_binding_unbind);
-  g_clear_pointer (&priv->priority_binding, g_binding_unbind);
-  priv->task = NULL;
+  gtd_edit_pane_set_task (GTD_EDIT_PANE (user_data), NULL);
 }
 
 static void
@@ -98,7 +96,7 @@ gtd_edit_pane__close_button_clicked (GtkButton *button,
 
   g_signal_emit (user_data, signals[EDIT_FINISHED], 0, priv->task);
 
-  priv->task = NULL;
+  gtd_edit_pane_set_task (GTD_EDIT_PANE (user_data), NULL);
 }
 
 static void
