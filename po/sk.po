@@ -1,0 +1,692 @@
+# Slovak translation for gnome-todo.
+# Copyright (C) 2015 gnome-todo's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-todo package.
+# Dušan Kazik <prescott66@gmail.com>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-todo master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"todo&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-06-24 08:25+0000\n"
+"PO-Revision-Date: 2015-06-24 16:43+0100\n"
+"Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
+"Last-Translator: \n"
+"X-Generator: Poedit 1.8.1\n"
+
+#: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:1
+#: ../data/org.gnome.Todo.desktop.in.in.h:1
+msgid "Todo"
+msgstr "Úlohy"
+
+#: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:2
+msgid "Todo manager for GNOME"
+msgstr "Správca úloh prostredia GNOME"
+
+#: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:3
+msgid ""
+"GNOME Todo is a simple task management application designed to integrate "
+"with GNOME."
+msgstr ""
+"Úlohy prostredia GNOME je jednoduchá aplikácia na správu úloh, integrovaná "
+"s prostredím GNOME."
+
+#: ../data/gtk/menus.ui.h:1
+msgid "New List…"
+msgstr "Nový zoznam…"
+
+#: ../data/gtk/menus.ui.h:2
+msgid "Change default storage location…"
+msgstr "Zmeniť predvolené umiestnenie úložiska…"
+
+#: ../data/gtk/menus.ui.h:3
+msgid "_About"
+msgstr "_O programe"
+
+#: ../data/gtk/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Ukončiť"
+
+#: ../data/org.gnome.Todo.desktop.in.in.h:2
+msgid "Manage your personal tasks"
+msgstr "Spravujte vaše osobné úlohy"
+
+#: ../data/org.gnome.Todo.desktop.in.in.h:3
+msgid "Task;Productivity;"
+msgstr "úloha;produktivita;"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Maximalizované okno"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Maximalizovaný stav okna"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Veľkosť okna"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Veľkosť okna (šírka a výška)."
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Umiestnenie okna"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Pozícia okna (x a y)."
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:7
+msgid "First run of GNOME To Do"
+msgstr "Prvé spustenie aplikácie Úlohy prostredia GNOME"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:8
+msgid ""
+"Whether it's the first run of GNOME To Do (to run the initial setup) or not"
+msgstr ""
+"Určuje, či je prvé spustenie aplikácie Úlohy prostredia GNOME (kvôli "
+"spusteniu počiatočného nastavenia) alebo nie"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:9
+msgid "Default location to add new lists to"
+msgstr "Predvolené umiestnenie, do ktorého sa majú pridávať nové zoznamy"
+
+#: ../data/org.gnome.todo.gschema.xml.in.h:10
+msgid "The identifier of the default location to add new lists to"
+msgstr ""
+"Identifikátor predvoleného umiestnenie, do ktorého sa majú pridávať nové "
+"zoznamy"
+
+#: ../data/ui/edit-pane.ui.h:1
+msgid "Details"
+msgstr "Podrobnosti"
+
+#: ../data/ui/edit-pane.ui.h:2
+msgid "Notes"
+msgstr "Poznámky"
+
+#: ../data/ui/edit-pane.ui.h:3
+msgid "Due Date"
+msgstr "Termín"
+
+#: ../data/ui/edit-pane.ui.h:4
+msgid "Priority"
+msgstr "Priorita"
+
+#: ../data/ui/edit-pane.ui.h:5
+msgid "None"
+msgstr "Žiadna"
+
+#: ../data/ui/edit-pane.ui.h:6
+msgid "Low"
+msgstr "Nízka"
+
+#: ../data/ui/edit-pane.ui.h:7
+msgid "Medium"
+msgstr "Stredná"
+
+#: ../data/ui/edit-pane.ui.h:8
+msgid "High"
+msgstr "Vysoká"
+
+#: ../data/ui/edit-pane.ui.h:9
+msgid "Delete"
+msgstr "Odstrániť"
+
+#: ../data/ui/initial-setup.ui.h:1
+msgid "Welcome"
+msgstr "Vitajte"
+
+#: ../data/ui/initial-setup.ui.h:2
+msgid "Login to online accounts to access your tasks"
+msgstr "Prihlásením do účtov služieb získate prístup k vašim úlohám"
+
+#: ../data/ui/initial-setup.ui.h:3 ../data/ui/storage-popover.ui.h:2
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: ../data/ui/initial-setup.ui.h:4 ../data/ui/list-view.ui.h:2
+#: ../src/gtd-list-view.c:241
+msgid "Done"
+msgstr "Dokončiť"
+
+# tooltip
+#: ../data/ui/list-view.ui.h:1
+msgid "Show or hide completed tasks"
+msgstr "Zobrazí alebo skryje dokončené úlohy"
+
+#: ../data/ui/storage-dialog.ui.h:1
+msgid "Select the default storage location to create task lists:"
+msgstr ""
+"Vyberte predvolené umiestnenie úložiska, v ktorom sa majú vytvoriť zoznamy "
+"úloh:"
+
+#: ../data/ui/storage-popover.ui.h:1
+msgid "Create"
+msgstr "Vytvoriť"
+
+#: ../data/ui/storage-popover.ui.h:3
+msgid "List Name"
+msgstr "Názov zoznamu"
+
+#: ../data/ui/storage-popover.ui.h:4
+msgid "Select a storage location"
+msgstr "Vyberte umiestnenie úložiska"
+
+#: ../data/ui/storage-row.ui.h:1
+msgid "Off"
+msgstr "Vypnuté"
+
+# tooltip
+#: ../data/ui/storage-selector.ui.h:1
+msgid "Click to add a new Google account"
+msgstr "Kliknutím pridáte nový účet Google"
+
+#: ../data/ui/storage-selector.ui.h:2
+msgid "Google"
+msgstr "Google"
+
+# tooltip
+#: ../data/ui/storage-selector.ui.h:3
+msgid "Click to add a new ownCloud account"
+msgstr "Kliknutím pridáte nový účet ownCloud"
+
+#: ../data/ui/storage-selector.ui.h:4
+msgid "ownCloud"
+msgstr "ownCloud"
+
+# tooltip
+#: ../data/ui/storage-selector.ui.h:5
+msgid "Click to add a new Microsoft Exchange account"
+msgstr "Kliknutím pridáte nový účet Microsoft Exchange"
+
+#: ../data/ui/storage-selector.ui.h:6
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/storage-selector.ui.h:7
+msgid "Or you can just store your tasks on this computer"
+msgstr "Alebo môžete ukladať vaše úlohy iba v tomto počítači"
+
+#: ../data/ui/task-row.ui.h:1
+msgid "New task…"
+msgstr "Nová úloha…"
+
+#: ../data/ui/window.ui.h:1 ../src/gtd-list-view.c:174
+msgid "Undo"
+msgstr "Vrátiť späť"
+
+#: ../data/ui/window.ui.h:2
+msgid "Lists"
+msgstr "Zoznamy"
+
+#: ../data/ui/window.ui.h:3 ../src/gtd-task-row.c:100
+msgid "Today"
+msgstr "Dnes"
+
+#: ../data/ui/window.ui.h:4
+msgid "Scheduled"
+msgstr "Naplánované"
+
+#: ../data/ui/window.ui.h:5
+msgid "Rename"
+msgstr "Premenovať"
+
+#: ../data/ui/window.ui.h:6
+msgid "New List"
+msgstr "Nový zoznam"
+
+#: ../src/gtd-application.c:90
+msgid "Copyright © %Id The Todo authors"
+msgstr "Autorské práva © %Id Autori aplikácie Úlohy"
+
+#: ../src/gtd-application.c:95
+msgid "Copyright © %Id–%Id The Todo authors"
+msgstr "Autorské práva © %Id–%Id Autori aplikácie Úlohy"
+
+#: ../src/gtd-application.c:100 ../src/gtd-application.c:126
+msgid "To Do"
+msgstr "Úlohy"
+
+#: ../src/gtd-application.c:107
+msgid "translator-credits"
+msgstr "Dušan Kazik <prescott66@gmail.com>"
+
+#: ../src/gtd-application.c:215
+msgid "Error loading CSS from resource"
+msgstr "Chyba pri načítavaní CSS zo zdroja"
+
+#: ../src/gtd-edit-pane.c:136 ../src/gtd-task-row.c:124
+msgid "No date set"
+msgstr "Žiadna sada údajov "
+
+#: ../src/gtd-edit-pane.c:251
+msgid "Manager of this application"
+msgstr "Správca tejto aplikácie"
+
+#: ../src/gtd-edit-pane.c:252
+msgid "The manager of the application"
+msgstr "Správca aplikácie"
+
+#: ../src/gtd-edit-pane.c:265
+msgid "Task being edited"
+msgstr "Úloha, ktorá je práve upravovaná"
+
+#: ../src/gtd-edit-pane.c:266
+msgid "The task that is actually being edited"
+msgstr "Úloha, ktorá sa aktuálne upravuje"
+
+#: ../src/gtd-initial-setup-window.c:216
+msgid "Manager of the task"
+msgstr "Správca úlohy"
+
+#: ../src/gtd-initial-setup-window.c:217
+msgid "The singleton manager instance of the task"
+msgstr "Jediná inštancia správcu úlohy"
+
+#: ../src/gtd-list-view.c:158
+#, c-format
+msgid "Task <b>%s</b> removed"
+msgstr "Úloha <b>%s</b> bola odstránená"
+
+#: ../src/gtd-list-view.c:592 ../src/gtd-storage-dialog.c:153
+#: ../src/gtd-storage-popover.c:264 ../src/gtd-storage-selector.c:522
+#: ../src/gtd-window.c:476
+msgid "Manager of this window's application"
+msgstr "Správca aplikácie pre toto okno"
+
+#: ../src/gtd-list-view.c:593 ../src/gtd-storage-dialog.c:154
+#: ../src/gtd-storage-popover.c:265 ../src/gtd-storage-selector.c:523
+#: ../src/gtd-window.c:477
+msgid "The manager of the window's application"
+msgstr "Správca aplikácie okna"
+
+#: ../src/gtd-list-view.c:606
+msgid "Whether the list is readonly"
+msgstr "Či je zoznam iba na čítanie"
+
+#: ../src/gtd-list-view.c:607
+msgid ""
+"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
+msgstr ""
+"Určuje, či je zoznam iba na čítanie, t.j. zobrazí alebo nezobrazí sa riadok "
+"Nová úloha"
+
+#: ../src/gtd-list-view.c:620
+msgid "Whether task rows show the list name"
+msgstr "Či riadky s úlohami zobrazia názov zoznamu"
+
+#: ../src/gtd-list-view.c:621
+msgid "Whether task rows show the list name at the end of the row"
+msgstr ""
+"Určuje, či riadky s úlohami majú zobraziť názov zoznamu na konci riadku"
+
+#: ../src/gtd-list-view.c:634
+msgid "Whether completed tasks are shown"
+msgstr "Či sa zobrazia dokončené úlohy"
+
+#: ../src/gtd-list-view.c:635
+msgid "Whether completed tasks are visible or not"
+msgstr "Určuje, či sú viditeľné dokončené úlohy alebo nie"
+
+#: ../src/gtd-manager.c:331
+msgid "Error loading GNOME Online Accounts"
+msgstr "Chyba pri načítavaní Účtov služieb prostredia GNOME"
+
+#: ../src/gtd-manager.c:360
+msgid "Error saving task list"
+msgstr "Chyba pri ukladaní zoznamu úloh"
+
+#: ../src/gtd-manager.c:387
+msgid "Error removing task list"
+msgstr "Chyba pri odstraňovaní zoznamu úloh"
+
+#: ../src/gtd-manager.c:419
+msgid "Error creating task"
+msgstr "Chyba pri vytváraní zoznamu úloh"
+
+#: ../src/gtd-manager.c:451
+msgid "Error removing task"
+msgstr "Chyba pri odstraňovaní úlohy"
+
+#: ../src/gtd-manager.c:477
+msgid "Error updating task"
+msgstr "Chyba pri aktualizovaní úlohy"
+
+#: ../src/gtd-manager.c:506
+msgid "Failed to prompt for credentials"
+msgstr "Zlyhalo pýtanie poverení"
+
+#: ../src/gtd-manager.c:529
+msgid "Failed to prompt for credentials for"
+msgstr "Zlyhalo pýtanie poverení pre"
+
+#: ../src/gtd-manager.c:581
+msgid "Authentication failure"
+msgstr "Zlyhanie overenia totožnosti"
+
+#: ../src/gtd-manager.c:622
+msgid "Error fetching tasks from list"
+msgstr "Chyba pri získavaní úloh zo zoznamu"
+
+#: ../src/gtd-manager.c:684
+msgid "Task list source successfully connected"
+msgstr "Zdroj zoznamu úloh bol úspešne pripojený"
+
+#: ../src/gtd-manager.c:691
+msgid "Failed to connect to task list source"
+msgstr "Zlyhalo pripojenie k zdroju zoznamu úloh"
+
+#: ../src/gtd-manager.c:721
+msgid "Skipping already loaded task list "
+msgstr "Vynecháva sa už načítaný zoznam úloh "
+
+#: ../src/gtd-manager.c:759
+msgid "Error loading task manager"
+msgstr "Chyba pri načítavaní správcu úloh"
+
+#: ../src/gtd-manager.c:891
+msgid "Local"
+msgstr "Miestne"
+
+#: ../src/gtd-manager.c:892
+msgid "On This Computer"
+msgstr "V tomto počítači"
+
+#: ../src/gtd-manager.c:925
+msgid "The online accounts client of the manager"
+msgstr "Klient účtov služieb správcu"
+
+#: ../src/gtd-manager.c:926
+msgid ""
+"The read-only GNOME online accounts client loaded and owned by the manager"
+msgstr ""
+"Klient účtov služieb prostredia GNOME iba na čítanie, ktorý je načítaný a "
+"vlastnený správcom"
+
+#: ../src/gtd-manager.c:939
+msgid "Whether GNOME Online Accounts client is ready"
+msgstr "Či je klient účtov služieb prostredia GNOME pripravený"
+
+#: ../src/gtd-manager.c:940
+msgid "Whether the read-only GNOME online accounts client is loaded"
+msgstr ""
+"Určuje, či je načítaný klient účtov služieb prostredia GNOME iba na čítanie"
+
+#: ../src/gtd-manager.c:953
+msgid "The source registry of the manager"
+msgstr "Zdrojový register správcu"
+
+#: ../src/gtd-manager.c:954
+msgid "The read-only source registry loaded and owned by the manager"
+msgstr "Zdrojový registre iba na čítanie je načítaný a vlastnený správcom"
+
+#: ../src/gtd-object.c:152
+msgid "Unique identifier of the object"
+msgstr "Jedinečný identifikátor objektu"
+
+#: ../src/gtd-object.c:153
+msgid "The unique identifier of the object, defined by the backend"
+msgstr "Jedinečný identifikátor objektu, definovaný obslužným programom"
+
+#: ../src/gtd-object.c:166
+msgid "Ready state of the object"
+msgstr "Stav pripravenosti objektu"
+
+#: ../src/gtd-object.c:167
+msgid "Whether the object is marked as ready or not"
+msgstr "Určuje, či je objekt označený ako pripravený alebo nie"
+
+#: ../src/gtd-storage.c:189
+msgid "Whether the storage is enabled"
+msgstr "Či je povolené úložisko"
+
+#: ../src/gtd-storage.c:190
+msgid "Whether the storage is available to be used."
+msgstr "Určuje, či je úložisko dostupné na použitie."
+
+#: ../src/gtd-storage.c:203
+msgid "Icon of the storage"
+msgstr "Ikona úložiska"
+
+#: ../src/gtd-storage.c:204
+msgid "The icon representing the storage location."
+msgstr "Ikona predstavujúca umiestnenie úložiska."
+
+#: ../src/gtd-storage.c:217
+msgid "Identifier of the storage"
+msgstr "Identifikátor úložiska"
+
+#: ../src/gtd-storage.c:218
+msgid "The unique identifier of the storage location."
+msgstr "Jedinečný identifikátor umiestnenia úložiska."
+
+#: ../src/gtd-storage.c:231
+msgid "Whether the storage is the default"
+msgstr "Či je úložisko predvolené"
+
+#: ../src/gtd-storage.c:232
+msgid "Whether the storage is the default storage location to be used."
+msgstr "Určuje, či je úložisko predvoleným úložiskom, ktoré sa má použiť."
+
+#: ../src/gtd-storage.c:245
+msgid "Name of the storage"
+msgstr "Názov úložiska"
+
+#: ../src/gtd-storage.c:246
+msgid "The user-visible name of the storage location."
+msgstr "Názov umiestnenia úložiska viditeľný pre používateľa."
+
+#: ../src/gtd-storage.c:259
+msgid "Parent of the storage"
+msgstr "Rodič úložiska"
+
+#: ../src/gtd-storage.c:260
+msgid "The parent source identifier of the storage location."
+msgstr "Identifikátor rodičovského zdroja umiestnenia úložiska."
+
+#: ../src/gtd-storage.c:273
+msgid "Provider type of the storage"
+msgstr "Typ poskytovateľa úložiska"
+
+#: ../src/gtd-storage.c:274
+msgid "The provider type of the storage location."
+msgstr "Typ poskytovateľa umiestnenia úložiska."
+
+#: ../src/gtd-storage.c:287
+msgid "Provider name of the storage"
+msgstr "Názov poskytovateľa úložiska"
+
+#: ../src/gtd-storage.c:288
+msgid "The name of the provider of the storage location."
+msgstr "Názov poskytovateľa umiestnenia úložiska."
+
+#: ../src/gtd-storage.c:680
+msgid "Error creating new task list"
+msgstr "Chyba pri vytváraní nového zoznamu úloh"
+
+#: ../src/gtd-storage-row.c:148
+msgid "Storage of the row"
+msgstr "Úložisko riadku"
+
+#: ../src/gtd-storage-row.c:149
+msgid "The storage that this row holds"
+msgstr "Úložisko, ktoré drží tento riadok"
+
+#: ../src/gtd-storage-selector.c:536
+msgid "Show local storage row"
+msgstr "Zobraziť riadok s miestnym úložiskom"
+
+#: ../src/gtd-storage-selector.c:537
+msgid "Whether should show a local storage row instead of a checkbox"
+msgstr ""
+"Určuje, či sa má zobraziť riadok s miestnym úložiskom namiesto "
+"zaškrtávacieho poľa"
+
+#: ../src/gtd-storage-selector.c:550
+msgid "Show stub rows"
+msgstr ""
+
+#: ../src/gtd-storage-selector.c:551
+msgid "Whether should show stub rows for non-added accounts"
+msgstr ""
+
+#: ../src/gtd-storage-selector.c:564
+msgid "Selects default storage row"
+msgstr "Vyberie riadok predvoleného úložiska"
+
+#: ../src/gtd-storage-selector.c:565
+msgid "Whether should select the default storage row"
+msgstr "Určuje, či sa má vybrať riadok s predvoleným úložiskom"
+
+#: ../src/gtd-task.c:254
+msgid "Whether the task is completed or not"
+msgstr "Či je úloha dokončená alebo nie"
+
+#: ../src/gtd-task.c:255
+msgid "Whether the task is marked as completed by the user"
+msgstr "Určuje, či má byť úloha označená používateľom  ako dokončená"
+
+#: ../src/gtd-task.c:268
+msgid "Component of the task"
+msgstr "Súčasť úlohy"
+
+#: ../src/gtd-task.c:269
+msgid "The #ECalComponent this task handles."
+msgstr "Súčasť #ECalComponent, ktorý spravuje táto úloha."
+
+#: ../src/gtd-task.c:282
+msgid "Description of the task"
+msgstr "Popis úlohy"
+
+#: ../src/gtd-task.c:283
+msgid "Optional string describing the task"
+msgstr "Voliteľný reťazec popisujúci úlohu"
+
+#: ../src/gtd-task.c:297
+msgid "End date of the task"
+msgstr "Dátum konca tejto úlohy"
+
+#: ../src/gtd-task.c:298
+msgid "The day the task is supposed to be completed"
+msgstr "Predpokladaný deň dokončenia úlohy"
+
+#: ../src/gtd-task.c:311
+msgid "List of the task"
+msgstr "Zoznam úlohy"
+
+#: ../src/gtd-task.c:312
+msgid "The list that owns this task"
+msgstr "Zoznam, ktorý vlastní túto úlohu"
+
+#: ../src/gtd-task.c:325
+msgid "Priority of the task"
+msgstr "Priorita úlohy"
+
+#: ../src/gtd-task.c:326
+msgid ""
+"The priority of the task. 0 means no priority set, and tasks will be sorted "
+"alfabetically."
+msgstr ""
+"Priorita úlohy. 0 znamená, že nie je nastavená žiadna priorita a úlohy budú "
+"usporiadané podľa abecedy."
+
+#: ../src/gtd-task.c:341
+msgid "Title of the task"
+msgstr "Názov úlohy"
+
+#: ../src/gtd-task.c:342
+msgid "The title of the task"
+msgstr "Názov úlohy"
+
+#: ../src/gtd-task-list.c:152
+msgid "Color of the list"
+msgstr "Farba zoznamu"
+
+#: ../src/gtd-task-list.c:153
+msgid "The color of the list"
+msgstr "Farba zoznamu"
+
+#: ../src/gtd-task-list.c:166
+msgid "Name of the list"
+msgstr "Názov zoznamu"
+
+#: ../src/gtd-task-list.c:167
+msgid "The name of the list"
+msgstr "Názov zoznamu"
+
+#: ../src/gtd-task-list.c:180
+msgid "Data origin of the list"
+msgstr "Pôvod údajov zoznamu"
+
+#: ../src/gtd-task-list.c:181
+msgid "The data origin location of the list"
+msgstr "Umiestnenie pôvodu údajov zoznamu"
+
+#: ../src/gtd-task-list.c:194
+msgid "Source of the list"
+msgstr "Zdroj zoznamu"
+
+#: ../src/gtd-task-list.c:195
+msgid "The parent source that handles the list"
+msgstr "Rodičovský zdroj, ktorý spravuje tento zoznam"
+
+#: ../src/gtd-task-list-item.c:231
+msgid "No tasks"
+msgstr "Žiadne úlohy"
+
+#: ../src/gtd-task-list-item.c:443
+msgid "Mode of this item"
+msgstr "Režim tejto položky"
+
+#: ../src/gtd-task-list-item.c:444
+msgid "The mode of this item, inherited from the parent's mode"
+msgstr "Režim tejto položky, zdedený z režimu rodičov"
+
+#: ../src/gtd-task-list-item.c:459
+msgid "Task list of the item"
+msgstr "Zoznam úloh položky"
+
+#: ../src/gtd-task-list-item.c:460
+msgid "The task list associated with this item"
+msgstr "Zoznam úloh priradený k tejto položke"
+
+#: ../src/gtd-task-row.c:104
+msgid "Tomorrow"
+msgstr "Zajtra"
+
+#: ../src/gtd-task-row.c:108
+msgid "Yesterday"
+msgstr "Včera"
+
+#: ../src/gtd-task-row.c:324
+msgid "If the row is used to add a new task"
+msgstr "Ak je riadok použitý na pridanie novej úlohy"
+
+#: ../src/gtd-task-row.c:325
+msgid "Whether the row is used to add a new task"
+msgstr "Určuje, či je riadok použitý na pridanie novej úlohy"
+
+#: ../src/gtd-task-row.c:338
+msgid "Task of the row"
+msgstr "Úloha riadku"
+
+#: ../src/gtd-task-row.c:339
+msgid "The task that this row represents"
+msgstr "Úloha, ktorú reprezentuje tento riadok"
+
+#: ../src/gtd-window.c:230
+msgid "Setting new color for task list"
+msgstr "Nastavuje sa nová farba zoznamu úloh"
+
+#: ../src/gtd-window.c:276
+msgid "Loading your task lists…"
+msgstr "Načítavanie vašich zoznamov úloh…"
