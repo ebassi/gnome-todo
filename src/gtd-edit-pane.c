@@ -419,10 +419,10 @@ gtd_edit_pane_set_task (GtdEditPane *pane,
           gtk_text_buffer_set_text (gtk_text_view_get_buffer (priv->notes_textview),
                                     gtd_task_get_description (task),
                                     -1);
-          priv->notes_binding = g_object_bind_property (task,
-                                                        "description",
-                                                        gtk_text_view_get_buffer (priv->notes_textview),
+          priv->notes_binding = g_object_bind_property (gtk_text_view_get_buffer (priv->notes_textview),
                                                         "text",
+                                                        task,
+                                                        "description",
                                                         G_BINDING_BIDIRECTIONAL);
 
           /* priority */
