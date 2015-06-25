@@ -473,10 +473,7 @@ gtd_manager__create_task_finished (GObject      *client,
     }
   else
     {
-      GDateTime *today;
       GDateTime *dt;
-
-      today = g_date_time_new_now_local ();
 
       /*
        * Add in 'Today' and/or 'Scheduled' lists.
@@ -495,11 +492,10 @@ gtd_manager__create_task_finished (GObject      *client,
        */
       if (new_uid)
         {
-          gtd_object_set_uid (GTD_OBJECT (user_data), new_uid);
+          gtd_object_set_uid (GTD_OBJECT (data->data), new_uid);
           g_free (new_uid);
         }
 
-      g_clear_pointer (&dt, g_date_time_unref);
       g_free (data);
     }
 }
