@@ -286,16 +286,23 @@ gtd_task_list_new (ESource     *source,
 GdkRGBA*
 gtd_task_list_get_color (GtdTaskList *list)
 {
-  ESourceSelectable *selectable;
   GdkRGBA color;
 
   g_return_val_if_fail (GTD_IS_TASK_LIST (list), NULL);
-  g_return_val_if_fail (E_IS_SOURCE (list->priv->source), NULL);
 
-  selectable = E_SOURCE_SELECTABLE (e_source_get_extension (list->priv->source, E_SOURCE_EXTENSION_TASK_LIST));
+  if (list->priv->source)
+    {
+      ESourceSelectable *selectable;
 
-  if (!gdk_rgba_parse (&color, e_source_selectable_get_color (selectable)))
-    gdk_rgba_parse (&color, "#ffffff"); /* calendar default colour */
+      selectable = E_SOURCE_SELECTABLE (e_source_get_extension (list->priv->source, E_SOURCE_EXTENSION_TASK_LIST));
+
+      if (!gdk_rgba_parse (&color, e_source_selectable_get_color (selectable)))
+        gdk_rgba_parse (&color, "#ffffff"); /* calendar default colour */
+    }
+  else
+    {
+      gdk_rgba_parse (&color, "#ffffff");
+    }
 
   return gdk_rgba_copy (&color);
 }
