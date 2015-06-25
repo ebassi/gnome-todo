@@ -1557,3 +1557,37 @@ gtd_manager_set_is_first_run (GtdManager *manager,
                           "first-run",
                           is_first_run);
 }
+
+/**
+ * gtd_manager_get_scheduled_list:
+ * @manager: a #GtdManager
+ *
+ * Retrieves the internal #GtdTaskList that holds scheduled tasks.
+ *
+ * Returns: (transfer none): the internal #GtdTaskList with scheduled
+ * tasks
+ */
+GtdTaskList*
+gtd_manager_get_scheduled_list (GtdManager *manager)
+{
+  g_return_val_if_fail (GTD_IS_MANAGER (manager), NULL);
+
+  return manager->priv->scheduled_tasks_list;
+}
+
+/**
+ * gtd_manager_get_today_list:
+ * @manager: a #GtdManager
+ *
+ * Retrieves the internal #GtdTaskList that holds tasks for today.
+ *
+ * Returns: (transfer none): the internal #GtdTaskList with today's
+ * tasks
+ */
+GtdTaskList*
+gtd_manager_get_today_list (GtdManager *manager)
+{
+  g_return_val_if_fail (GTD_IS_MANAGER (manager), NULL);
+
+  return manager->priv->today_tasks_list;
+}
