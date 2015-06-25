@@ -41,3 +41,16 @@ GtdArrowFrame:dir(rtl) {
 GtkLabel.main-title {
     font-size: 28px;
 }
+
+/* priority icons */
+GtkImage.priority-low {
+    background-color: green;
+}
+
+GtkImage.priority-medium {
+    background-color: yellow;
+}
+
+GtkImage.priority-hight {
+    background-color: red;
+}
