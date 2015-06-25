@@ -38,8 +38,10 @@ typedef struct
   GtkLabel                      *notification_label;
   GtkRevealer                   *notification_revealer;
   GtkSpinner                    *notification_spinner;
+  GtdListView                   *scheduled_list_view;
   GtkStackSwitcher              *stack_switcher;
   GtdStorageDialog              *storage_dialog;
+  GtdListView                   *today_list_view;
   GtdListView                   *list_view;
 
   /* mode */
@@ -423,6 +425,8 @@ gtd_window_set_property (GObject      *object,
       self->priv->manager = g_value_get_object (value);
 
       gtd_list_view_set_manager (self->priv->list_view, self->priv->manager);
+      gtd_list_view_set_manager (self->priv->today_list_view, self->priv->manager);
+      gtd_list_view_set_manager (self->priv->scheduled_list_view, self->priv->manager);
 
       g_signal_connect (self->priv->manager,
                         "notify::ready",
@@ -444,6 +448,10 @@ gtd_window_set_property (GObject      *object,
         }
 
       g_list_free (lists);
+
+      /* Setup 'Today' and 'Scheduled' lists */
+      gtd_list_view_set_task_list (self->priv->today_list_view, gtd_manager_get_today_list (self->priv->manager));
+      gtd_list_view_set_task_list (self->priv->scheduled_list_view, gtd_manager_get_scheduled_list (self->priv->manager));
 
       g_object_notify (object, "manager");
       break;
@@ -493,6 +501,8 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_spinner);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, storage_dialog);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, scheduled_list_view);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, today_list_view);
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_color_set);
