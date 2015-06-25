@@ -44,13 +44,13 @@ GtkLabel.main-title {
 
 /* priority icons */
 GtkImage.priority-low {
-    background-color: green;
+    background-color: #4e9a06;
 }
 
 GtkImage.priority-medium {
-    background-color: yellow;
+    background-color: #edd400;
 }
 
 GtkImage.priority-hight {
-    background-color: red;
+    background-color: #a40000;
 }
