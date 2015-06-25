@@ -56,7 +56,7 @@ struct _GtdTaskRow
   GtdTaskRowPrivate *priv;
 };
 
-#define PRIORITY_ICON_SIZE         16
+#define PRIORITY_ICON_SIZE         8
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtdTaskRow, gtd_task_row, GTK_TYPE_LIST_BOX_ROW)
 
