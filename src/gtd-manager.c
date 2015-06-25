@@ -545,14 +545,41 @@ gtd_manager__update_task_finished (GObject      *client,
                                    GAsyncResult *result,
                                    gpointer      user_data)
 {
+  GtdManagerPrivate *priv;
+  GDateTime *dt;
+  TaskData *data = user_data;
+  GtdTask *task;
   gboolean success;
   GError *error = NULL;
 
+  priv = data->manager->priv;
+  task = GTD_TASK (data->data);
   success = e_cal_client_modify_object_finish (E_CAL_CLIENT (client),
                                                result,
                                                &error);
 
-  gtd_object_set_ready (GTD_OBJECT (user_data), TRUE);
+  /* Check if the task still fits internal lists */
+  dt = gtd_task_get_due_date (task);
+
+  if (dt)
+    {
+      gtd_task_list_save_task (priv->scheduled_tasks_list, task);
+
+      if (is_today (dt))
+        gtd_task_list_save_task (priv->today_tasks_list, task);
+      else
+        gtd_task_list_remove_task (priv->today_tasks_list, task);
+    }
+  else
+    {
+      gtd_task_list_remove_task (priv->scheduled_tasks_list, task);
+      gtd_task_list_remove_task (priv->today_tasks_list, task);
+    }
+
+  g_clear_pointer (&dt, g_date_time_unref);
+  g_free (data);
+
+  gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
 
   if (error)
     {
@@ -1310,6 +1337,7 @@ gtd_manager_update_task (GtdManager *manager,
   GtdManagerPrivate *priv = GTD_MANAGER (manager)->priv;
   ECalComponent *component;
   ECalClient *client;
+  TaskData *data;
   ESource *source;
 
   g_return_if_fail (GTD_IS_MANAGER (manager));
@@ -1319,6 +1347,9 @@ gtd_manager_update_task (GtdManager *manager,
   client = g_hash_table_lookup (priv->clients, source);
   component = gtd_task_get_component (task);
 
+  /* Temporary data for async operation */
+  data = task_data_new (manager, (gpointer) task);
+
   /* The task is not ready until we finish the operation */
   gtd_object_set_ready (GTD_OBJECT (task), FALSE);
 
@@ -1327,7 +1358,7 @@ gtd_manager_update_task (GtdManager *manager,
                               E_CAL_OBJ_MOD_THIS,
                               NULL, // We won't cancel the operation
                               (GAsyncReadyCallback) gtd_manager__update_task_finished,
-                              task);
+                              data);
 }
 
 /**
