@@ -32,6 +32,12 @@ typedef struct
   ECredentialsPrompter  *credentials_prompter;
   ESourceRegistry       *source_registry;
 
+  /*
+   * Today & Scheduled lists
+   */
+  GtdTaskList           *today_tasks_list;
+  GtdTaskList           *scheduled_tasks_list;
+
   /* Online accounts */
   GoaClient             *goa_client;
   gboolean               goa_client_ready;
@@ -54,6 +60,13 @@ struct _GtdManager
   /*< private >*/
   GtdManagerPrivate *priv;
 };
+
+/* Auxiliary struct for asyncronous task operations */
+typedef struct _TaskData
+{
+  GtdManager *manager;
+  gpointer   *data;
+} TaskData;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtdManager, gtd_manager, GTD_TYPE_OBJECT)
 
@@ -86,6 +99,19 @@ enum
 };
 
 static guint signals[NUM_SIGNALS] = { 0, };
+
+TaskData*
+task_data_new (GtdManager *manager,
+               gpointer   *data)
+{
+  TaskData *tdata;
+
+  tdata = g_new0 (TaskData, 1);
+  tdata->manager = manager;
+  tdata->data = data;
+
+  return tdata;
+}
 
 static void
 gtd_manager__setup_url (GtdManager *manager,
@@ -401,16 +427,21 @@ gtd_manager__create_task_finished (GObject      *client,
                                    GAsyncResult *result,
                                    gpointer      user_data)
 {
+  GtdManagerPrivate *priv;
+  TaskData *data = user_data;
   gboolean success;
   gchar *new_uid = NULL;
   GError *error = NULL;
 
+  priv = data->manager->priv;
   success = e_cal_client_create_object_finish (E_CAL_CLIENT (client),
                                                result,
                                                &new_uid,
                                                &error);
 
-  gtd_object_set_ready (GTD_OBJECT (user_data), TRUE);
+  gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
+
+  g_free (data);
 
   if (error)
     {
@@ -422,10 +453,35 @@ gtd_manager__create_task_finished (GObject      *client,
       g_error_free (error);
       return;
     }
-  else if (new_uid)
+  else
     {
-      gtd_object_set_uid (GTD_OBJECT (user_data), new_uid);
-      g_free (new_uid);
+      GDateTime *today;
+      GDateTime *dt;
+
+      today = g_date_time_new_now_local ();
+
+      /*
+       * Add in 'Today' and/or 'Scheduled' lists.
+       */
+      dt = gtd_task_get_due_date (GTD_TASK (data->data));
+
+      if (dt)
+        gtd_task_list_save_task (priv->scheduled_tasks_list, (GtdTask*) data->data);
+
+      if (dt && g_date_time_compare (dt, today) == 0)
+        gtd_task_list_save_task (priv->today_tasks_list, (GtdTask*) data->data);
+
+      /*
+       * In the case the task UID changes because of creation proccess,
+       * reapply it to the task.
+       */
+      if (new_uid)
+        {
+          gtd_object_set_uid (GTD_OBJECT (user_data), new_uid);
+          g_free (new_uid);
+        }
+
+      g_clear_pointer (&dt, g_date_time_unref);
     }
 }
 
@@ -434,15 +490,24 @@ gtd_manager__remove_task_finished (GObject      *client,
                                    GAsyncResult *result,
                                    gpointer      user_data)
 {
+  GtdManagerPrivate *priv;
+  TaskData *data = user_data;
   gboolean success;
   GError *error = NULL;
 
+  priv = data->manager->priv;
   success = e_cal_client_remove_object_finish (E_CAL_CLIENT (client),
                                                result,
                                                &error);
 
   gtd_object_set_ready (GTD_OBJECT (user_data), TRUE);
-  g_object_unref (user_data);
+
+  /* Remove from 'Today' or 'Scheduled' as needed */
+  gtd_task_list_remove_task (priv->scheduled_tasks_list, (GtdTask*) data->data);
+  gtd_task_list_remove_task (priv->today_tasks_list, (GtdTask*) data->data);
+
+  g_object_unref ((GtdTask*) data->data);
+  g_free (data);
 
   if (error)
     {
@@ -589,28 +654,54 @@ gtd_manager__fill_task_list (GObject      *client,
                              GAsyncResult *result,
                              gpointer      user_data)
 {
+  GtdManagerPrivate *priv;
+  GtdTaskList *list;
+  TaskData *data = user_data;
   GSList *component_list;
   GError *error = NULL;
+
+  g_return_if_fail (GTD_IS_MANAGER (data->manager));
+
+  priv = data->manager->priv;
+  list = GTD_TASK_LIST (data->data);
 
   e_cal_client_get_object_list_as_comps_finish (E_CAL_CLIENT (client),
                                                 result,
                                                 &component_list,
                                                 &error);
 
-  gtd_object_set_ready (GTD_OBJECT (user_data), TRUE);
+  gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
+  g_free (data);
 
   if (!error)
     {
+      GDateTime *today;
       GSList *l;
+
+      today = g_date_time_new_now_local ();
 
       for (l = component_list; l != NULL; l = l->next)
         {
+          GDateTime *dt;
           GtdTask *task;
 
           task = gtd_task_new (l->data);
-          gtd_task_set_list (task, GTD_TASK_LIST (user_data));
+          gtd_task_set_list (task, list);
 
-          gtd_task_list_save_task (GTD_TASK_LIST (user_data), task);
+          gtd_task_list_save_task (list, task);
+
+          /*
+           * Add in 'Today' and/or 'Scheduled' lists.
+           */
+          dt = gtd_task_get_due_date (task);
+
+          if (dt)
+            gtd_task_list_save_task (priv->scheduled_tasks_list, task);
+
+          if (dt && g_date_time_compare (dt, today) == 0)
+            gtd_task_list_save_task (priv->today_tasks_list, task);
+
+          g_clear_pointer (&dt, g_date_time_unref);
         }
 
       e_cal_client_free_ecalcomp_slist (component_list);
@@ -647,8 +738,9 @@ gtd_manager__on_client_connected (GObject      *source_object,
 
   if (!error)
     {
-      ESource *parent;
       GtdTaskList *list;
+      TaskData *data;
+      ESource *parent;
 
       /* parent source's display name is list's origin */
       parent = e_source_registry_ref_source (priv->source_registry, e_source_get_parent (source));
@@ -659,12 +751,15 @@ gtd_manager__on_client_connected (GObject      *source_object,
       /* it's not ready until we fetch the list of tasks from client */
       gtd_object_set_ready (GTD_OBJECT (list), FALSE);
 
+      /* async data */
+      data = task_data_new (user_data, (gpointer) list);
+
       /* asyncronously fetch the task list */
       e_cal_client_get_object_list_as_comps (client,
                                              "contains? \"any\" \"\"",
                                              NULL,
                                              (GAsyncReadyCallback) gtd_manager__fill_task_list,
-                                             list);
+                                             data);
 
 
       priv->task_lists = g_list_append (priv->task_lists, list);
@@ -829,6 +924,8 @@ gtd_manager_finalize (GObject *object)
   GtdManager *self = (GtdManager *)object;
 
   g_clear_object (&self->priv->goa_client);
+  g_clear_object (&self->priv->scheduled_tasks_list);
+  g_clear_object (&self->priv->today_tasks_list);
 
   G_OBJECT_CLASS (gtd_manager_parent_class)->finalize (object);
 }
@@ -1082,6 +1179,10 @@ gtd_manager_init (GtdManager *self)
 {
   self->priv = gtd_manager_get_instance_private (self);
   self->priv->settings = g_settings_new ("org.gnome.todo");
+
+  /* fixed task lists */
+  self->priv->scheduled_tasks_list = g_object_new (GTD_TYPE_TASK_LIST, NULL);
+  self->priv->today_tasks_list = g_object_new (GTD_TYPE_TASK_LIST, NULL);
 }
 
 GtdManager*
@@ -1106,6 +1207,7 @@ gtd_manager_create_task (GtdManager *manager,
   GtdManagerPrivate *priv = GTD_MANAGER (manager)->priv;
   ECalComponent *component;
   ECalClient *client;
+  TaskData *data;
   ESource *source;
 
   g_return_if_fail (GTD_IS_MANAGER (manager));
@@ -1115,6 +1217,9 @@ gtd_manager_create_task (GtdManager *manager,
   client = g_hash_table_lookup (priv->clients, source);
   component = gtd_task_get_component (task);
 
+  /* Temporary data for async operation */
+  data = task_data_new (manager, (gpointer) task);
+
   /* The task is not ready until we finish the operation */
   gtd_object_set_ready (GTD_OBJECT (task), FALSE);
 
@@ -1122,7 +1227,7 @@ gtd_manager_create_task (GtdManager *manager,
                               e_cal_component_get_icalcomponent (component),
                               NULL, // We won't cancel the operation
                               (GAsyncReadyCallback) gtd_manager__create_task_finished,
-                              task);
+                              data);
 }
 
 /**
@@ -1142,6 +1247,7 @@ gtd_manager_remove_task (GtdManager *manager,
   ECalComponent *component;
   ECalComponentId *id;
   ECalClient *client;
+  TaskData *data;
   ESource *source;
 
   g_return_if_fail (GTD_IS_MANAGER (manager));
@@ -1152,6 +1258,9 @@ gtd_manager_remove_task (GtdManager *manager,
   component = gtd_task_get_component (task);
   id = e_cal_component_get_id (component);
 
+  /* Temporary data for async operation */
+  data = task_data_new (manager, (gpointer) task);
+
   /* The task is not ready until we finish the operation */
   gtd_object_set_ready (GTD_OBJECT (task), FALSE);
 
@@ -1161,7 +1270,7 @@ gtd_manager_remove_task (GtdManager *manager,
                               E_CAL_OBJ_MOD_THIS,
                               NULL, // We won't cancel the operation
                               (GAsyncReadyCallback) gtd_manager__remove_task_finished,
-                              task);
+                              data);
 
   e_cal_component_free_id (id);
 }
