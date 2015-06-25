@@ -34,6 +34,9 @@ typedef struct
   GBinding          *notes_binding;
   GBinding          *priority_binding;
 
+  /* flags */
+  gint               should_save_task : 1;
+
   GtdManager        *manager;
   GtdTask           *task;
 } GtdEditPanePrivate;
@@ -78,6 +81,7 @@ gtd_edit_pane__delete_button_clicked (GtkButton *button,
 
   g_signal_emit (user_data, signals[REMOVE_TASK], 0, priv->task);
 
+  priv->should_save_task = FALSE;
   gtd_edit_pane_set_task (GTD_EDIT_PANE (user_data), NULL);
 }
 
@@ -91,11 +95,9 @@ gtd_edit_pane__close_button_clicked (GtkButton *button,
 
   priv = GTD_EDIT_PANE (user_data)->priv;
 
-  /* save the task */
-  gtd_task_save (priv->task);
-
   g_signal_emit (user_data, signals[EDIT_FINISHED], 0, priv->task);
 
+  priv->should_save_task = TRUE;
   gtd_edit_pane_set_task (GTD_EDIT_PANE (user_data), NULL);
 }
 
@@ -405,7 +407,8 @@ gtd_edit_pane_set_task (GtdEditPane *pane,
           g_clear_pointer (&priv->notes_binding, g_binding_unbind);
           g_clear_pointer (&priv->priority_binding, g_binding_unbind);
 
-          g_signal_emit (pane, signals[EDIT_FINISHED], 0, priv->task);
+          if (priv->should_save_task)
+            g_signal_emit (pane, signals[EDIT_FINISHED], 0, priv->task);
         }
 
       priv->task = task;
