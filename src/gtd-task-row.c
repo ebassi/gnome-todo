@@ -90,7 +90,6 @@ gtd_task_row__date_changed_binding (GBinding     *binding,
   if (dt)
     {
       GDateTime *today = g_date_time_new_now_local ();
-      new_label = g_date_time_format (dt, "%x");
 
       if (g_date_time_get_year (dt) == g_date_time_get_year (today) &&
           g_date_time_get_month (dt) == g_date_time_get_month (today))
@@ -117,6 +116,12 @@ gtd_task_row__date_changed_binding (GBinding     *binding,
               new_label = g_date_time_format (dt, "%x");
             }
         }
+      else
+        {
+          new_label = g_date_time_format (dt, "%x");
+        }
+
+      g_date_time_unref (today);
 
     }
   else
