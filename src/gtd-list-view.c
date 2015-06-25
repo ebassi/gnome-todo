@@ -396,8 +396,7 @@ gtd_list_view__remove_task (GtdListView *view,
         }
     }
 
-  if (children)
-    g_list_free (children);
+  g_list_free (children);
 }
 
 static void
