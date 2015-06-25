@@ -460,8 +460,6 @@ gtd_manager__create_task_finished (GObject      *client,
 
   gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
 
-  g_free (data);
-
   if (error)
     {
       g_warning ("%s: %s: %s",
@@ -470,6 +468,7 @@ gtd_manager__create_task_finished (GObject      *client,
                  error->message);
 
       g_error_free (error);
+      g_free (data);
       return;
     }
   else
@@ -501,6 +500,7 @@ gtd_manager__create_task_finished (GObject      *client,
         }
 
       g_clear_pointer (&dt, g_date_time_unref);
+      g_free (data);
     }
 }
 
@@ -519,7 +519,7 @@ gtd_manager__remove_task_finished (GObject      *client,
                                                result,
                                                &error);
 
-  gtd_object_set_ready (GTD_OBJECT (user_data), TRUE);
+  gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
 
   /* Remove from 'Today' or 'Scheduled' as needed */
   gtd_task_list_remove_task (priv->scheduled_tasks_list, (GtdTask*) data->data);
