@@ -113,6 +113,25 @@ task_data_new (GtdManager *manager,
   return tdata;
 }
 
+gboolean
+is_today (GDateTime *dt)
+{
+  GDateTime *today;
+
+  today = g_date_time_new_now_local ();
+
+  if (g_date_time_get_year (dt) == g_date_time_get_year (today) &&
+      g_date_time_get_month (dt) == g_date_time_get_month (today) &&
+      g_date_time_get_day_of_month (dt) == g_date_time_get_day_of_month (today))
+    {
+      return TRUE;
+    }
+
+  g_date_time_unref (today);
+
+  return FALSE;
+}
+
 static void
 gtd_manager__setup_url (GtdManager *manager,
                         GtdStorage *storage)
@@ -468,7 +487,7 @@ gtd_manager__create_task_finished (GObject      *client,
       if (dt)
         gtd_task_list_save_task (priv->scheduled_tasks_list, (GtdTask*) data->data);
 
-      if (dt && g_date_time_compare (dt, today) == 0)
+      if (dt && is_today (dt))
         gtd_task_list_save_task (priv->today_tasks_list, (GtdTask*) data->data);
 
       /*
@@ -698,7 +717,7 @@ gtd_manager__fill_task_list (GObject      *client,
           if (dt)
             gtd_task_list_save_task (priv->scheduled_tasks_list, task);
 
-          if (dt && g_date_time_compare (dt, today) == 0)
+          if (dt && is_today (dt))
             gtd_task_list_save_task (priv->today_tasks_list, task);
 
           g_clear_pointer (&dt, g_date_time_unref);
