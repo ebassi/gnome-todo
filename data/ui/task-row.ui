@@ -64,6 +64,8 @@
                           <object class="GtkImage" id="priority_icon">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
                           </object>
                         </child>
                         <child>
@@ -179,6 +181,10 @@
                   <object class="GtkLabel" id="task_list_label">
                     <property name="visible">False</property>
                     <property name="can_focus">False</property>
+                    <property name="xalign">1</property>
+                    <property name="width_chars">18</property>
+                    <property name="max_width_chars">18</property>
+                    <property name="ellipsize">middle</property>
                     <style>
                       <class name="dim-label"/>
                     </style>
