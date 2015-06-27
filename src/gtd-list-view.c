@@ -356,6 +356,8 @@ gtd_list_view__add_task (GtdListView *view,
 
   new_row = gtd_task_row_new (task);
 
+  gtd_task_row_set_list_name_visible (GTD_TASK_ROW (new_row), priv->show_list_name);
+
   if (!gtd_task_get_complete (task))
     {
       gtk_list_box_insert (priv->listbox,
@@ -1053,6 +1055,9 @@ gtd_list_view_set_show_completed (GtdListView *view,
                 continue;
 
               new_row = gtd_task_row_new (l->data);
+
+              gtd_task_row_set_list_name_visible (GTD_TASK_ROW (new_row), priv->show_list_name);
+
 
               gtk_list_box_insert (priv->listbox,
                                    new_row,
