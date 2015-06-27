@@ -770,7 +770,7 @@ gtd_task_get_title (GtdTask *task)
 
   e_cal_component_get_summary (task->priv->component, &summary);
 
-  return summary.value;
+  return summary.value ? summary.value : "";
 }
 
 /**
