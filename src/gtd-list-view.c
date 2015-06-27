@@ -1066,8 +1066,7 @@ gtd_list_view_set_show_completed (GtdListView *view,
               gtd_task_row_reveal (GTD_TASK_ROW (new_row));
             }
 
-            if (list_of_tasks)
-              g_list_free (list_of_tasks);
+            g_list_free (list_of_tasks);
         }
       else
         {
@@ -1085,8 +1084,7 @@ gtd_list_view_set_show_completed (GtdListView *view,
                 }
             }
 
-          if (children)
-              g_list_free (children);
+          g_list_free (children);
         }
 
       g_object_notify (G_OBJECT (view), "show-completed");
