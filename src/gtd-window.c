@@ -20,6 +20,7 @@
 #include "gtd-task-list-view.h"
 #include "gtd-manager.h"
 #include "gtd-storage-dialog.h"
+#include "gtd-task.h"
 #include "gtd-task-list.h"
 #include "gtd-task-list-item.h"
 #include "gtd-window.h"
@@ -39,6 +40,7 @@ typedef struct
   GtkRevealer                   *notification_revealer;
   GtkSpinner                    *notification_spinner;
   GtdTaskListView               *scheduled_list_view;
+  GtkStackSwitcher              *stack;
   GtkStackSwitcher              *stack_switcher;
   GtdStorageDialog              *storage_dialog;
   GtdTaskListView               *today_list_view;
@@ -106,6 +108,59 @@ enum {
   PROP_MANAGER,
   LAST_PROP
 };
+
+static void
+gtd_window_update_list_counters (GtdTaskList *list,
+                                 GtdTask     *task,
+                                 GtdWindow   *window)
+{
+  GtdWindowPrivate *priv;
+  GtkWidget *container_child;
+  gboolean is_today;
+  GList *tasks;
+  GList *l;
+  gchar *new_title;
+  gint counter;
+
+  g_return_if_fail (GTD_IS_WINDOW (window));
+  g_return_if_fail (GTD_IS_TASK_LIST (list));
+
+  priv = window->priv;
+
+  /* Count the number of incomplete tasks */
+  counter = 0;
+  tasks = gtd_task_list_get_tasks (list);
+
+  for (l = tasks; l != NULL; l = l->next)
+    {
+      if (!gtd_task_get_complete (l->data))
+        counter++;
+    }
+
+  /* Update the list title */
+  is_today = list == gtd_manager_get_today_list (priv->manager);
+
+  container_child = is_today ? GTK_WIDGET (priv->today_list_view) : GTK_WIDGET (priv->scheduled_list_view);
+
+  if (counter == 0)
+    {
+      new_title = g_strdup_printf ("%s", is_today ? _("Today") : _("Scheduled"));
+    }
+  else
+    {
+      new_title = g_strdup_printf ("%s (%d)",
+                                   is_today ? _("Today") : _("Scheduled"),
+                                   counter);
+    }
+
+  gtk_container_child_set (GTK_CONTAINER (priv->stack),
+                           container_child,
+                           "title", new_title,
+                           NULL);
+
+  g_list_free (tasks);
+  g_free (new_title);
+}
 
 void
 notification_data_free (NotificationData *data)
@@ -453,6 +508,31 @@ gtd_window_set_property (GObject      *object,
       gtd_task_list_view_set_task_list (self->priv->today_list_view, gtd_manager_get_today_list (self->priv->manager));
       gtd_task_list_view_set_task_list (self->priv->scheduled_list_view, gtd_manager_get_scheduled_list (self->priv->manager));
 
+      g_signal_connect (gtd_manager_get_today_list (self->priv->manager),
+                        "task-added",
+                        G_CALLBACK (gtd_window_update_list_counters),
+                        self);
+      g_signal_connect (gtd_manager_get_today_list (self->priv->manager),
+                        "task-updated",
+                        G_CALLBACK (gtd_window_update_list_counters),
+                        self);
+      g_signal_connect (gtd_manager_get_today_list (self->priv->manager),
+                        "task-removed",
+                        G_CALLBACK (gtd_window_update_list_counters),
+                        self);
+      g_signal_connect (gtd_manager_get_scheduled_list (self->priv->manager),
+                        "task-added",
+                        G_CALLBACK (gtd_window_update_list_counters),
+                        self);
+      g_signal_connect (gtd_manager_get_scheduled_list (self->priv->manager),
+                        "task-updated",
+                        G_CALLBACK (gtd_window_update_list_counters),
+                        self);
+      g_signal_connect (gtd_manager_get_scheduled_list (self->priv->manager),
+                        "task-removed",
+                        G_CALLBACK (gtd_window_update_list_counters),
+                        self);
+
       g_object_notify (object, "manager");
       break;
 
@@ -499,6 +579,7 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_revealer);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_spinner);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, storage_dialog);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, scheduled_list_view);
