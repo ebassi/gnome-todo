@@ -473,6 +473,17 @@ gtd_task_list_view__task_completed (GObject    *object,
   else
     priv->complete_tasks--;
 
+  /*
+   * If we're editing the task and it get completed, hide the edit
+   * pane and the task.
+   */
+  if (task_complete &&
+      task == gtd_edit_pane_get_task (priv->edit_pane))
+    {
+      gtk_revealer_set_reveal_child (priv->edit_revealer, FALSE);
+      gtd_edit_pane_set_task (priv->edit_pane, NULL);
+    }
+
   gtd_task_list_view__update_done_label (GTD_TASK_LIST_VIEW (user_data));
   gtk_revealer_set_reveal_child (priv->revealer, priv->complete_tasks > 0);
 
