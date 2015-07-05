@@ -40,6 +40,7 @@ typedef struct
   GtkImage              *done_image;
   GtkLabel              *done_label;
   GtkScrolledWindow     *viewport;
+  GtkStack              *stack;
 
   /* internal */
   gboolean               can_toggle;
@@ -139,6 +140,49 @@ update_font_color (GtdTaskListView *view)
         gtk_style_context_remove_class (context, "dark");
 
       gdk_rgba_free (color);
+    }
+}
+
+static void
+gtd_task_list_view__update_empty_state (GtdTaskListView *view)
+{
+  GtdTaskListViewPrivate *priv;
+
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
+
+  priv = view->priv;
+
+  /*
+   * Here it explicitly check if it's readonly because we don't
+   * want to show the empty state for lists that can be edited. If
+   * we show the empty state there, the New Task row won't be show,
+   * and the user will get stuck.
+   *
+   * The empty state is meant to be visible from Today & Schedule
+   * task lists.
+   */
+  if (priv->readonly)
+    {
+      gboolean is_empty;
+      GList *tasks;
+      GList *l;
+
+      is_empty = TRUE;
+      tasks = gtd_task_list_view_get_list (view);
+
+      for (l = tasks; l != NULL; l = l->next)
+        {
+          if (gtd_task_get_complete (l->data) ||
+              (priv->show_completed && !gtd_task_get_complete (l->data)))
+            {
+              is_empty = FALSE;
+              break;
+            }
+        }
+
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), is_empty ? "empty" : "list");
+
+      g_list_free (tasks);
     }
 }
 
@@ -374,6 +418,9 @@ gtd_task_list_view__add_task (GtdTaskListView *view,
       if (!gtk_revealer_get_reveal_child (priv->revealer))
         gtk_revealer_set_reveal_child (priv->revealer, TRUE);
     }
+
+  /* Check if it should show the empty state */
+  gtd_task_list_view__update_empty_state (view);
 }
 
 static void
@@ -397,6 +444,9 @@ gtd_task_list_view__remove_task (GtdTaskListView *view,
           gtd_task_row_destroy (l->data);
         }
     }
+
+  /* Check if it should show the empty state */
+  gtd_task_list_view__update_empty_state (view);
 
   g_list_free (children);
 }
@@ -652,6 +702,7 @@ gtd_task_list_view_class_init (GtdTaskListViewClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, done_image);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, done_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, viewport);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_task_list_view__done_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_task_list_view__edit_task_finished);
@@ -746,6 +797,9 @@ gtd_task_list_view_set_list (GtdTaskListView *view,
                         G_CALLBACK (gtd_task_list_view__task_completed),
                         view);
     }
+
+  /* Check if it should show the empty state */
+  gtd_task_list_view__update_empty_state (view);
 }
 
 /**
@@ -1086,6 +1140,9 @@ gtd_task_list_view_set_show_completed (GtdTaskListView *view,
 
           g_list_free (children);
         }
+
+      /* Check if it should show the empty state */
+      gtd_task_list_view__update_empty_state (view);
 
       g_object_notify (G_OBJECT (view), "show-completed");
     }
