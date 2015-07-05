@@ -61,14 +61,6 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkImage" id="priority_icon">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="halign">center</property>
-                            <property name="valign">center</property>
-                          </object>
-                        </child>
-                        <child>
                           <object class="GtkSpinner" id="task_loading_spinner">
                             <property name="visible">False</property>
                             <property name="can_focus">False</property>

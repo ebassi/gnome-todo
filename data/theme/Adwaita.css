@@ -43,14 +43,28 @@ GtkLabel.main-title {
 }
 
 /* priority icons */
-GtkImage.priority-low {
-    background-color: #4e9a06;
+GtdTaskRow.priority-low {
+    background-color: alpha(#3465a4, 0.2);
 }
 
-GtkImage.priority-medium {
-    background-color: #edd400;
+GtdTaskRow.priority-low:hover {
+    background-color: alpha(#3465a4, 0.3);
 }
 
-GtkImage.priority-hight {
-    background-color: #a40000;
+
+GtdTaskRow.priority-medium {
+    background-color: alpha(#f57900, 0.2);
+}
+
+GtdTaskRow.priority-medium:hover {
+    background-color: alpha(#f57900, 0.3);
+}
+
+
+GtdTaskRow.priority-hight {
+    background-color: alpha(#cc0000, 0.2);
+}
+
+GtdTaskRow.priority-hight:hover {
+    background-color: alpha(#cc0000, 0.3);
 }

@@ -36,7 +36,6 @@ typedef struct
   GtkStack                  *new_task_stack;
 
   /* task widgets */
-  GtkImage                  *priority_icon;
   GtkEntry                  *title_entry;
   GtkLabel                  *task_date_label;
   GtkLabel                  *task_list_label;
@@ -77,54 +76,6 @@ enum {
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-/*
- * Code partially stolen from GNOME Calendar (gcal-utils.c)
- */
-GdkPixbuf*
-generate_priority_icon (GtdTaskRow *row)
-{
-  GtdTaskRowPrivate *priv;
-  GtkStyleContext *context;
-  cairo_surface_t *surface;
-  GdkPixbuf *pix;
-  cairo_t *cr;
-
-  g_return_val_if_fail (GTD_IS_TASK_ROW (row), NULL);
-
-  priv = row->priv;
-  context = gtk_widget_get_style_context (GTK_WIDGET (priv->priority_icon));
-
-  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
-                                        PRIORITY_ICON_SIZE,
-                                        PRIORITY_ICON_SIZE);
-  cr = cairo_create (surface);
-
-  cairo_arc (cr,
-             PRIORITY_ICON_SIZE / 2.0,
-             PRIORITY_ICON_SIZE / 2.0,
-             PRIORITY_ICON_SIZE / 2.0,
-             0.,
-             2 * M_PI);
-  cairo_clip (cr);
-
-  /* Use the given GtkContext to draw the background */
-  gtk_render_background (context,
-                         cr,
-                         0,
-                         0,
-                         PRIORITY_ICON_SIZE,
-                         PRIORITY_ICON_SIZE);
-
-  cairo_destroy (cr);
-  pix = gdk_pixbuf_get_from_surface (surface,
-                                     0,
-                                     0,
-                                     PRIORITY_ICON_SIZE,
-                                     PRIORITY_ICON_SIZE);
-  cairo_surface_destroy (surface);
-  return pix;
-}
-
 static void
 gtd_task_row__priority_changed_cb (GtdTaskRow *row,
                                    GParamSpec *spec,
@@ -132,16 +83,18 @@ gtd_task_row__priority_changed_cb (GtdTaskRow *row,
 {
   GtdTaskRowPrivate *priv;
   GtkStyleContext *context;
-  GdkPixbuf *icon;
   gint priority;
 
   g_return_if_fail (GTD_IS_TASK_ROW (row));
 
   priv = row->priv;
-  context = gtk_widget_get_style_context (GTK_WIDGET (priv->priority_icon));
+  context = gtk_widget_get_style_context (GTK_WIDGET (row));
   priority = gtd_task_get_priority (GTD_TASK (object));
 
-  gtk_style_context_save (context);
+  /* remove all styles */
+  gtk_style_context_remove_class (context, "priority-low");
+  gtk_style_context_remove_class (context, "priority-medium");
+  gtk_style_context_remove_class (context, "priority-hight");
 
   switch (priority)
     {
@@ -161,15 +114,8 @@ gtd_task_row__priority_changed_cb (GtdTaskRow *row,
       break;
     }
 
-  /* Set the new icon */
-  icon = generate_priority_icon (row);
-
-  gtk_image_set_from_pixbuf (priv->priority_icon, icon);
-  gtk_widget_set_visible (GTK_WIDGET (priv->priority_icon), priority != 0);
-
-  gtk_style_context_restore (context);
-
-  g_object_unref (icon);
+  /* redraw background according to the new applied style */
+  gtk_widget_queue_draw (GTK_WIDGET (row));
 }
 
 static gboolean
@@ -512,7 +458,6 @@ gtd_task_row_class_init (GtdTaskRowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, new_task_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, new_task_stack);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, priority_icon);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, revealer);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, task_date_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtdTaskRow, task_list_label);
