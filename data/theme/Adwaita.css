@@ -15,11 +15,11 @@ GtdTaskListItem.thumbnail {
 }
 
 GtdTaskListItem.dark,
-GtdListView.dark GtdTaskRow {
+GtdTaskListView.dark GtdTaskRow {
     color: #eeeeec;
 }
 
-GtdListView.dark GtdTaskRow:hover {
+GtdTaskListView.dark GtdTaskRow:hover {
     background-color: alpha(@theme_bg_color, 0.2);
 }
 

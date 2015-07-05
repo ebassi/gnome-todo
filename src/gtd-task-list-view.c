@@ -1,4 +1,4 @@
-/* gtd-list-view.c
+/* gtd-task-list-view.c
  *
  * Copyright (C) 2015 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -18,7 +18,7 @@
 
 #include "gtd-arrow-frame.h"
 #include "gtd-edit-pane.h"
-#include "gtd-list-view.h"
+#include "gtd-task-list-view.h"
 #include "gtd-manager.h"
 #include "gtd-task.h"
 #include "gtd-task-list.h"
@@ -53,14 +53,14 @@ typedef struct
 
   /* color provider */
   GtkCssProvider        *color_provider;
-} GtdListViewPrivate;
+} GtdTaskListViewPrivate;
 
-struct _GtdListView
+struct _GtdTaskListView
 {
   GtkOverlay          parent;
 
   /*<private>*/
-  GtdListViewPrivate *priv;
+  GtdTaskListViewPrivate *priv;
 };
 
 #define COLOR_TEMPLATE "GtkViewport {background-color: %s;}"
@@ -69,16 +69,16 @@ struct _GtdListView
 #define TASK_REMOVED_NOTIFICATION_ID             "task-removed-id"
 
 /* prototypes */
-static void             gtd_list_view__task_completed                 (GObject          *object,
+static void             gtd_task_list_view__task_completed            (GObject          *object,
                                                                        GParamSpec       *spec,
                                                                        gpointer          user_data);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GtdListView, gtd_list_view, GTK_TYPE_OVERLAY)
+G_DEFINE_TYPE_WITH_PRIVATE (GtdTaskListView, gtd_task_list_view, GTK_TYPE_OVERLAY)
 
 typedef struct
 {
-  GtdListView *view;
-  GtdTask     *task;
+  GtdTaskListView *view;
+  GtdTask         *task;
 } RemoveTaskData;
 
 enum {
@@ -117,11 +117,11 @@ undo_remove_task_action (RemoveTaskData *data)
 }
 
 static void
-update_font_color (GtdListView *view)
+update_font_color (GtdTaskListView *view)
 {
-  GtdListViewPrivate *priv;
+  GtdTaskListViewPrivate *priv;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   priv = view->priv;
 
@@ -143,18 +143,18 @@ update_font_color (GtdListView *view)
 }
 
 static void
-gtd_list_view__remove_task_cb (GtdEditPane *pane,
-                               GtdTask     *task,
-                               gpointer     user_data)
+gtd_task_list_view__remove_task_cb (GtdEditPane *pane,
+                                    GtdTask     *task,
+                                    gpointer     user_data)
 {
-  GtdListViewPrivate *priv;
+  GtdTaskListViewPrivate *priv;
   RemoveTaskData *data;
   GtdWindow *window;
   gchar *text;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (user_data));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
 
-  priv = GTD_LIST_VIEW (user_data)->priv;
+  priv = GTD_TASK_LIST_VIEW (user_data)->priv;
   text = g_strdup_printf (_("Task <b>%s</b> removed"), gtd_task_get_title (task));
   window = GTD_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (user_data)));
 
@@ -181,17 +181,17 @@ gtd_list_view__remove_task_cb (GtdEditPane *pane,
 }
 
 static void
-gtd_list_view__edit_task_finished (GtdEditPane *pane,
-                                   GtdTask     *task,
-                                   gpointer     user_data)
+gtd_task_list_view__edit_task_finished (GtdEditPane *pane,
+                                        GtdTask     *task,
+                                        gpointer     user_data)
 {
-  GtdListViewPrivate *priv;
+  GtdTaskListViewPrivate *priv;
 
   g_return_if_fail (GTD_IS_TASK (task));
   g_return_if_fail (GTD_IS_EDIT_PANE (pane));
-  g_return_if_fail (GTD_IS_LIST_VIEW (user_data));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
 
-  priv = GTD_LIST_VIEW (user_data)->priv;
+  priv = GTD_TASK_LIST_VIEW (user_data)->priv;
 
   gtk_revealer_set_reveal_child (priv->edit_revealer, FALSE);
 
@@ -204,11 +204,11 @@ gtd_list_view__edit_task_finished (GtdEditPane *pane,
 }
 
 static void
-gtd_list_view__color_changed (GObject    *object,
-                              GParamSpec *spec,
-                              gpointer    user_data)
+gtd_task_list_view__color_changed (GObject    *object,
+                                   GParamSpec *spec,
+                                   gpointer    user_data)
 {
-  GtdListViewPrivate *priv = GTD_LIST_VIEW (user_data)->priv;
+  GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
   GdkRGBA *color;
   gchar *color_str;
   gchar *parsed_css;
@@ -224,18 +224,18 @@ gtd_list_view__color_changed (GObject    *object,
                                    -1,
                                    NULL);
 
-  update_font_color (GTD_LIST_VIEW (user_data));
+  update_font_color (GTD_TASK_LIST_VIEW (user_data));
 
   gdk_rgba_free (color);
   g_free (color_str);
 }
 
 static void
-gtd_list_view__update_done_label (GtdListView *view)
+gtd_task_list_view__update_done_label (GtdTaskListView *view)
 {
   gchar *new_label;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   new_label = g_strdup_printf ("%s (%d)",
                                _("Done"),
@@ -247,20 +247,20 @@ gtd_list_view__update_done_label (GtdListView *view)
 }
 
 static gboolean
-can_toggle_show_completed (GtdListView *view)
+can_toggle_show_completed (GtdTaskListView *view)
 {
   view->priv->can_toggle = TRUE;
   return G_SOURCE_REMOVE;
 }
 
 static void
-gtd_list_view__done_button_clicked (GtkButton *button,
-                                    gpointer   user_data)
+gtd_task_list_view__done_button_clicked (GtkButton *button,
+                                         gpointer   user_data)
 {
-  GtdListView *view = GTD_LIST_VIEW (user_data);
+  GtdTaskListView *view = GTD_TASK_LIST_VIEW (user_data);
   gboolean show_completed;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   if (!view->priv->can_toggle)
     return;
@@ -275,7 +275,7 @@ gtd_list_view__done_button_clicked (GtkButton *button,
 
   show_completed = view->priv->show_completed;
 
-  gtd_list_view_set_show_completed (view, !show_completed);
+  gtd_task_list_view_set_show_completed (view, !show_completed);
 
   g_timeout_add (205,
                  (GSourceFunc) can_toggle_show_completed,
@@ -283,9 +283,9 @@ gtd_list_view__done_button_clicked (GtkButton *button,
 }
 
 static gint
-gtd_list_view__listbox_sort_func (GtdTaskRow *row1,
-                                  GtdTaskRow *row2,
-                                  gpointer    user_data)
+gtd_task_list_view__listbox_sort_func (GtdTaskRow *row1,
+                                       GtdTaskRow *row2,
+                                       gpointer    user_data)
 {
   g_return_val_if_fail (GTD_IS_TASK_ROW (row1), 0);
   g_return_val_if_fail (GTD_IS_TASK_ROW (row2), 0);
@@ -299,12 +299,12 @@ gtd_list_view__listbox_sort_func (GtdTaskRow *row1,
 }
 
 static void
-gtd_list_view__clear_list (GtdListView *view)
+gtd_task_list_view__clear_list (GtdTaskListView *view)
 {
   GList *children;
   GList *l;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   view->priv->complete_tasks = 0;
   gtd_arrow_frame_set_row (view->priv->arrow_frame, NULL);
@@ -316,7 +316,7 @@ gtd_list_view__clear_list (GtdListView *view)
       if (l->data != view->priv->new_task_row)
         {
           g_signal_handlers_disconnect_by_func (gtd_task_row_get_task (l->data),
-                                                gtd_list_view__task_completed,
+                                                gtd_task_list_view__task_completed,
                                                 view);
           gtk_widget_destroy (l->data);
         }
@@ -329,11 +329,11 @@ gtd_list_view__clear_list (GtdListView *view)
 }
 
 static void
-gtd_list_view__row_activated (GtkListBox *listbox,
-                              GtdTaskRow *row,
-                              gpointer    user_data)
+gtd_task_list_view__row_activated (GtkListBox *listbox,
+                                   GtdTaskRow *row,
+                                   gpointer    user_data)
 {
-  GtdListViewPrivate *priv = GTD_LIST_VIEW (user_data)->priv;
+  GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
 
   if (row == priv->new_task_row)
     return;
@@ -345,13 +345,13 @@ gtd_list_view__row_activated (GtkListBox *listbox,
 }
 
 static void
-gtd_list_view__add_task (GtdListView *view,
-                         GtdTask     *task)
+gtd_task_list_view__add_task (GtdTaskListView *view,
+                              GtdTask         *task)
 {
-  GtdListViewPrivate *priv = view->priv;
+  GtdTaskListViewPrivate *priv = view->priv;
   GtkWidget *new_row;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
   g_return_if_fail (GTD_IS_TASK (task));
 
   new_row = gtd_task_row_new (task);
@@ -369,7 +369,7 @@ gtd_list_view__add_task (GtdListView *view,
     {
       priv->complete_tasks++;
 
-      gtd_list_view__update_done_label (view);
+      gtd_task_list_view__update_done_label (view);
 
       if (!gtk_revealer_get_reveal_child (priv->revealer))
         gtk_revealer_set_reveal_child (priv->revealer, TRUE);
@@ -377,14 +377,14 @@ gtd_list_view__add_task (GtdListView *view,
 }
 
 static void
-gtd_list_view__remove_task (GtdListView *view,
-                            GtdTask     *task)
+gtd_task_list_view__remove_task (GtdTaskListView *view,
+                                 GtdTask         *task)
 {
-  GtdListViewPrivate *priv = view->priv;
+  GtdTaskListViewPrivate *priv = view->priv;
   GList *children;
   GList *l;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
   g_return_if_fail (GTD_IS_TASK (task));
 
   children = gtk_container_get_children (GTK_CONTAINER (priv->listbox));
@@ -402,16 +402,16 @@ gtd_list_view__remove_task (GtdListView *view,
 }
 
 static void
-gtd_list_view__task_completed (GObject    *object,
-                               GParamSpec *spec,
-                               gpointer    user_data)
+gtd_task_list_view__task_completed (GObject    *object,
+                                    GParamSpec *spec,
+                                    gpointer    user_data)
 {
-  GtdListViewPrivate *priv = GTD_LIST_VIEW (user_data)->priv;
+  GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
   GtdTask *task = GTD_TASK (object);
   gboolean task_complete;
 
   g_return_if_fail (GTD_IS_TASK (object));
-  g_return_if_fail (GTD_IS_LIST_VIEW (user_data));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
 
   task_complete = gtd_task_get_complete (task);
 
@@ -423,15 +423,15 @@ gtd_list_view__task_completed (GObject    *object,
   else
     priv->complete_tasks--;
 
-  gtd_list_view__update_done_label (GTD_LIST_VIEW (user_data));
+  gtd_task_list_view__update_done_label (GTD_TASK_LIST_VIEW (user_data));
   gtk_revealer_set_reveal_child (priv->revealer, priv->complete_tasks > 0);
 
   if (!priv->show_completed)
     {
       if (task_complete)
-        gtd_list_view__remove_task (GTD_LIST_VIEW (user_data), task);
+        gtd_task_list_view__remove_task (GTD_TASK_LIST_VIEW (user_data), task);
       else
-        gtd_list_view__add_task (GTD_LIST_VIEW (user_data), task);
+        gtd_task_list_view__add_task (GTD_TASK_LIST_VIEW (user_data), task);
     }
   else
     {
@@ -440,34 +440,34 @@ gtd_list_view__task_completed (GObject    *object,
 }
 
 static void
-gtd_list_view__task_added (GtdTaskList *list,
-                           GtdTask     *task,
-                           gpointer     user_data)
+gtd_task_list_view__task_added (GtdTaskList *list,
+                                GtdTask     *task,
+                                gpointer     user_data)
 {
-  GtdListViewPrivate *priv = GTD_LIST_VIEW (user_data)->priv;
+  GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (user_data));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
   g_return_if_fail (GTD_IS_TASK_LIST (list));
   g_return_if_fail (GTD_IS_TASK (task));
 
   /* Add the new task to the list */
-  gtd_list_view__add_task (GTD_LIST_VIEW (user_data), task);
+  gtd_task_list_view__add_task (GTD_TASK_LIST_VIEW (user_data), task);
 
   g_signal_connect (task,
                     "notify::complete",
-                    G_CALLBACK (gtd_list_view__task_completed),
+                    G_CALLBACK (gtd_task_list_view__task_completed),
                     user_data);
 }
 
 static void
-gtd_list_view__create_task (GtdTaskRow *row,
-                            GtdTask    *task,
-                            gpointer    user_data)
+gtd_task_list_view__create_task (GtdTaskRow *row,
+                                 GtdTask    *task,
+                                 gpointer    user_data)
 {
-  GtdListViewPrivate *priv = GTD_LIST_VIEW (user_data)->priv;
+  GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
   GtkWidget *new_row;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (user_data));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
   g_return_if_fail (GTD_IS_TASK_ROW (row));
   g_return_if_fail (GTD_IS_TASK (task));
   g_return_if_fail (!priv->readonly);
@@ -484,21 +484,21 @@ gtd_list_view__create_task (GtdTaskRow *row,
 }
 
 static void
-gtd_list_view_finalize (GObject *object)
+gtd_task_list_view_finalize (GObject *object)
 {
-  GtdListView *self = (GtdListView *)object;
-  GtdListViewPrivate *priv = gtd_list_view_get_instance_private (self);
+  GtdTaskListView *self = (GtdTaskListView *)object;
+  GtdTaskListViewPrivate *priv = gtd_task_list_view_get_instance_private (self);
 
-  G_OBJECT_CLASS (gtd_list_view_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gtd_task_list_view_parent_class)->finalize (object);
 }
 
 static void
-gtd_list_view_get_property (GObject    *object,
-                            guint       prop_id,
-                            GValue     *value,
-                            GParamSpec *pspec)
+gtd_task_list_view_get_property (GObject    *object,
+                                 guint       prop_id,
+                                 GValue     *value,
+                                 GParamSpec *pspec)
 {
-  GtdListView *self = GTD_LIST_VIEW (object);
+  GtdTaskListView *self = GTD_TASK_LIST_VIEW (object);
 
   switch (prop_id)
     {
@@ -524,11 +524,42 @@ gtd_list_view_get_property (GObject    *object,
 }
 
 static void
-gtd_list_view_constructed (GObject *object)
+gtd_task_list_view_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
 {
-  GtdListView *self = GTD_LIST_VIEW (object);
+  GtdTaskListView *self = GTD_TASK_LIST_VIEW (object);
 
-  G_OBJECT_CLASS (gtd_list_view_parent_class)->constructed (object);
+  switch (prop_id)
+    {
+    case PROP_MANAGER:
+      gtd_task_list_view_set_manager (self, g_value_get_object (value));
+      break;
+
+    case PROP_SHOW_COMPLETED:
+      gtd_task_list_view_set_show_completed (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_SHOW_LIST_NAME:
+      gtd_task_list_view_set_show_list_name (self, g_value_get_boolean (value));
+      break;
+
+    case PROP_READONLY:
+      gtd_task_list_view_set_readonly (self, g_value_get_boolean (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gtd_task_list_view_constructed (GObject *object)
+{
+  GtdTaskListView *self = GTD_TASK_LIST_VIEW (object);
+
+  G_OBJECT_CLASS (gtd_task_list_view_parent_class)->constructed (object);
 
   /* css provider */
   self->priv->color_provider = gtk_css_provider_new ();
@@ -539,55 +570,24 @@ gtd_list_view_constructed (GObject *object)
 
   /* show a nifty separator between lines */
   gtk_list_box_set_sort_func (self->priv->listbox,
-                              (GtkListBoxSortFunc) gtd_list_view__listbox_sort_func,
+                              (GtkListBoxSortFunc) gtd_task_list_view__listbox_sort_func,
                               NULL,
                               NULL);
 }
 
 static void
-gtd_list_view_set_property (GObject      *object,
-                            guint         prop_id,
-                            const GValue *value,
-                            GParamSpec   *pspec)
-{
-  GtdListView *self = GTD_LIST_VIEW (object);
-
-  switch (prop_id)
-    {
-    case PROP_MANAGER:
-      gtd_list_view_set_manager (self, g_value_get_object (value));
-      break;
-
-    case PROP_SHOW_COMPLETED:
-      gtd_list_view_set_show_completed (self, g_value_get_boolean (value));
-      break;
-
-    case PROP_SHOW_LIST_NAME:
-      gtd_list_view_set_show_list_name (self, g_value_get_boolean (value));
-      break;
-
-    case PROP_READONLY:
-      gtd_list_view_set_readonly (self, g_value_get_boolean (value));
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gtd_list_view_class_init (GtdListViewClass *klass)
+gtd_task_list_view_class_init (GtdTaskListViewClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = gtd_list_view_finalize;
-  object_class->constructed = gtd_list_view_constructed;
-  object_class->get_property = gtd_list_view_get_property;
-  object_class->set_property = gtd_list_view_set_property;
+  object_class->finalize = gtd_task_list_view_finalize;
+  object_class->constructed = gtd_task_list_view_constructed;
+  object_class->get_property = gtd_task_list_view_get_property;
+  object_class->set_property = gtd_task_list_view_set_property;
 
   /**
-   * GtdListView::manager:
+   * GtdTaskListView::manager:
    *
    * A weak reference to the application's #GtdManager instance.
    */
@@ -601,7 +601,7 @@ gtd_list_view_class_init (GtdListViewClass *klass)
                              G_PARAM_READWRITE));
 
   /**
-   * GtdListView::readonly:
+   * GtdTaskListView::readonly:
    *
    * Whether the list shows the "New Task" row or not.
    */
@@ -615,7 +615,7 @@ gtd_list_view_class_init (GtdListViewClass *klass)
                               G_PARAM_READWRITE));
 
   /**
-   * GtdListView::show-list-name:
+   * GtdTaskListView::show-list-name:
    *
    * Whether the task rows should show the list name.
    */
@@ -629,7 +629,7 @@ gtd_list_view_class_init (GtdListViewClass *klass)
                               G_PARAM_READWRITE));
 
   /**
-   * GtdListView::show-completed:
+   * GtdTaskListView::show-completed:
    *
    * Whether completed tasks are shown.
    */
@@ -644,25 +644,25 @@ gtd_list_view_class_init (GtdListViewClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/todo/ui/list-view.ui");
 
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, arrow_frame);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, edit_pane);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, edit_revealer);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, listbox);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, revealer);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, done_image);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, done_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdListView, viewport);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, arrow_frame);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, edit_pane);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, edit_revealer);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, listbox);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, revealer);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, done_image);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, done_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdTaskListView, viewport);
 
-  gtk_widget_class_bind_template_callback (widget_class, gtd_list_view__done_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, gtd_list_view__edit_task_finished);
-  gtk_widget_class_bind_template_callback (widget_class, gtd_list_view__remove_task_cb);
-  gtk_widget_class_bind_template_callback (widget_class, gtd_list_view__row_activated);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_task_list_view__done_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_task_list_view__edit_task_finished);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_task_list_view__remove_task_cb);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_task_list_view__row_activated);
 }
 
 static void
-gtd_list_view_init (GtdListView *self)
+gtd_task_list_view_init (GtdTaskListView *self)
 {
-  self->priv = gtd_list_view_get_instance_private (self);
+  self->priv = gtd_task_list_view_get_instance_private (self);
   self->priv->readonly = TRUE;
   self->priv->can_toggle = TRUE;
   self->priv->new_task_row = GTD_TASK_ROW (gtd_task_row_new (NULL));
@@ -670,28 +670,28 @@ gtd_list_view_init (GtdListView *self)
 
   g_signal_connect (self->priv->new_task_row,
                     "create-task",
-                    G_CALLBACK (gtd_list_view__create_task),
+                    G_CALLBACK (gtd_task_list_view__create_task),
                     self);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 /**
- * gtd_list_view_new:
+ * gtd_task_list_view_new:
  *
- * Creates a new #GtdListView
+ * Creates a new #GtdTaskListView
  *
- * Returns: a newly allocated #GtdListView
+ * Returns: a newly allocated #GtdTaskListView
  */
 GtkWidget*
-gtd_list_view_new (void)
+gtd_task_list_view_new (void)
 {
-  return g_object_new (GTD_TYPE_LIST_VIEW, NULL);
+  return g_object_new (GTD_TYPE_TASK_LIST_VIEW, NULL);
 }
 
 /**
- * gtd_list_view_get_list:
- * @view: a #GtdListView
+ * gtd_task_list_view_get_list:
+ * @view: a #GtdTaskListView
  *
  * Retrieves the list of tasks from @view. Note that,
  * if a #GtdTaskList is set, the #GtdTaskList's list
@@ -701,9 +701,9 @@ gtd_list_view_new (void)
  * tasks. Free with @g_list_free after use.
  */
 GList*
-gtd_list_view_get_list (GtdListView *view)
+gtd_task_list_view_get_list (GtdTaskListView *view)
 {
-  g_return_val_if_fail (GTD_IS_LIST_VIEW (view), NULL);
+  g_return_val_if_fail (GTD_IS_TASK_LIST_VIEW (view), NULL);
 
   if (view->priv->task_list)
     return gtd_task_list_get_tasks (view->priv->task_list);
@@ -714,59 +714,59 @@ gtd_list_view_get_list (GtdListView *view)
 }
 
 /**
- * gtd_list_view_set_list:
- * @view: a #GtdListView
+ * gtd_task_list_view_set_list:
+ * @view: a #GtdTaskListView
  *
  * Copies the tasks from @list to @view.
  *
  * Returns:
  */
 void
-gtd_list_view_set_list (GtdListView *view,
-                        GList       *list)
+gtd_task_list_view_set_list (GtdTaskListView *view,
+                             GList           *list)
 {
   GList *l;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   if (view->priv->list)
     g_list_free (view->priv->list);
 
   /* clear previous tasks */
-  gtd_list_view__clear_list (view);
+  gtd_task_list_view__clear_list (view);
 
   view->priv->list = g_list_copy (list);
 
   for (l = view->priv->list; l != NULL; l = l->next)
     {
-      gtd_list_view__add_task (view, l->data);
+      gtd_task_list_view__add_task (view, l->data);
 
       g_signal_connect (l->data,
                         "notify::complete",
-                        G_CALLBACK (gtd_list_view__task_completed),
+                        G_CALLBACK (gtd_task_list_view__task_completed),
                         view);
     }
 }
 
 /**
- * gtd_list_view_get_manager:
- * @view: a #GtdListView
+ * gtd_task_list_view_get_manager:
+ * @view: a #GtdTaskListView
  *
  * Retrieves the #GtdManager from @view.
  *
  * Returns: (transfer none): the #GtdManager of @view
  */
 GtdManager*
-gtd_list_view_get_manager (GtdListView *view)
+gtd_task_list_view_get_manager (GtdTaskListView *view)
 {
-  g_return_val_if_fail (GTD_IS_LIST_VIEW (view), NULL);
+  g_return_val_if_fail (GTD_IS_TASK_LIST_VIEW (view), NULL);
 
   return view->priv->manager;
 }
 
 /**
- * gtd_list_view_set_manager:
- * @view: a #GtdListView
+ * gtd_task_list_view_set_manager:
+ * @view: a #GtdTaskListView
  * @manager: a #GtdManager
  *
  * Sets the #GtdManager of @view.
@@ -774,10 +774,10 @@ gtd_list_view_get_manager (GtdListView *view)
  * Returns:
  */
 void
-gtd_list_view_set_manager (GtdListView *view,
-                           GtdManager  *manager)
+gtd_task_list_view_set_manager (GtdTaskListView *view,
+                                GtdManager      *manager)
 {
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
   g_return_if_fail (GTD_IS_MANAGER (manager));
 
   if (view->priv->manager != manager)
@@ -790,34 +790,34 @@ gtd_list_view_set_manager (GtdListView *view,
 }
 
 /**
- * gtd_list_view_get_readonly:
- * @view: a #GtdListView
+ * gtd_task_list_view_get_readonly:
+ * @view: a #GtdTaskListView
  *
  * Gets the readonly state of @view.
  *
  * Returns: %TRUE if @view is readonly, %FALSE otherwise
  */
 gboolean
-gtd_list_view_get_readonly (GtdListView *view)
+gtd_task_list_view_get_readonly (GtdTaskListView *view)
 {
-  g_return_val_if_fail (GTD_IS_LIST_VIEW (view), FALSE);
+  g_return_val_if_fail (GTD_IS_TASK_LIST_VIEW (view), FALSE);
 
   return view->priv->readonly;
 }
 
 /**
- * gtd_list_view_set_readonly:
- * @view: a #GtdListView
+ * gtd_task_list_view_set_readonly:
+ * @view: a #GtdTaskListView
  *
- * Sets the GtdListView::readonly property of @view.
+ * Sets the GtdTaskListView::readonly property of @view.
  *
  * Returns:
  */
 void
-gtd_list_view_set_readonly (GtdListView *view,
-                            gboolean     readonly)
+gtd_task_list_view_set_readonly (GtdTaskListView *view,
+                                 gboolean         readonly)
 {
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   if (view->priv->readonly != readonly)
     {
@@ -848,8 +848,8 @@ gtd_list_view_set_readonly (GtdListView *view,
 }
 
 /**
- * gtd_list_view_get_task_list:
- * @view: a #GtdListView
+ * gtd_task_list_view_get_task_list:
+ * @view: a #GtdTaskListView
  *
  * Retrieves the #GtdTaskList from @view, or %NULL if none was set.
  *
@@ -857,16 +857,16 @@ gtd_list_view_set_readonly (GtdListView *view,
  * none was set.
  */
 GtdTaskList*
-gtd_list_view_get_task_list (GtdListView *view)
+gtd_task_list_view_get_task_list (GtdTaskListView *view)
 {
-  g_return_val_if_fail (GTD_IS_LIST_VIEW (view), NULL);
+  g_return_val_if_fail (GTD_IS_TASK_LIST_VIEW (view), NULL);
 
   return view->priv->task_list;
 }
 
 /**
- * gtd_list_view_set_task_list:
- * @view: a #GtdListView
+ * gtd_task_list_view_set_task_list:
+ * @view: a #GtdTaskListView
  * @list: a #GtdTaskList
  *
  * Sets the internal #GtdTaskList of @view.
@@ -874,12 +874,12 @@ gtd_list_view_get_task_list (GtdListView *view)
  * Returns:
  */
 void
-gtd_list_view_set_task_list (GtdListView *view,
-                             GtdTaskList *list)
+gtd_task_list_view_set_task_list (GtdTaskListView *view,
+                                  GtdTaskList     *list)
 {
-  GtdListViewPrivate *priv = view->priv;
+  GtdTaskListViewPrivate *priv = view->priv;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
   g_return_if_fail (GTD_IS_TASK_LIST (list));
 
   if (priv->task_list != list)
@@ -896,10 +896,10 @@ gtd_list_view_set_task_list (GtdListView *view,
       if (priv->task_list)
         {
           g_signal_handlers_disconnect_by_func (priv->task_list,
-                                                gtd_list_view__task_added,
+                                                gtd_task_list_view__task_added,
                                                 view);
           g_signal_handlers_disconnect_by_func (priv->task_list,
-                                                gtd_list_view__color_changed,
+                                                gtd_task_list_view__color_changed,
                                                 view);
         }
 
@@ -927,44 +927,44 @@ gtd_list_view_set_task_list (GtdListView *view,
       /* Add the tasks from the list */
       task_list = gtd_task_list_get_tasks (list);
 
-      gtd_list_view_set_list (view, task_list);
+      gtd_task_list_view_set_list (view, task_list);
 
       g_list_free (task_list);
 
       g_signal_connect (list,
                         "task-added",
-                        G_CALLBACK (gtd_list_view__task_added),
+                        G_CALLBACK (gtd_task_list_view__task_added),
                         view);
       g_signal_connect_swapped (list,
                                 "task-removed",
-                                G_CALLBACK (gtd_list_view__remove_task),
+                                G_CALLBACK (gtd_task_list_view__remove_task),
                                 view);
       g_signal_connect (list,
                         "notify::color",
-                        G_CALLBACK (gtd_list_view__color_changed),
+                        G_CALLBACK (gtd_task_list_view__color_changed),
                         view);
     }
 }
 
 /**
- * gtd_list_view_get_show_list_name:
- * @view: a #GtdListView
+ * gtd_task_list_view_get_show_list_name:
+ * @view: a #GtdTaskListView
  *
  * Whether @view shows the tasks' list names.
  *
  * Returns: %TRUE if @view show the tasks' list names, %FALSE otherwise
  */
 gboolean
-gtd_list_view_get_show_list_name (GtdListView *view)
+gtd_task_list_view_get_show_list_name (GtdTaskListView *view)
 {
-  g_return_val_if_fail (GTD_IS_LIST_VIEW (view), FALSE);
+  g_return_val_if_fail (GTD_IS_TASK_LIST_VIEW (view), FALSE);
 
   return view->priv->show_list_name;
 }
 
 /**
- * gtd_list_view_set_show_list_name:
- * @view: a #GtdListView
+ * gtd_task_list_view_set_show_list_name:
+ * @view: a #GtdTaskListView
  * @show_list_name: %TRUE to show list names, %FALSE to hide it
  *
  * Whether @view should should it's tasks' list name.
@@ -972,10 +972,10 @@ gtd_list_view_get_show_list_name (GtdListView *view)
  * Returns:
  */
 void
-gtd_list_view_set_show_list_name (GtdListView *view,
-                                  gboolean     show_list_name)
+gtd_task_list_view_set_show_list_name (GtdTaskListView *view,
+                                       gboolean         show_list_name)
 {
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   if (view->priv->show_list_name != show_list_name)
     {
@@ -997,24 +997,24 @@ gtd_list_view_set_show_list_name (GtdListView *view,
 }
 
 /**
- * gtd_list_view_get)show_completed:
- * @view: a #GtdListView
+ * gtd_task_list_view_get)show_completed:
+ * @view: a #GtdTaskListView
  *
  * Returns %TRUE if completed tasks are visible, %FALSE otherwise.
  *
  * Returns: %TRUE if completed tasks are visible, %FALSE if they are hidden
  */
 gboolean
-gtd_list_view_get_show_completed (GtdListView *view)
+gtd_task_list_view_get_show_completed (GtdTaskListView *view)
 {
-  g_return_val_if_fail (GTD_IS_LIST_VIEW (view), FALSE);
+  g_return_val_if_fail (GTD_IS_TASK_LIST_VIEW (view), FALSE);
 
   return view->priv->show_completed;
 }
 
 /**
- * gtd_list_view_set_show_completed:
- * @view: a #GtdListView
+ * gtd_task_list_view_set_show_completed:
+ * @view: a #GtdTaskListView
  * @show_completed: %TRUE to show completed tasks, %FALSE to hide them
  *
  * Sets the ::show-completed property to @show_completed.
@@ -1022,12 +1022,12 @@ gtd_list_view_get_show_completed (GtdListView *view)
  * Returns:
  */
 void
-gtd_list_view_set_show_completed (GtdListView *view,
-                                  gboolean     show_completed)
+gtd_task_list_view_set_show_completed (GtdTaskListView *view,
+                                       gboolean         show_completed)
 {
-  GtdListViewPrivate *priv = view->priv;
+  GtdTaskListViewPrivate *priv = view->priv;
 
-  g_return_if_fail (GTD_IS_LIST_VIEW (view));
+  g_return_if_fail (GTD_IS_TASK_LIST_VIEW (view));
 
   if (priv->show_completed != show_completed)
     {
@@ -1045,7 +1045,7 @@ gtd_list_view_set_show_completed (GtdListView *view,
           GList *list_of_tasks;
           GList *l;
 
-          list_of_tasks = gtd_list_view_get_list (view);
+          list_of_tasks = gtd_task_list_view_get_list (view);
 
           for (l = list_of_tasks; l != NULL; l = l->next)
             {

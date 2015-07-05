@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.18.1 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <template class="GtdListView" parent="GtkOverlay">
+  <template class="GtdTaskListView" parent="GtkOverlay">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
@@ -28,7 +28,7 @@
                     <property name="valign">start</property>
                     <property name="hexpand">True</property>
                     <property name="selection_mode">none</property>
-                    <signal name="row-activated" handler="gtd_list_view__row_activated" object="GtdListView" swapped="no" />
+                    <signal name="row-activated" handler="gtd_task_list_view__row_activated" object="GtdTaskListView" swapped="no" />
                     <style>
                       <class name="transparent" />
                     </style>
@@ -73,7 +73,7 @@
                     <property name="tooltip_text" translatable="yes">Show or hide completed tasks</property>
                     <property name="border_width">12</property>
                     <property name="relief">none</property>
-                    <signal name="clicked" handler="gtd_list_view__done_button_clicked" object="GtdListView" swapped="no" />
+                    <signal name="clicked" handler="gtd_task_list_view__done_button_clicked" object="GtdTaskListView" swapped="no" />
                     <child>
                       <object class="GtkBox" id="done_button_box">
                         <property name="visible">True</property>
@@ -140,8 +140,8 @@
             <child>
               <object class="GtdEditPane" id="edit_pane">
                 <property name="visible">True</property>
-                <signal name="edit-finished" handler="gtd_list_view__edit_task_finished" object="GtdListView" swapped="no" />
-                <signal name="remove-task" handler="gtd_list_view__remove_task_cb" object="GtdListView" swapped="no" />
+                <signal name="edit-finished" handler="gtd_task_list_view__edit_task_finished" object="GtdTaskListView" swapped="no" />
+                <signal name="remove-task" handler="gtd_task_list_view__remove_task_cb" object="GtdTaskListView" swapped="no" />
               </object>
             </child>
           </object>

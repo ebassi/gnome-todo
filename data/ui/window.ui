@@ -164,7 +164,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtdListView" id="today_list_view">
+                      <object class="GtdTaskListView" id="today_list_view">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="show_list_name">True</property>
@@ -176,7 +176,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtdListView" id="scheduled_list_view">
+                      <object class="GtdTaskListView" id="scheduled_list_view">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="show_list_name">True</property>
@@ -242,7 +242,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtdListView" id="list_view">
+              <object class="GtdTaskListView" id="list_view">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="readonly">False</property>
