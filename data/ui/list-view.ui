@@ -55,13 +55,16 @@
                 <property name="valign">center</property>
                 <property name="halign">center</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkImage" id="empty_list_image">
+                  <object class="GtkImage" id="empty_view__list_image">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="pixel_size">256</property>
+                    <property name="valign">center</property>
+                    <property name="pixel_size">128</property>
                     <property name="icon_name">emblem-ok-symbolic</property>
+                    <property name="icon-size">0</property>
+                    <property name="opacity">0.2</property>
+                    <property name="margin-bottom">18</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -70,12 +73,14 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="title_label">
+                  <object class="GtkLabel" id="empty_view_title_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="opacity">0.5</property>
                     <property name="label" translatable="yes">No tasks found</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
+                      <attribute name="scale" value="2"/>
                     </attributes>
                   </object>
                   <packing>
@@ -85,14 +90,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="subtitle_label">
+                  <object class="GtkLabel" id="empty_view_subtitle_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">You can add tasks to lists in the &lt;b&gt;Lists&lt;/b&gt; view</property>
                     <property name="use_markup">True</property>
-                    <style>
-                      <class name="dim-label"/>
-                    </style>
+                    <property name="opacity">0.5</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
