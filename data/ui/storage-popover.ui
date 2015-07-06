@@ -4,6 +4,7 @@
   <template class="GtdStoragePopover" parent="GtkPopover">
     <property name="can_focus">False</property>
     <property name="border_width">18</property>
+    <signal name="closed" handler="gtd_storage_popover__closed" swapped="no" />
     <child>
       <object class="GtkStack" id="stack">
         <property name="visible">True</property>

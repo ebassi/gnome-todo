@@ -84,6 +84,14 @@ clear_and_hide (GtdStoragePopover *popover)
 }
 
 static void
+gtd_storage_popover__closed (GtdStoragePopover *popover)
+{
+  g_return_if_fail (GTD_IS_STORAGE_POPOVER (popover));
+
+  gtk_stack_set_visible_child_name (GTK_STACK (popover->priv->stack), "main");
+}
+
+static void
 gtd_storage_popover__action_button_clicked (GtdStoragePopover *popover,
                                             GtkWidget         *button)
 {
@@ -277,6 +285,7 @@ gtd_storage_popover_class_init (GtdStoragePopoverClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__action_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__change_location_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__closed);
   gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__storage_selected);
   gtk_widget_class_bind_template_callback (widget_class, gtd_storage_popover__text_changed_cb);
 }
