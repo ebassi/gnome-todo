@@ -305,7 +305,19 @@ gtd_window__on_key_press_event (GtkWidget    *widget,
                                 GdkEvent     *event,
                                 GtkSearchBar *bar)
 {
-  return gtk_search_bar_handle_event (bar, event);
+  GtdWindowPrivate *priv;
+
+  g_return_val_if_fail (GTD_IS_WINDOW (widget), TRUE);
+
+  priv = GTD_WINDOW (widget)->priv;
+
+  if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->main_stack)), "overview") == 0 &&
+      g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->stack)), "lists") == 0)
+    {
+      return gtk_search_bar_handle_event (bar, event);
+    }
+
+  return FALSE;
 }
 
 static gint
