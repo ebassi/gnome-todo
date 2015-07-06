@@ -36,6 +36,7 @@ typedef struct
   GtkStack                      *main_stack;
   GtkWidget                     *new_list_popover;
   GtkButton                     *notification_action_button;
+  GtkButton                     *notification_close_button;
   GtkLabel                      *notification_label;
   GtkRevealer                   *notification_revealer;
   GtkSpinner                    *notification_spinner;
@@ -90,7 +91,8 @@ static void          gtd_window__change_storage_action           (GSimpleAction 
                                                                   GVariant              *parameter,
                                                                   gpointer               user_data);
 
-static gboolean      gtd_window__execute_notification_data       (NotificationData      *data);
+static gboolean      gtd_window__execute_notification_data       (NotificationData      *data,
+                                                                  gboolean               primary_action);
 
 
 static void          gtd_window_consume_notification             (GtdWindow             *window);
@@ -186,8 +188,8 @@ gtd_window__change_storage_action (GSimpleAction *simple,
 }
 
 static void
-gtd_window__notification_close_button_clicked (GtkButton *button,
-                                               gpointer   user_data)
+gtd_window__notification_notification_button_clicked (GtkButton *button,
+                                                      gpointer   user_data)
 {
   GtdWindowPrivate *priv;
   NotificationData *data;
@@ -204,7 +206,7 @@ gtd_window__notification_close_button_clicked (GtkButton *button,
       priv->notification_delay_id = 0;
     }
 
-  gtd_window__execute_notification_data (data);
+  gtd_window__execute_notification_data (data, button == priv->notification_close_button);
 }
 
 static void
@@ -248,13 +250,16 @@ gtd_window_consume_notification (GtdWindow *window)
 }
 
 static gboolean
-gtd_window__execute_notification_data (NotificationData *data)
+gtd_window__execute_notification_data (NotificationData *data,
+                                       gboolean          primary_action)
 {
   GtdWindowPrivate *priv = data->window->priv;
   gboolean retval = G_SOURCE_REMOVE;
 
-  if (data->primary_action)
+  if (primary_action && data->primary_action)
     retval = data->primary_action (data->data);
+  else if (!primary_action && data->secondary_action)
+    retval = data->secondary_action (data->data);
 
   /* Remove the current notification from queue */
   g_queue_pop_head (priv->notification_queue);
@@ -588,7 +593,7 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_color_set);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_selected);
-  gtk_widget_class_bind_template_callback (widget_class, gtd_window__notification_close_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_window__notification_notification_button_clicked);
 }
 
 static void
