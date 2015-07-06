@@ -41,6 +41,8 @@ typedef struct
   GtkRevealer                   *notification_revealer;
   GtkSpinner                    *notification_spinner;
   GtdTaskListView               *scheduled_list_view;
+  GtkSearchBar                  *search_bar;
+  GtkSearchEntry                *search_entry;
   GtkStackSwitcher              *stack;
   GtkStackSwitcher              *stack_switcher;
   GtdStorageDialog              *storage_dialog;
@@ -298,8 +300,16 @@ gtd_window__list_color_set (GtkColorChooser *button,
   gtd_manager_save_task_list (priv->manager, list);
 }
 
+static gboolean
+gtd_window__on_key_press_event (GtkWidget    *widget,
+                                GdkEvent     *event,
+                                GtkSearchBar *bar)
+{
+  return gtk_search_bar_handle_event (bar, event);
+}
+
 static gint
-gtd_window__listbox_sort_func (GtdTaskListItem *a,
+gtd_window__flowbox_sort_func (GtdTaskListItem *a,
                                GtdTaskListItem *b,
                                gpointer         user_data)
 {
@@ -316,6 +326,44 @@ gtd_window__listbox_sort_func (GtdTaskListItem *a,
     return retval;
 
   return g_strcmp0 (gtd_task_list_get_name (l1), gtd_task_list_get_name (l2));
+}
+
+static gboolean
+gtd_window__flowbox_filter_func (GtdTaskListItem *item,
+                                 GtdWindow       *window)
+{
+  GtdWindowPrivate *priv;
+  GtdTaskList *list;
+  gboolean return_value;
+  gchar *search_folded;
+  gchar *list_name_folded;
+  gchar *haystack;
+
+  g_return_val_if_fail (GTD_IS_WINDOW (window), FALSE);
+
+  priv = window->priv;
+  list = gtd_task_list_item_get_list (item);
+  haystack = NULL;
+  search_folded = g_utf8_casefold (gtk_entry_get_text (GTK_ENTRY (priv->search_entry)), -1);
+  list_name_folded = g_utf8_casefold (gtd_task_list_get_name (list), -1);
+
+  if (!search_folded || search_folded[0] == '\0')
+    {
+      return_value = TRUE;
+      goto out;
+    }
+
+  haystack = g_strstr_len (list_name_folded,
+                           -1,
+                           search_folded);
+
+  return_value = (haystack != NULL);
+
+out:
+  g_free (search_folded);
+  g_free (list_name_folded);
+
+  return return_value;
 }
 
 static void
@@ -383,6 +431,7 @@ gtd_window__list_selected (GtkFlowBox      *flowbox,
   gtk_header_bar_set_title (priv->headerbar, gtd_task_list_get_name (list));
   gtk_header_bar_set_subtitle (priv->headerbar, gtd_task_list_get_origin (list));
   gtk_header_bar_set_custom_title (priv->headerbar, NULL);
+  gtk_search_bar_set_search_mode (priv->search_bar, FALSE);
   gtd_task_list_view_set_task_list (priv->list_view, list);
   gtd_task_list_view_set_show_completed (priv->list_view, FALSE);
   gtk_widget_show (GTK_WIDGET (priv->back_button));
@@ -419,9 +468,14 @@ gtd_window_constructed (GObject *object)
   G_OBJECT_CLASS (gtd_window_parent_class)->constructed (object);
 
   gtk_flow_box_set_sort_func (priv->lists_flowbox,
-                              (GtkFlowBoxSortFunc) gtd_window__listbox_sort_func,
+                              (GtkFlowBoxSortFunc) gtd_window__flowbox_sort_func,
                               NULL,
                               NULL);
+
+  gtk_flow_box_set_filter_func (priv->lists_flowbox,
+                                (GtkFlowBoxFilterFunc) gtd_window__flowbox_filter_func,
+                                object,
+                                NULL);
 
   g_object_bind_property (object,
                           "manager",
@@ -584,15 +638,18 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_revealer);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_spinner);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, scheduled_list_view);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, search_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, storage_dialog);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, scheduled_list_view);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, today_list_view);
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_color_set);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_selected);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_window__on_key_press_event);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__notification_notification_button_clicked);
 }
 
