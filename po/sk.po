@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "todo&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2015-07-06 01:14+0000\n"
-"PO-Revision-Date: 2015-07-08 20:40+0200\n"
+"PO-Revision-Date: 2015-07-08 20:44+0200\n"
 "Last-Translator: \n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -360,7 +360,7 @@ msgstr "Chyba pri načítavaní správcu úloh"
 
 #: ../src/gtd-manager.c:1030
 msgid "Local"
-msgstr "Miestne"
+msgstr "Miestny"
 
 #: ../src/gtd-manager.c:1031
 msgid "On This Computer"
