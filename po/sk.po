@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: gnome-todo master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "todo&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-24 08:25+0000\n"
-"PO-Revision-Date: 2015-06-24 16:43+0100\n"
+"POT-Creation-Date: 2015-07-06 01:14+0000\n"
+"PO-Revision-Date: 2015-07-08 20:40+0200\n"
+"Last-Translator: \n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"Last-Translator: \n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.2\n"
 
 #: ../data/appdata/org.gnome.Todo.appdata.xml.in.h:1
 #: ../data/org.gnome.Todo.desktop.in.in.h:1
@@ -33,8 +33,8 @@ msgid ""
 "GNOME Todo is a simple task management application designed to integrate "
 "with GNOME."
 msgstr ""
-"Úlohy prostredia GNOME je jednoduchá aplikácia na správu úloh, integrovaná "
-"s prostredím GNOME."
+"Úlohy prostredia GNOME je jednoduchá aplikácia na správu úloh, integrovaná s "
+"prostredím GNOME."
 
 #: ../data/gtk/menus.ui.h:1
 msgid "New List…"
@@ -153,13 +153,22 @@ msgstr "Prihlásením do účtov služieb získate prístup k vašim úlohám"
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: ../data/ui/initial-setup.ui.h:4 ../data/ui/list-view.ui.h:2
-#: ../src/gtd-list-view.c:241
+#: ../data/ui/initial-setup.ui.h:4 ../data/ui/list-view.ui.h:4
+#: ../src/gtd-task-list-view.c:285
 msgid "Done"
 msgstr "Dokončiť"
 
-# tooltip
 #: ../data/ui/list-view.ui.h:1
+msgid "No tasks found"
+msgstr "Nenašli sa žiadne úlohy"
+
+#: ../data/ui/list-view.ui.h:2
+msgid "You can add tasks to lists in the <b>Lists</b> view"
+msgstr ""
+"Môžete pridať úlohy do zoznamov prostredníctvom zobrazenia <b>Zoznamy</b>"
+
+# tooltip
+#: ../data/ui/list-view.ui.h:3
 msgid "Show or hide completed tasks"
 msgstr "Zobrazí alebo skryje dokončené úlohy"
 
@@ -220,7 +229,7 @@ msgstr "Alebo môžete ukladať vaše úlohy iba v tomto počítači"
 msgid "New task…"
 msgstr "Nová úloha…"
 
-#: ../data/ui/window.ui.h:1 ../src/gtd-list-view.c:174
+#: ../data/ui/window.ui.h:1 ../src/gtd-task-list-view.c:218
 msgid "Undo"
 msgstr "Vrátiť späť"
 
@@ -228,11 +237,12 @@ msgstr "Vrátiť späť"
 msgid "Lists"
 msgstr "Zoznamy"
 
-#: ../data/ui/window.ui.h:3 ../src/gtd-task-row.c:100
+#: ../data/ui/window.ui.h:3 ../src/gtd-task-row.c:145 ../src/gtd-window.c:147
+#: ../src/gtd-window.c:152
 msgid "Today"
 msgstr "Dnes"
 
-#: ../data/ui/window.ui.h:4
+#: ../data/ui/window.ui.h:4 ../src/gtd-window.c:147 ../src/gtd-window.c:152
 msgid "Scheduled"
 msgstr "Naplánované"
 
@@ -264,7 +274,7 @@ msgstr "Dušan Kazik <prescott66@gmail.com>"
 msgid "Error loading CSS from resource"
 msgstr "Chyba pri načítavaní CSS zo zdroja"
 
-#: ../src/gtd-edit-pane.c:136 ../src/gtd-task-row.c:124
+#: ../src/gtd-edit-pane.c:136 ../src/gtd-task-row.c:175
 msgid "No date set"
 msgstr "Žiadna sada údajov "
 
@@ -292,140 +302,95 @@ msgstr "Správca úlohy"
 msgid "The singleton manager instance of the task"
 msgstr "Jediná inštancia správcu úlohy"
 
-#: ../src/gtd-list-view.c:158
-#, c-format
-msgid "Task <b>%s</b> removed"
-msgstr "Úloha <b>%s</b> bola odstránená"
-
-#: ../src/gtd-list-view.c:592 ../src/gtd-storage-dialog.c:153
-#: ../src/gtd-storage-popover.c:264 ../src/gtd-storage-selector.c:522
-#: ../src/gtd-window.c:476
-msgid "Manager of this window's application"
-msgstr "Správca aplikácie pre toto okno"
-
-#: ../src/gtd-list-view.c:593 ../src/gtd-storage-dialog.c:154
-#: ../src/gtd-storage-popover.c:265 ../src/gtd-storage-selector.c:523
-#: ../src/gtd-window.c:477
-msgid "The manager of the window's application"
-msgstr "Správca aplikácie okna"
-
-#: ../src/gtd-list-view.c:606
-msgid "Whether the list is readonly"
-msgstr "Či je zoznam iba na čítanie"
-
-#: ../src/gtd-list-view.c:607
-msgid ""
-"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
-msgstr ""
-"Určuje, či je zoznam iba na čítanie, t.j. zobrazí alebo nezobrazí sa riadok "
-"Nová úloha"
-
-#: ../src/gtd-list-view.c:620
-msgid "Whether task rows show the list name"
-msgstr "Či riadky s úlohami zobrazia názov zoznamu"
-
-#: ../src/gtd-list-view.c:621
-msgid "Whether task rows show the list name at the end of the row"
-msgstr ""
-"Určuje, či riadky s úlohami majú zobraziť názov zoznamu na konci riadku"
-
-#: ../src/gtd-list-view.c:634
-msgid "Whether completed tasks are shown"
-msgstr "Či sa zobrazia dokončené úlohy"
-
-#: ../src/gtd-list-view.c:635
-msgid "Whether completed tasks are visible or not"
-msgstr "Určuje, či sú viditeľné dokončené úlohy alebo nie"
-
-#: ../src/gtd-manager.c:331
+#: ../src/gtd-manager.c:376
 msgid "Error loading GNOME Online Accounts"
 msgstr "Chyba pri načítavaní Účtov služieb prostredia GNOME"
 
-#: ../src/gtd-manager.c:360
+#: ../src/gtd-manager.c:405
 msgid "Error saving task list"
 msgstr "Chyba pri ukladaní zoznamu úloh"
 
-#: ../src/gtd-manager.c:387
+#: ../src/gtd-manager.c:432
 msgid "Error removing task list"
 msgstr "Chyba pri odstraňovaní zoznamu úloh"
 
-#: ../src/gtd-manager.c:419
+#: ../src/gtd-manager.c:467
 msgid "Error creating task"
 msgstr "Chyba pri vytváraní zoznamu úloh"
 
-#: ../src/gtd-manager.c:451
+#: ../src/gtd-manager.c:531
 msgid "Error removing task"
 msgstr "Chyba pri odstraňovaní úlohy"
 
-#: ../src/gtd-manager.c:477
+#: ../src/gtd-manager.c:584
 msgid "Error updating task"
 msgstr "Chyba pri aktualizovaní úlohy"
 
-#: ../src/gtd-manager.c:506
+#: ../src/gtd-manager.c:613
 msgid "Failed to prompt for credentials"
 msgstr "Zlyhalo pýtanie poverení"
 
-#: ../src/gtd-manager.c:529
+#: ../src/gtd-manager.c:636
 msgid "Failed to prompt for credentials for"
 msgstr "Zlyhalo pýtanie poverení pre"
 
-#: ../src/gtd-manager.c:581
+#: ../src/gtd-manager.c:688
 msgid "Authentication failure"
 msgstr "Zlyhanie overenia totožnosti"
 
-#: ../src/gtd-manager.c:622
+#: ../src/gtd-manager.c:755
 msgid "Error fetching tasks from list"
 msgstr "Chyba pri získavaní úloh zo zoznamu"
 
-#: ../src/gtd-manager.c:684
+#: ../src/gtd-manager.c:821
 msgid "Task list source successfully connected"
 msgstr "Zdroj zoznamu úloh bol úspešne pripojený"
 
-#: ../src/gtd-manager.c:691
+#: ../src/gtd-manager.c:828
 msgid "Failed to connect to task list source"
 msgstr "Zlyhalo pripojenie k zdroju zoznamu úloh"
 
-#: ../src/gtd-manager.c:721
+#: ../src/gtd-manager.c:858
 msgid "Skipping already loaded task list "
 msgstr "Vynecháva sa už načítaný zoznam úloh "
 
-#: ../src/gtd-manager.c:759
+#: ../src/gtd-manager.c:896
 msgid "Error loading task manager"
 msgstr "Chyba pri načítavaní správcu úloh"
 
-#: ../src/gtd-manager.c:891
+#: ../src/gtd-manager.c:1030
 msgid "Local"
 msgstr "Miestne"
 
-#: ../src/gtd-manager.c:892
+#: ../src/gtd-manager.c:1031
 msgid "On This Computer"
 msgstr "V tomto počítači"
 
-#: ../src/gtd-manager.c:925
+#: ../src/gtd-manager.c:1064
 msgid "The online accounts client of the manager"
 msgstr "Klient účtov služieb správcu"
 
-#: ../src/gtd-manager.c:926
+#: ../src/gtd-manager.c:1065
 msgid ""
 "The read-only GNOME online accounts client loaded and owned by the manager"
 msgstr ""
 "Klient účtov služieb prostredia GNOME iba na čítanie, ktorý je načítaný a "
 "vlastnený správcom"
 
-#: ../src/gtd-manager.c:939
+#: ../src/gtd-manager.c:1078
 msgid "Whether GNOME Online Accounts client is ready"
 msgstr "Či je klient účtov služieb prostredia GNOME pripravený"
 
-#: ../src/gtd-manager.c:940
+#: ../src/gtd-manager.c:1079
 msgid "Whether the read-only GNOME online accounts client is loaded"
 msgstr ""
 "Určuje, či je načítaný klient účtov služieb prostredia GNOME iba na čítanie"
 
-#: ../src/gtd-manager.c:953
+#: ../src/gtd-manager.c:1092
 msgid "The source registry of the manager"
 msgstr "Zdrojový register správcu"
 
-#: ../src/gtd-manager.c:954
+#: ../src/gtd-manager.c:1093
 msgid "The read-only source registry loaded and owned by the manager"
 msgstr "Zdrojový registre iba na čítanie je načítaný a vlastnený správcom"
 
@@ -512,6 +477,18 @@ msgstr "Názov poskytovateľa umiestnenia úložiska."
 #: ../src/gtd-storage.c:680
 msgid "Error creating new task list"
 msgstr "Chyba pri vytváraní nového zoznamu úloh"
+
+#: ../src/gtd-storage-dialog.c:153 ../src/gtd-storage-popover.c:264
+#: ../src/gtd-storage-selector.c:522 ../src/gtd-task-list-view.c:659
+#: ../src/gtd-window.c:564
+msgid "Manager of this window's application"
+msgstr "Správca aplikácie pre toto okno"
+
+#: ../src/gtd-storage-dialog.c:154 ../src/gtd-storage-popover.c:265
+#: ../src/gtd-storage-selector.c:523 ../src/gtd-task-list-view.c:660
+#: ../src/gtd-window.c:565
+msgid "The manager of the window's application"
+msgstr "Správca aplikácie okna"
 
 #: ../src/gtd-storage-row.c:148
 msgid "Storage of the row"
@@ -659,34 +636,67 @@ msgstr "Zoznam úloh položky"
 msgid "The task list associated with this item"
 msgstr "Zoznam úloh priradený k tejto položke"
 
-#: ../src/gtd-task-row.c:104
+#: ../src/gtd-task-list-view.c:202
+#, c-format
+msgid "Task <b>%s</b> removed"
+msgstr "Úloha <b>%s</b> bola odstránená"
+
+#: ../src/gtd-task-list-view.c:673
+msgid "Whether the list is readonly"
+msgstr "Či je zoznam iba na čítanie"
+
+#: ../src/gtd-task-list-view.c:674
+msgid ""
+"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
+msgstr ""
+"Určuje, či je zoznam iba na čítanie, t.j. zobrazí alebo nezobrazí sa riadok "
+"Nová úloha"
+
+#: ../src/gtd-task-list-view.c:687
+msgid "Whether task rows show the list name"
+msgstr "Či riadky s úlohami zobrazia názov zoznamu"
+
+#: ../src/gtd-task-list-view.c:688
+msgid "Whether task rows show the list name at the end of the row"
+msgstr ""
+"Určuje, či riadky s úlohami majú zobraziť názov zoznamu na konci riadku"
+
+#: ../src/gtd-task-list-view.c:701
+msgid "Whether completed tasks are shown"
+msgstr "Či sa zobrazia dokončené úlohy"
+
+#: ../src/gtd-task-list-view.c:702
+msgid "Whether completed tasks are visible or not"
+msgstr "Určuje, či sú viditeľné dokončené úlohy alebo nie"
+
+#: ../src/gtd-task-row.c:149
 msgid "Tomorrow"
 msgstr "Zajtra"
 
-#: ../src/gtd-task-row.c:108
+#: ../src/gtd-task-row.c:153
 msgid "Yesterday"
 msgstr "Včera"
 
-#: ../src/gtd-task-row.c:324
+#: ../src/gtd-task-row.c:375
 msgid "If the row is used to add a new task"
 msgstr "Ak je riadok použitý na pridanie novej úlohy"
 
-#: ../src/gtd-task-row.c:325
+#: ../src/gtd-task-row.c:376
 msgid "Whether the row is used to add a new task"
 msgstr "Určuje, či je riadok použitý na pridanie novej úlohy"
 
-#: ../src/gtd-task-row.c:338
+#: ../src/gtd-task-row.c:389
 msgid "Task of the row"
 msgstr "Úloha riadku"
 
-#: ../src/gtd-task-row.c:339
+#: ../src/gtd-task-row.c:390
 msgid "The task that this row represents"
 msgstr "Úloha, ktorú reprezentuje tento riadok"
 
-#: ../src/gtd-window.c:230
+#: ../src/gtd-window.c:287
 msgid "Setting new color for task list"
 msgstr "Nastavuje sa nová farba zoznamu úloh"
 
-#: ../src/gtd-window.c:276
+#: ../src/gtd-window.c:333
 msgid "Loading your task lists…"
 msgstr "Načítavanie vašich zoznamov úloh…"
