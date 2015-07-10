@@ -14,13 +14,22 @@ GtdTaskListItem.thumbnail {
     font-size: 9px;
 }
 
+GtdTaskListItem,
+GtdTaskListView GtdTaskRow {
+    color: #000003;
+}
+
+GtdTaskListView GtdTaskRow:hover {
+    background-color: alpha(#ededed, 0.4);
+}
+
 GtdTaskListItem.dark,
 GtdTaskListView.dark GtdTaskRow {
     color: #eeeeec;
 }
 
 GtdTaskListView.dark GtdTaskRow:hover {
-    background-color: alpha(@theme_bg_color, 0.2);
+    background-color: alpha(#393f3f, 0.4);
 }
 
 GtdArrowFrame {
@@ -48,7 +57,7 @@ GtdTaskRow.priority-low {
 }
 
 GtdTaskRow.priority-low:hover {
-    background-color: alpha(#3465a4, 0.3);
+    background-color: alpha(#3465a4, 0.4);
 }
 
 
@@ -57,7 +66,7 @@ GtdTaskRow.priority-medium {
 }
 
 GtdTaskRow.priority-medium:hover {
-    background-color: alpha(#f57900, 0.3);
+    background-color: alpha(#f57900, 0.4);
 }
 
 
@@ -66,5 +75,5 @@ GtdTaskRow.priority-hight {
 }
 
 GtdTaskRow.priority-hight:hover {
-    background-color: alpha(#cc0000, 0.3);
+    background-color: alpha(#cc0000, 0.4);
 }
