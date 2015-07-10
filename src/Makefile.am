@@ -4,6 +4,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
 	-DUI_DATA_DIR=\""$(pkgdatadir)/style"\" \
 	-DGOA_API_IS_SUBJECT_TO_CHANGE \
+	-I$(srcdir)/storage \
 	$(GNOME_TODO_CFLAGS)
 
 bin_PROGRAMS = gnome-todo
@@ -14,6 +15,16 @@ BUILT_SOURCES = \
 
 gnome_todo_SOURCES = \
 	$(BUILT_SOURCES) \
+	storage/gtd-storage.c \
+	storage/gtd-storage.h \
+	storage/gtd-storage-dialog.c \
+	storage/gtd-storage-dialog.h \
+	storage/gtd-storage-popover.c \
+	storage/gtd-storage-popover.h \
+	storage/gtd-storage-row.c \
+	storage/gtd-storage-row.h \
+	storage/gtd-storage-selector.c \
+	storage/gtd-storage-selector.h \
 	gtd-application.c \
 	gtd-application.h \
 	gtd-arrow-frame.c \
@@ -27,16 +38,6 @@ gnome_todo_SOURCES = \
 	gtd-manager.h \
 	gtd-object.c \
 	gtd-object.h \
-	gtd-storage.c \
-	gtd-storage.h \
-	gtd-storage-dialog.c \
-	gtd-storage-dialog.h \
-	gtd-storage-popover.c \
-	gtd-storage-popover.h \
-	gtd-storage-row.c \
-	gtd-storage-row.h \
-	gtd-storage-selector.c \
-	gtd-storage-selector.h \
 	gtd-task.c \
 	gtd-task.h \
 	gtd-task-list.c \
