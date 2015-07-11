@@ -69,6 +69,26 @@ gtd_notification_widget_clear_bindings (GtdNotificationWidget *widget)
   g_clear_pointer (&priv->secondary_label_binding, g_binding_unbind);
 }
 
+static void
+gtd_notification_widget__enter_notify_cb (GtdNotificationWidget *widget)
+{
+  GtdNotificationWidgetPrivate *priv = widget->priv;
+
+  /* Stop the timer when mouse enters */
+  if (priv->current_notification)
+    gtd_notification_stop (priv->current_notification);
+}
+
+static void
+gtd_notification_widget__leave_notify_cb (GtdNotificationWidget *widget)
+{
+  GtdNotificationWidgetPrivate *priv = widget->priv;
+
+  /* Restart the timer when mouse leaves */
+  if (priv->current_notification)
+    gtd_notification_start (priv->current_notification);
+}
+
 /*
  * This method is called after a notification is dismissed
  * or any action is taken, and it verifies if it should
@@ -193,6 +213,8 @@ gtd_notification_widget_class_init (GtdNotificationWidgetClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdNotificationWidget, text_label);
 
   gtk_widget_class_bind_template_callback (widget_class, gtd_notification_widget__close_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_notification_widget__enter_notify_cb);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_notification_widget__leave_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, gtd_notification_widget__secondary_button_clicked_cb);
 }
 
