@@ -99,7 +99,6 @@ gtd_notification_widget_stop_or_run (GtdNotificationWidget *widget)
 {
   GtdNotificationWidgetPrivate *priv = widget->priv;
 
-  g_clear_object (&priv->current_notification);
   priv->current_notification = g_queue_pop_head (priv->queue);
 
   if (priv->current_notification)
