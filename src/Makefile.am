@@ -5,6 +5,7 @@ AM_CPPFLAGS = \
 	-DUI_DATA_DIR=\""$(pkgdatadir)/style"\" \
 	-DGOA_API_IS_SUBJECT_TO_CHANGE \
 	-I$(srcdir)/storage \
+	-I$(srcdir)/notification \
 	$(GNOME_TODO_CFLAGS)
 
 bin_PROGRAMS = gnome-todo
@@ -15,6 +16,10 @@ BUILT_SOURCES = \
 
 gnome_todo_SOURCES = \
 	$(BUILT_SOURCES) \
+	notification/gtd-notification.c \
+	notification/gtd-notification.h \
+	notification/gtd-notification-widget.c \
+	notification/gtd-notification-widget.h \
 	storage/gtd-storage.c \
 	storage/gtd-storage.h \
 	storage/gtd-storage-dialog.c \

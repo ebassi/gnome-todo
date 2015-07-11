@@ -20,6 +20,7 @@
 #include "gtd-edit-pane.h"
 #include "gtd-task-list-view.h"
 #include "gtd-manager.h"
+#include "gtd-notification.h"
 #include "gtd-task.h"
 #include "gtd-task-list.h"
 #include "gtd-task-row.h"
@@ -91,30 +92,27 @@ enum {
   LAST_PROP
 };
 
-static gboolean
-remove_task_action (RemoveTaskData *data)
+static void
+remove_task_action (GtdNotification *notification,
+                    gpointer         user_data)
 {
-  g_return_val_if_fail (data != NULL, G_SOURCE_REMOVE);
+  RemoveTaskData *data = user_data;
 
   gtd_manager_remove_task (data->view->priv->manager, data->task);
 
   g_free (data);
-
-  return G_SOURCE_REMOVE;
 }
 
-static gboolean
-undo_remove_task_action (RemoveTaskData *data)
+static void
+undo_remove_task_action (GtdNotification *notification,
+                         gpointer         user_data)
 {
+  RemoveTaskData  *data = user_data;
   GtdTaskList *list = gtd_task_get_list (data->task);
-
-  g_return_val_if_fail (data != NULL, G_SOURCE_REMOVE);
 
   gtd_task_list_save_task (list, data->task);
 
   g_free (data);
-
-  return G_SOURCE_REMOVE;
 }
 
 static void
@@ -192,6 +190,7 @@ gtd_task_list_view__remove_task_cb (GtdEditPane *pane,
                                     gpointer     user_data)
 {
   GtdTaskListViewPrivate *priv;
+  GtdNotification *notification;
   RemoveTaskData *data;
   GtdWindow *window;
   gchar *text;
@@ -211,15 +210,19 @@ gtd_task_list_view__remove_task_cb (GtdEditPane *pane,
 
   gtk_revealer_set_reveal_child (priv->edit_revealer, FALSE);
 
-  gtd_window_notify (window,
-                     7500, //ms
-                     TASK_REMOVED_NOTIFICATION_ID,
-                     text,
-                     _("Undo"),
-                     (GSourceFunc) remove_task_action,
-                     (GSourceFunc) undo_remove_task_action,
-                     FALSE,
-                     data);
+  /* Notify about the removal */
+  notification = gtd_notification_new (text, 7500.0);
+
+  gtd_notification_set_primary_action (notification,
+                                       (GtdNotificationActionFunc) remove_task_action,
+                                       data);
+
+  gtd_notification_set_secondary_action (notification,
+                                         _("Undo"),
+                                         (GtdNotificationActionFunc) undo_remove_task_action,
+                                         data);
+
+  gtd_window_notify (window, notification);
 
   g_free (text);
 }

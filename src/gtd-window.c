@@ -19,6 +19,8 @@
 #include "gtd-application.h"
 #include "gtd-task-list-view.h"
 #include "gtd-manager.h"
+#include "gtd-notification.h"
+#include "gtd-notification-widget.h"
 #include "gtd-storage-dialog.h"
 #include "gtd-task.h"
 #include "gtd-task-list.h"
@@ -35,15 +37,12 @@ typedef struct
   GtkFlowBox                    *lists_flowbox;
   GtkStack                      *main_stack;
   GtkWidget                     *new_list_popover;
-  GtkButton                     *notification_action_button;
-  GtkButton                     *notification_close_button;
-  GtkLabel                      *notification_label;
-  GtkRevealer                   *notification_revealer;
-  GtkSpinner                    *notification_spinner;
+  GtdNotificationWidget         *notification_widget;
   GtdTaskListView               *scheduled_list_view;
   GtkSearchBar                  *search_bar;
+  GtkToggleButton               *search_button;
   GtkSearchEntry                *search_entry;
-  GtkStackSwitcher              *stack;
+  GtkStack                      *stack;
   GtkStackSwitcher              *stack_switcher;
   GtdStorageDialog              *storage_dialog;
   GtdTaskListView               *today_list_view;
@@ -52,12 +51,8 @@ typedef struct
   /* mode */
   GtdWindowMode                  mode;
 
-  /*
-   * A queue of the next operations.
-   */
-  GQueue                        *notification_queue;
-  gint                           notification_delay_id;
-  gboolean                       consuming_notifications;
+  /* loading notification */
+  GtdNotification               *loading_notification;
 
   GtdManager                    *manager;
 } GtdWindowPrivate;
@@ -70,36 +65,9 @@ struct _GtdWindow
   GtdWindowPrivate     *priv;
 };
 
-typedef struct
-{
-  GtdWindow   *window;
-
-  gchar       *id;
-  gchar       *text;
-  gchar       *label;
-
-  gint         delay;
-  gboolean     show_spinner;
-
-  GSourceFunc  primary_action;
-  GSourceFunc  secondary_action;
-
-  gpointer     data;
-} NotificationData;
-
-#define LOADING_LISTS_NOTIFICATION_ID            "loading-lists-id"
-
 static void          gtd_window__change_storage_action           (GSimpleAction         *simple,
                                                                   GVariant              *parameter,
                                                                   gpointer               user_data);
-
-static gboolean      gtd_window__execute_notification_data       (NotificationData      *data,
-                                                                  gboolean               primary_action);
-
-
-static void          gtd_window_consume_notification             (GtdWindow             *window);
-
-void                 notification_data_free                      (NotificationData      *data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtdWindow, gtd_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -112,6 +80,20 @@ enum {
   PROP_MANAGER,
   LAST_PROP
 };
+
+static void
+gtd_window__stack_visible_child_cb (GtdWindow *window)
+{
+  GtdWindowPrivate *priv;
+
+  priv = window->priv;
+
+  gtk_widget_set_visible (
+          GTK_WIDGET (priv->search_button),
+          g_strcmp0 (gtk_stack_get_visible_child_name (priv->main_stack), "overview") == 0 &&
+          g_strcmp0 (gtk_stack_get_visible_child_name (priv->stack), "lists") == 0);
+
+}
 
 static void
 gtd_window_update_list_counters (GtdTaskList *list,
@@ -166,14 +148,6 @@ gtd_window_update_list_counters (GtdTaskList *list,
   g_free (new_title);
 }
 
-void
-notification_data_free (NotificationData *data)
-{
-  g_free (data->id);
-  g_free (data->text);
-  g_free (data->label);
-  g_free (data);
-}
 
 static void
 gtd_window__change_storage_action (GSimpleAction *simple,
@@ -187,93 +161,6 @@ gtd_window__change_storage_action (GSimpleAction *simple,
   priv = GTD_WINDOW (user_data)->priv;
 
   gtk_dialog_run (GTK_DIALOG (priv->storage_dialog));
-}
-
-static void
-gtd_window__notification_notification_button_clicked (GtkButton *button,
-                                                      gpointer   user_data)
-{
-  GtdWindowPrivate *priv;
-  NotificationData *data;
-
-  g_return_if_fail (GTD_IS_WINDOW (user_data));
-
-  priv = GTD_WINDOW (user_data)->priv;
-  data = g_queue_peek_head (priv->notification_queue);
-
-  /* Cancel any previouly set timeouts */
-  if (priv->notification_delay_id > 0)
-    {
-      g_source_remove (priv->notification_delay_id);
-      priv->notification_delay_id = 0;
-    }
-
-  gtd_window__execute_notification_data (data, button == priv->notification_close_button);
-}
-
-static void
-gtd_window_consume_notification (GtdWindow *window)
-{
-  GtdWindowPrivate *priv;
-  NotificationData *data;
-
-  g_return_if_fail (GTD_IS_WINDOW (window));
-
-  priv = window->priv;
-
-  if (g_queue_is_empty (priv->notification_queue))
-    {
-      gtk_revealer_set_reveal_child (priv->notification_revealer, FALSE);
-      priv->consuming_notifications = FALSE;
-      return;
-    }
-
-  priv->consuming_notifications = TRUE;
-
-  /* Keep the current operation until it is finished or canceled */
-  data = g_queue_peek_head (priv->notification_queue);
-
-  gtk_button_set_label (priv->notification_action_button, data->label ? data->label : "");
-  gtk_label_set_markup (priv->notification_label, data->text);
-  gtk_revealer_set_reveal_child (priv->notification_revealer, TRUE);
-  gtk_widget_set_visible (GTK_WIDGET (priv->notification_action_button), data->label != NULL);
-
-  /* spinner */
-  gtk_widget_set_visible (GTK_WIDGET (priv->notification_spinner), data->show_spinner);
-  g_object_set (priv->notification_spinner, "active", data->show_spinner, NULL);
-
-  /* If there's a delay set, execute the action */
-  if (data->delay)
-    {
-      priv->notification_delay_id = g_timeout_add (data->delay,
-                                                   (GSourceFunc) gtd_window__execute_notification_data,
-                                                   data);
-    }
-}
-
-static gboolean
-gtd_window__execute_notification_data (NotificationData *data,
-                                       gboolean          primary_action)
-{
-  GtdWindowPrivate *priv = data->window->priv;
-  gboolean retval = G_SOURCE_REMOVE;
-
-  if (primary_action && data->primary_action)
-    retval = data->primary_action (data->data);
-  else if (!primary_action && data->secondary_action)
-    retval = data->secondary_action (data->data);
-
-  /* Remove the current notification from queue */
-  g_queue_pop_head (priv->notification_queue);
-
-  /* Continue consuming notifications */
-  gtd_window_consume_notification (data->window);
-
-  notification_data_free (data);
-
-  priv->notification_delay_id = 0;
-
-  return retval;
 }
 
 static void
@@ -384,23 +271,16 @@ gtd_window__manager_ready_changed (GObject    *source,
                                    gpointer    user_data)
 {
   GtdWindowPrivate *priv = GTD_WINDOW (user_data)->priv;
+
   g_return_if_fail (GTD_IS_WINDOW (user_data));
 
   if (gtd_object_get_ready (GTD_OBJECT (source)))
     {
-      gtd_window_cancel_notification (GTD_WINDOW (user_data), LOADING_LISTS_NOTIFICATION_ID);
+      gtd_notification_widget_cancel (priv->notification_widget, priv->loading_notification);
     }
   else
     {
-      gtd_window_notify (GTD_WINDOW (user_data),
-                         0,
-                         LOADING_LISTS_NOTIFICATION_ID,
-                         _("Loading your task lists…"),
-                         NULL,
-                         NULL,
-                         NULL,
-                         TRUE,
-                         NULL);
+      gtd_notification_widget_notify (priv->notification_widget, priv->loading_notification);
     }
 }
 
@@ -646,13 +526,11 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, list_view);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, main_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, new_list_popover);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_action_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_revealer);
-  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_spinner);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, notification_widget);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, scheduled_list_view);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, search_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, search_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, stack_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GtdWindow, storage_dialog);
@@ -662,7 +540,7 @@ gtd_window_class_init (GtdWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_color_set);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__list_selected);
   gtk_widget_class_bind_template_callback (widget_class, gtd_window__on_key_press_event);
-  gtk_widget_class_bind_template_callback (widget_class, gtd_window__notification_notification_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, gtd_window__stack_visible_child_cb);
 }
 
 static void
@@ -670,7 +548,8 @@ gtd_window_init (GtdWindow *self)
 {
   self->priv = gtd_window_get_instance_private (self);
 
-  self->priv->notification_queue = g_queue_new ();
+  self->priv->loading_notification = gtd_notification_new (_("Loading your task lists…"), 0);
+  gtd_object_set_ready (GTD_OBJECT (self->priv->loading_notification), FALSE);
 
   /* add actions */
   g_action_map_add_action_entries (G_ACTION_MAP (self),
@@ -700,111 +579,43 @@ gtd_window_get_manager (GtdWindow *window)
 /**
  * gtd_window_notify:
  * @window: a #GtdWindow
- * @visible_time: time which the notification will be visible, 0 to show permanently
- * @text: text of the notification
- * @button_label: text to show on the notification button, %NULL to hide it
- * @primary_action: function to call when close button is clicked
- * @secondary_action: function to call when the alternative button is clicked
- * @show_spinner: whether show the spinner or not
- * @user_data: custom data
+ * @notification: a #GtdNotification
  *
  * Shows a notification on the top of the main window.
  *
  * Returns:
  */
 void
-gtd_window_notify (GtdWindow   *window,
-                   gint         visible_time,
-                   const gchar *id,
-                   const gchar *text,
-                   const gchar *button_label,
-                   GSourceFunc  primary_action,
-                   GSourceFunc  secondary_action,
-                   gboolean     show_spinner,
-                   gpointer     user_data)
+gtd_window_notify (GtdWindow       *window,
+                   GtdNotification *notification)
 {
   GtdWindowPrivate *priv;
-  NotificationData *data;
 
   g_return_if_fail (GTD_IS_WINDOW (window));
 
   priv = window->priv;
 
-  data = g_new0 (NotificationData, 1);
-  data->window = window;
-  data->delay = visible_time;
-  data->id = g_strdup (id);
-  data->text = g_strdup (text);
-  data->label = g_strdup (button_label);
-  data->primary_action = primary_action;
-  data->secondary_action = secondary_action;
-  data->show_spinner = show_spinner;
-  data->data = user_data;
-
-  g_queue_push_tail (priv->notification_queue, data);
-
-  /* If we're not consuming notifications, start it now */
-  if (!priv->consuming_notifications)
-    gtd_window_consume_notification (window);
+  gtd_notification_widget_notify (priv->notification_widget, notification);
 }
 
 /**
  * gtd_window_cancel_notification:
  * @window: a #GtdManager
- * @id: id of the given notification
+ * @notification: a #GtdNotification
  *
- * Cancels the notification with @id as id.
+ * Cancels @notification.
  *
  * Returns:
  */
 void
-gtd_window_cancel_notification (GtdWindow   *window,
-                                const gchar *id)
+gtd_window_cancel_notification (GtdWindow       *window,
+                                GtdNotification *notification)
 {
   GtdWindowPrivate *priv;
-  NotificationData *data;
-  GList *head;
-  GList *l;
-  gint index;
 
   g_return_if_fail (GTD_IS_WINDOW (window));
-  g_return_if_fail (id != NULL);
 
-  data = NULL;
   priv = window->priv;
-  index = 0;
 
-  /* Search for a notification with the given id */
-  head = priv->notification_queue->head;
-
-  for (l = head; l != NULL; l = l->next)
-    {
-      NotificationData *tmp = l->data;
-
-      if (tmp && g_strcmp0 (tmp->id, id) == 0)
-        {
-          data = l->data;
-          break;
-        }
-
-      index++;
-    }
-
-  g_queue_remove (priv->notification_queue, data);
-
-  /* If we're removing the current head, continue consuming the queue */
-  if (index == 0)
-    {
-      /* Remove any remaining timeouts */
-      if (priv->notification_delay_id > 0)
-        {
-          g_source_remove (priv->notification_delay_id);
-          priv->notification_delay_id = 0;
-        }
-
-      gtd_window_consume_notification (window);
-    }
-
-  if (data)
-    notification_data_free (data);
+  gtd_notification_widget_cancel (priv->notification_widget, notification);
 }

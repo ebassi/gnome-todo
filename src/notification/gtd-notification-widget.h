@@ -1,4 +1,4 @@
-/* gtd-window.h
+/* gtd-notification-widget.h
  *
  * Copyright (C) 2015 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -16,9 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef GTD_WINDOW_H
-#define GTD_WINDOW_H
+#ifndef GTD_NOTIFICATION_WIDGET_H
+#define GTD_NOTIFICATION_WIDGET_H
 
 #include "gtd-types.h"
 
@@ -26,20 +25,18 @@
 
 G_BEGIN_DECLS
 
-#define GTD_TYPE_WINDOW (gtd_window_get_type())
+#define GTD_TYPE_NOTIFICATION_WIDGET (gtd_notification_widget_get_type())
 
-G_DECLARE_FINAL_TYPE (GtdWindow, gtd_window, GTD, WINDOW, GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE (GtdNotificationWidget, gtd_notification_widget, GTD, NOTIFICATION_WIDGET, GtkRevealer)
 
-GtkWidget*                gtd_window_new                  (GtdApplication       *application);
+GtkWidget*           gtd_notification_widget_new                 (void);
 
-GtdManager*               gtd_window_get_manager          (GtdWindow            *window);
+void                 gtd_notification_widget_notify              (GtdNotificationWidget *widget,
+                                                                  GtdNotification       *notification);
 
-void                      gtd_window_notify               (GtdWindow            *window,
-                                                           GtdNotification      *notification);
-
-void                      gtd_window_cancel_notification  (GtdWindow             *window,
-                                                           GtdNotification      *notification);
+void                 gtd_notification_widget_cancel              (GtdNotificationWidget *widget,
+                                                                  GtdNotification       *notification);
 
 G_END_DECLS
 
-#endif /* GTD_WINDOW_H */
+#endif /* GTD_NOTIFICATION_WIDGET_H */

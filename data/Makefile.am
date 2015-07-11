@@ -29,6 +29,7 @@ EXTRA_DIST=                     \
   ui/edit-pane.ui \
   ui/initial-setup.ui \
   ui/list-view.ui \
+  ui/notification.ui \
   ui/storage-dialog.ui \
   ui/storage-popover.ui \
   ui/storage-row.ui \
