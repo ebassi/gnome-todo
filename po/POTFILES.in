@@ -12,6 +12,7 @@ data/org.gnome.todo.gschema.xml.in
 [type: gettext/glade]data/ui/storage-selector.ui
 [type: gettext/glade]data/ui/task-row.ui
 [type: gettext/glade]data/ui/window.ui
+[type: gettext/glade]data/ui/notification.ui
 src/gtd-application.c
 src/gtd-edit-pane.c
 src/gtd-initial-setup-window.c
@@ -29,3 +30,5 @@ src/storage/gtd-storage-dialog.c
 src/storage/gtd-storage-popover.c
 src/storage/gtd-storage-row.c
 src/storage/gtd-storage-selector.c
+src/notification/gtd-notification.c
+src/notification/gtd-notification-widget.c
