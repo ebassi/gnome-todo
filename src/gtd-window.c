@@ -294,6 +294,7 @@ gtd_window__back_button_clicked (GtkButton *button,
 
   gtk_stack_set_visible_child_name (priv->main_stack, "overview");
   gtk_header_bar_set_custom_title (priv->headerbar, GTK_WIDGET (priv->stack_switcher));
+  gtk_header_bar_set_title (priv->headerbar, _("To Do"));
   gtk_widget_hide (GTK_WIDGET (priv->back_button));
   gtk_widget_hide (GTK_WIDGET (priv->color_button));
 }
