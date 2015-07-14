@@ -266,22 +266,15 @@ out:
 static void
 gtd_task_list_item__update_thumbnail (GtdTaskListItem *item)
 {
-  GtdTaskListItemPrivate *priv = item->priv;
+  GtdTaskListItemPrivate *priv;
+  GdkPixbuf *pix;
 
-  if (!gtd_object_get_ready (GTD_OBJECT (priv->list)))
-    {
-      gtk_image_set_from_icon_name (GTK_IMAGE (priv->icon_image),
-                                    "folder-documents-symbolic",
-                                    GTK_ICON_SIZE_DIALOG);
-    }
-  else
-    {
-      GdkPixbuf *pix = gtd_task_list_item__render_thumbnail (item);
+  priv = item->priv;
+  pix = gtd_task_list_item__render_thumbnail (item);
 
-      gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon_image), pix);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->icon_image), pix);
 
-      g_object_unref (pix);
-    }
+  g_object_unref (pix);
 }
 
 static void
