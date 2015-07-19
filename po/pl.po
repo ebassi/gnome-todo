@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-todo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-12 16:50+0200\n"
-"PO-Revision-Date: 2015-07-12 16:52+0200\n"
+"POT-Creation-Date: 2015-07-19 16:29+0200\n"
+"PO-Revision-Date: 2015-07-19 16:30+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -176,6 +176,10 @@ msgstr "Wyświetla lub ukrywa ukończone zadania"
 msgid "Select the default storage location to create task lists:"
 msgstr "Proszę wybrać domyślne położenie zadań do tworzenia list:"
 
+#: ../data/ui/storage-dialog.ui.h:2
+msgid "Default storage location"
+msgstr "Domyślne położenie zadań"
+
 #: ../data/ui/storage-popover.ui.h:1
 msgid "Create"
 msgstr "Utwórz"
@@ -254,6 +258,7 @@ msgid "Copyright © %Id–%Id The Todo authors"
 msgstr "Copyright © %Id–%Id Autorzy Menedżera zadań"
 
 #: ../src/gtd-application.c:100 ../src/gtd-application.c:126
+#: ../src/gtd-window.c:297
 msgid "To Do"
 msgstr "Zadania"
 
@@ -498,19 +503,19 @@ msgstr "Nadrzędne źródło obsługujące listę"
 msgid "No tasks"
 msgstr "Brak zadań"
 
-#: ../src/gtd-task-list-item.c:443
+#: ../src/gtd-task-list-item.c:436
 msgid "Mode of this item"
 msgstr "Tryb tego elementu"
 
-#: ../src/gtd-task-list-item.c:444
+#: ../src/gtd-task-list-item.c:437
 msgid "The mode of this item, inherited from the parent's mode"
 msgstr "Tryb tego elementu, odziedziczony z trybu elementu nadrzędnego"
 
-#: ../src/gtd-task-list-item.c:459
+#: ../src/gtd-task-list-item.c:452
 msgid "Task list of the item"
 msgstr "Lista zadań elementu"
 
-#: ../src/gtd-task-list-item.c:460
+#: ../src/gtd-task-list-item.c:453
 msgid "The task list associated with this item"
 msgstr "Lista zadań powiązana z tym elementem"
 
@@ -523,14 +528,14 @@ msgstr "Usunięto zadanie <b>%s</b>"
 msgid "Undo"
 msgstr "Cofnij"
 
-#: ../src/gtd-task-list-view.c:662 ../src/gtd-window.c:515
+#: ../src/gtd-task-list-view.c:662 ../src/gtd-window.c:516
 #: ../src/storage/gtd-storage-dialog.c:153
 #: ../src/storage/gtd-storage-popover.c:272
 #: ../src/storage/gtd-storage-selector.c:522
 msgid "Manager of this window's application"
 msgstr "Menedżer programu tego okna"
 
-#: ../src/gtd-task-list-view.c:663 ../src/gtd-window.c:516
+#: ../src/gtd-task-list-view.c:663 ../src/gtd-window.c:517
 #: ../src/storage/gtd-storage-dialog.c:154
 #: ../src/storage/gtd-storage-popover.c:273
 #: ../src/storage/gtd-storage-selector.c:523
@@ -591,7 +596,7 @@ msgstr "Zadanie przedstawiane przez ten rząd"
 msgid "Setting new color for task list"
 msgstr "Ustawianie nowego koloru listy zadań"
 
-#: ../src/gtd-window.c:551
+#: ../src/gtd-window.c:552
 msgid "Loading your task lists…"
 msgstr "Wczytywanie list zadań…"
 
