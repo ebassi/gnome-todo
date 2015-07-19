@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-todo 3.17.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-21 18:20+0300\n"
-"PO-Revision-Date: 2015-07-19 14:30+0300\n"
+"POT-Creation-Date: 2015-07-19 14:42+0300\n"
+"PO-Revision-Date: 2015-07-19 14:44+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gnome.org>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -148,18 +148,30 @@ msgstr "התחברות לחשבונות מקוונים לגישה למשימות
 msgid "Cancel"
 msgstr "ביטול"
 
-#: ../data/ui/initial-setup.ui.h:4 ../data/ui/list-view.ui.h:2
-#: ../src/gtd-list-view.c:241
+#: ../data/ui/initial-setup.ui.h:4 ../data/ui/list-view.ui.h:4
+#: ../src/gtd-task-list-view.c:288
 msgid "Done"
 msgstr "בוצע"
 
 #: ../data/ui/list-view.ui.h:1
+msgid "No tasks found"
+msgstr "לא נמצאו משימות"
+
+#: ../data/ui/list-view.ui.h:2
+msgid "You can add tasks to lists in the <b>Lists</b> view"
+msgstr "ניתן להוסיף משימות לרשימות בתצוגת ה<b>רשימות</b>"
+
+#: ../data/ui/list-view.ui.h:3
 msgid "Show or hide completed tasks"
 msgstr "הצגה או הסתרת משימות שהושלמו זה מכבר"
 
 #: ../data/ui/storage-dialog.ui.h:1
 msgid "Select the default storage location to create task lists:"
 msgstr "בחירת מיקום אחסון לברירת מחדל ליצירת רשימת משימות:"
+
+#: ../data/ui/storage-dialog.ui.h:2
+msgid "Default storage location"
+msgstr "מיקום אחסון בברירת מחדל"
 
 #: ../data/ui/storage-popover.ui.h:1
 msgid "Create"
@@ -171,7 +183,7 @@ msgstr "שם רשימה"
 
 #: ../data/ui/storage-popover.ui.h:4
 msgid "Select a storage location"
-msgstr "בלחרת מיקום אחסון"
+msgstr "בחירת מיקום האחסון"
 
 #: ../data/ui/storage-row.ui.h:1
 msgid "Off"
@@ -209,27 +221,24 @@ msgstr "או באפשרותך רק לאחסן את המשימות שלך על מ
 msgid "New task…"
 msgstr "משימה חדשה…"
 
-#: ../data/ui/window.ui.h:1 ../src/gtd-list-view.c:174
-msgid "Undo"
-msgstr "ביטול"
-
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:1
 msgid "Lists"
 msgstr "רשימות"
 
-#: ../data/ui/window.ui.h:3 ../src/gtd-task-row.c:100
+#: ../data/ui/window.ui.h:2 ../src/gtd-task-row.c:145 ../src/gtd-window.c:133
+#: ../src/gtd-window.c:138
 msgid "Today"
 msgstr "היום"
 
-#: ../data/ui/window.ui.h:4
+#: ../data/ui/window.ui.h:3 ../src/gtd-window.c:133 ../src/gtd-window.c:138
 msgid "Scheduled"
 msgstr "לוח זמנים"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:4
 msgid "Rename"
 msgstr "שינוי שם"
 
-#: ../data/ui/window.ui.h:6
+#: ../data/ui/window.ui.h:5
 msgid "New List"
 msgstr "רשימה חדשה"
 
@@ -242,6 +251,7 @@ msgid "Copyright © %Id–%Id The Todo authors"
 msgstr "כל הזכויות שמורות © %Id–%Id מחברי המשימות"
 
 #: ../src/gtd-application.c:100 ../src/gtd-application.c:126
+#: ../src/gtd-window.c:297
 msgid "To Do"
 msgstr "משימות"
 
@@ -253,7 +263,7 @@ msgstr "יוסף אור בוצ׳קו <yoseforb@gnome.org>"
 msgid "Error loading CSS from resource"
 msgstr "Error loading CSS from resource"
 
-#: ../src/gtd-edit-pane.c:136 ../src/gtd-task-row.c:124
+#: ../src/gtd-edit-pane.c:136 ../src/gtd-task-row.c:175
 msgid "No date set"
 msgstr "לא נקבע תאריך"
 
@@ -281,136 +291,93 @@ msgstr "Manager of the task"
 msgid "The singleton manager instance of the task"
 msgstr "The singleton manager instance of the task"
 
-#: ../src/gtd-list-view.c:158
-#, c-format
-msgid "Task <b>%s</b> removed"
-msgstr "משימה <b>%s</b> הוסרה"
-
-#: ../src/gtd-list-view.c:592 ../src/gtd-storage-dialog.c:153
-#: ../src/gtd-storage-popover.c:264 ../src/gtd-storage-selector.c:522
-#: ../src/gtd-window.c:476
-msgid "Manager of this window's application"
-msgstr "Manager of this window's application"
-
-#: ../src/gtd-list-view.c:593 ../src/gtd-storage-dialog.c:154
-#: ../src/gtd-storage-popover.c:265 ../src/gtd-storage-selector.c:523
-#: ../src/gtd-window.c:477
-msgid "The manager of the window's application"
-msgstr "The manager of the window's application"
-
-#: ../src/gtd-list-view.c:606
-msgid "Whether the list is readonly"
-msgstr "Whether the list is readonly"
-
-#: ../src/gtd-list-view.c:607
-msgid ""
-"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
-msgstr ""
-"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
-
-#: ../src/gtd-list-view.c:620
-msgid "Whether task rows show the list name"
-msgstr "Whether task rows show the list name"
-
-#: ../src/gtd-list-view.c:621
-msgid "Whether task rows show the list name at the end of the row"
-msgstr "Whether task rows show the list name at the end of the row"
-
-#: ../src/gtd-list-view.c:634
-msgid "Whether completed tasks are shown"
-msgstr "Whether completed tasks are shown"
-
-#: ../src/gtd-list-view.c:635
-msgid "Whether completed tasks are visible or not"
-msgstr "Whether completed tasks are visible or not"
-
-#: ../src/gtd-manager.c:331
+#: ../src/gtd-manager.c:376
 msgid "Error loading GNOME Online Accounts"
 msgstr "Error loading GNOME Online Accounts"
 
-#: ../src/gtd-manager.c:360
+#: ../src/gtd-manager.c:405
 msgid "Error saving task list"
 msgstr "Error saving task list"
 
-#: ../src/gtd-manager.c:387
+#: ../src/gtd-manager.c:432
 msgid "Error removing task list"
 msgstr "Error removing task list"
 
-#: ../src/gtd-manager.c:419
+#: ../src/gtd-manager.c:467
 msgid "Error creating task"
 msgstr "Error creating task"
 
-#: ../src/gtd-manager.c:451
+#: ../src/gtd-manager.c:531
 msgid "Error removing task"
 msgstr "Error removing task"
 
-#: ../src/gtd-manager.c:477
+#: ../src/gtd-manager.c:584
 msgid "Error updating task"
 msgstr "Error updating task"
 
-#: ../src/gtd-manager.c:506
+#: ../src/gtd-manager.c:613
 msgid "Failed to prompt for credentials"
 msgstr "Failed to prompt for credentials"
 
-#: ../src/gtd-manager.c:529
+#: ../src/gtd-manager.c:636
 msgid "Failed to prompt for credentials for"
 msgstr "Failed to prompt for credentials for"
 
-#: ../src/gtd-manager.c:581
+#: ../src/gtd-manager.c:688
 msgid "Authentication failure"
 msgstr "Authentication failure"
 
-#: ../src/gtd-manager.c:622
+#: ../src/gtd-manager.c:755
 msgid "Error fetching tasks from list"
 msgstr "Error fetching tasks from list"
 
-#: ../src/gtd-manager.c:684
+#: ../src/gtd-manager.c:821
 msgid "Task list source successfully connected"
 msgstr "Task list source successfully connected"
 
-#: ../src/gtd-manager.c:691
+#: ../src/gtd-manager.c:828
 msgid "Failed to connect to task list source"
 msgstr "Failed to connect to task list source"
 
-#: ../src/gtd-manager.c:721
+#: ../src/gtd-manager.c:858
 msgid "Skipping already loaded task list "
 msgstr "Skipping already loaded task list "
 
-#: ../src/gtd-manager.c:759
+#: ../src/gtd-manager.c:896
 msgid "Error loading task manager"
 msgstr "Error loading task manager"
 
-#: ../src/gtd-manager.c:891
+#: ../src/gtd-manager.c:1030
 msgid "Local"
 msgstr "מקומי"
 
-#: ../src/gtd-manager.c:892
+#: ../src/gtd-manager.c:1031
 msgid "On This Computer"
 msgstr "במחשב זה"
 
-#: ../src/gtd-manager.c:925
+#: ../src/gtd-manager.c:1064
 msgid "The online accounts client of the manager"
 msgstr "The online accounts client of the manager"
 
-#: ../src/gtd-manager.c:926
+#: ../src/gtd-manager.c:1065
 msgid ""
 "The read-only GNOME online accounts client loaded and owned by the manager"
 msgstr ""
 "The read-only GNOME online accounts client loaded and owned by the manager"
 
-#: ../src/gtd-manager.c:939
+#: ../src/gtd-manager.c:1078
 msgid "Whether GNOME Online Accounts client is ready"
 msgstr "Whether GNOME Online Accounts client is ready"
 
-#: ../src/gtd-manager.c:940
+#: ../src/gtd-manager.c:1079
 msgid "Whether the read-only GNOME online accounts client is loaded"
 msgstr "Whether the read-only GNOME online accounts client is loaded"
 
-#: ../src/gtd-manager.c:953
+#: ../src/gtd-manager.c:1092
 msgid "The source registry of the manager"
 msgstr "The source registry of the manager"
 
-#: ../src/gtd-manager.c:954
+#: ../src/gtd-manager.c:1093
 msgid "The read-only source registry loaded and owned by the manager"
 msgstr "The read-only source registry loaded and owned by the manager"
 
@@ -429,106 +396,6 @@ msgstr "Ready state of the object"
 #: ../src/gtd-object.c:167
 msgid "Whether the object is marked as ready or not"
 msgstr "Whether the object is marked as ready or not"
-
-#: ../src/gtd-storage.c:189
-msgid "Whether the storage is enabled"
-msgstr "Whether the storage is enabled"
-
-#: ../src/gtd-storage.c:190
-msgid "Whether the storage is available to be used."
-msgstr "Whether the storage is available to be used."
-
-#: ../src/gtd-storage.c:203
-msgid "Icon of the storage"
-msgstr "Icon of the storage"
-
-#: ../src/gtd-storage.c:204
-msgid "The icon representing the storage location."
-msgstr "The icon representing the storage location."
-
-#: ../src/gtd-storage.c:217
-msgid "Identifier of the storage"
-msgstr "Identifier of the storage"
-
-#: ../src/gtd-storage.c:218
-msgid "The unique identifier of the storage location."
-msgstr "The unique identifier of the storage location."
-
-#: ../src/gtd-storage.c:231
-msgid "Whether the storage is the default"
-msgstr "Whether the storage is the default"
-
-#: ../src/gtd-storage.c:232
-msgid "Whether the storage is the default storage location to be used."
-msgstr "Whether the storage is the default storage location to be used."
-
-#: ../src/gtd-storage.c:245
-msgid "Name of the storage"
-msgstr "Name of the storage"
-
-#: ../src/gtd-storage.c:246
-msgid "The user-visible name of the storage location."
-msgstr "The user-visible name of the storage location."
-
-#: ../src/gtd-storage.c:259
-msgid "Parent of the storage"
-msgstr "Parent of the storage"
-
-#: ../src/gtd-storage.c:260
-msgid "The parent source identifier of the storage location."
-msgstr "The parent source identifier of the storage location."
-
-#: ../src/gtd-storage.c:273
-msgid "Provider type of the storage"
-msgstr "Provider type of the storage"
-
-#: ../src/gtd-storage.c:274
-msgid "The provider type of the storage location."
-msgstr "The provider type of the storage location."
-
-#: ../src/gtd-storage.c:287
-msgid "Provider name of the storage"
-msgstr "Provider name of the storage"
-
-#: ../src/gtd-storage.c:288
-msgid "The name of the provider of the storage location."
-msgstr "The name of the provider of the storage location."
-
-#: ../src/gtd-storage.c:680
-msgid "Error creating new task list"
-msgstr "Error creating new task list"
-
-#: ../src/gtd-storage-row.c:148
-msgid "Storage of the row"
-msgstr "Storage of the row"
-
-#: ../src/gtd-storage-row.c:149
-msgid "The storage that this row holds"
-msgstr "The storage that this row holds"
-
-#: ../src/gtd-storage-selector.c:536
-msgid "Show local storage row"
-msgstr "Show local storage row"
-
-#: ../src/gtd-storage-selector.c:537
-msgid "Whether should show a local storage row instead of a checkbox"
-msgstr "Whether should show a local storage row instead of a checkbox"
-
-#: ../src/gtd-storage-selector.c:550
-msgid "Show stub rows"
-msgstr "Show stub rows"
-
-#: ../src/gtd-storage-selector.c:551
-msgid "Whether should show stub rows for non-added accounts"
-msgstr "Whether should show stub rows for non-added accounts"
-
-#: ../src/gtd-storage-selector.c:564
-msgid "Selects default storage row"
-msgstr "Selects default storage row"
-
-#: ../src/gtd-storage-selector.c:565
-msgid "Whether should select the default storage row"
-msgstr "Whether should select the default storage row"
 
 #: ../src/gtd-task.c:254
 msgid "Whether the task is completed or not"
@@ -626,50 +493,245 @@ msgstr "The parent source that handles the list"
 msgid "No tasks"
 msgstr "אין משימות"
 
-#: ../src/gtd-task-list-item.c:443
+#: ../src/gtd-task-list-item.c:436
 msgid "Mode of this item"
 msgstr "Mode of this item"
 
-#: ../src/gtd-task-list-item.c:444
+#: ../src/gtd-task-list-item.c:437
 msgid "The mode of this item, inherited from the parent's mode"
 msgstr "The mode of this item, inherited from the parent's mode"
 
-#: ../src/gtd-task-list-item.c:459
+#: ../src/gtd-task-list-item.c:452
 msgid "Task list of the item"
 msgstr "Task list of the item"
 
-#: ../src/gtd-task-list-item.c:460
+#: ../src/gtd-task-list-item.c:453
 msgid "The task list associated with this item"
 msgstr "The task list associated with this item"
 
-#: ../src/gtd-task-row.c:104
+#: ../src/gtd-task-list-view.c:201
+#, c-format
+msgid "Task <b>%s</b> removed"
+msgstr "משימה <b>%s</b> הוסרה"
+
+#: ../src/gtd-task-list-view.c:221
+msgid "Undo"
+msgstr "ביטול"
+
+#: ../src/gtd-task-list-view.c:662 ../src/gtd-window.c:516
+#: ../src/storage/gtd-storage-dialog.c:153
+#: ../src/storage/gtd-storage-popover.c:272
+#: ../src/storage/gtd-storage-selector.c:522
+msgid "Manager of this window's application"
+msgstr "Manager of this window's application"
+
+#: ../src/gtd-task-list-view.c:663 ../src/gtd-window.c:517
+#: ../src/storage/gtd-storage-dialog.c:154
+#: ../src/storage/gtd-storage-popover.c:273
+#: ../src/storage/gtd-storage-selector.c:523
+msgid "The manager of the window's application"
+msgstr "The manager of the window's application"
+
+#: ../src/gtd-task-list-view.c:676
+msgid "Whether the list is readonly"
+msgstr "Whether the list is readonly"
+
+#: ../src/gtd-task-list-view.c:677
+msgid ""
+"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
+msgstr ""
+"Whether the list is readonly, i.e. doesn't show the New Task row, or not"
+
+#: ../src/gtd-task-list-view.c:690
+msgid "Whether task rows show the list name"
+msgstr "Whether task rows show the list name"
+
+#: ../src/gtd-task-list-view.c:691
+msgid "Whether task rows show the list name at the end of the row"
+msgstr "Whether task rows show the list name at the end of the row"
+
+#: ../src/gtd-task-list-view.c:704
+msgid "Whether completed tasks are shown"
+msgstr "Whether completed tasks are shown"
+
+#: ../src/gtd-task-list-view.c:705
+msgid "Whether completed tasks are visible or not"
+msgstr "Whether completed tasks are visible or not"
+
+#: ../src/gtd-task-row.c:149
 msgid "Tomorrow"
 msgstr "מחר"
 
-#: ../src/gtd-task-row.c:108
+#: ../src/gtd-task-row.c:153
 msgid "Yesterday"
 msgstr "אתמול"
 
-#: ../src/gtd-task-row.c:324
+#: ../src/gtd-task-row.c:375
 msgid "If the row is used to add a new task"
 msgstr "If the row is used to add a new task"
 
-#: ../src/gtd-task-row.c:325
+#: ../src/gtd-task-row.c:376
 msgid "Whether the row is used to add a new task"
 msgstr "Whether the row is used to add a new task"
 
-#: ../src/gtd-task-row.c:338
+#: ../src/gtd-task-row.c:389
 msgid "Task of the row"
 msgstr "Task of the row"
 
-#: ../src/gtd-task-row.c:339
+#: ../src/gtd-task-row.c:390
 msgid "The task that this row represents"
 msgstr "The task that this row represents"
 
-#: ../src/gtd-window.c:230
+#: ../src/gtd-window.c:181
 msgid "Setting new color for task list"
 msgstr "Setting new color for task list"
 
-#: ../src/gtd-window.c:276
+#: ../src/gtd-window.c:552
 msgid "Loading your task lists…"
 msgstr "רשימות המשימות שלך בטעינה…"
+
+#: ../src/storage/gtd-storage.c:189
+msgid "Whether the storage is enabled"
+msgstr "Whether the storage is enabled"
+
+#: ../src/storage/gtd-storage.c:190
+msgid "Whether the storage is available to be used."
+msgstr "Whether the storage is available to be used."
+
+#: ../src/storage/gtd-storage.c:203
+msgid "Icon of the storage"
+msgstr "Icon of the storage"
+
+#: ../src/storage/gtd-storage.c:204
+msgid "The icon representing the storage location."
+msgstr "The icon representing the storage location."
+
+#: ../src/storage/gtd-storage.c:217
+msgid "Identifier of the storage"
+msgstr "Identifier of the storage"
+
+#: ../src/storage/gtd-storage.c:218
+msgid "The unique identifier of the storage location."
+msgstr "The unique identifier of the storage location."
+
+#: ../src/storage/gtd-storage.c:231
+msgid "Whether the storage is the default"
+msgstr "Whether the storage is the default"
+
+#: ../src/storage/gtd-storage.c:232
+msgid "Whether the storage is the default storage location to be used."
+msgstr "Whether the storage is the default storage location to be used."
+
+#: ../src/storage/gtd-storage.c:245
+msgid "Name of the storage"
+msgstr "Name of the storage"
+
+#: ../src/storage/gtd-storage.c:246
+msgid "The user-visible name of the storage location."
+msgstr "The user-visible name of the storage location."
+
+#: ../src/storage/gtd-storage.c:259
+msgid "Parent of the storage"
+msgstr "Parent of the storage"
+
+#: ../src/storage/gtd-storage.c:260
+msgid "The parent source identifier of the storage location."
+msgstr "The parent source identifier of the storage location."
+
+#: ../src/storage/gtd-storage.c:273
+msgid "Provider type of the storage"
+msgstr "Provider type of the storage"
+
+#: ../src/storage/gtd-storage.c:274
+msgid "The provider type of the storage location."
+msgstr "The provider type of the storage location."
+
+#: ../src/storage/gtd-storage.c:287
+msgid "Provider name of the storage"
+msgstr "Provider name of the storage"
+
+#: ../src/storage/gtd-storage.c:288
+msgid "The name of the provider of the storage location."
+msgstr "The name of the provider of the storage location."
+
+#: ../src/storage/gtd-storage.c:680
+msgid "Error creating new task list"
+msgstr "Error creating new task list"
+
+#: ../src/storage/gtd-storage-row.c:148
+msgid "Storage of the row"
+msgstr "Storage of the row"
+
+#: ../src/storage/gtd-storage-row.c:149
+msgid "The storage that this row holds"
+msgstr "The storage that this row holds"
+
+#: ../src/storage/gtd-storage-selector.c:536
+msgid "Show local storage row"
+msgstr "Show local storage row"
+
+#: ../src/storage/gtd-storage-selector.c:537
+msgid "Whether should show a local storage row instead of a checkbox"
+msgstr "Whether should show a local storage row instead of a checkbox"
+
+#: ../src/storage/gtd-storage-selector.c:550
+msgid "Show stub rows"
+msgstr "Show stub rows"
+
+#: ../src/storage/gtd-storage-selector.c:551
+msgid "Whether should show stub rows for non-added accounts"
+msgstr "Whether should show stub rows for non-added accounts"
+
+#: ../src/storage/gtd-storage-selector.c:564
+msgid "Selects default storage row"
+msgstr "Selects default storage row"
+
+#: ../src/storage/gtd-storage-selector.c:565
+msgid "Whether should select the default storage row"
+msgstr "Whether should select the default storage row"
+
+#: ../src/notification/gtd-notification.c:181
+msgid "Whether the notification has a primary action"
+msgstr "Whether the notification has a primary action"
+
+#: ../src/notification/gtd-notification.c:182
+msgid ""
+"Whether the notification has the primary action, activated on timeout or "
+"dismiss"
+msgstr ""
+"Whether the notification has the primary action, activated on timeout or "
+"dismiss"
+
+#: ../src/notification/gtd-notification.c:196
+msgid "Whether the notification has a secondary action"
+msgstr "Whether the notification has a secondary action"
+
+#: ../src/notification/gtd-notification.c:197
+msgid ""
+"Whether the notification has the secondary action, activated by the user"
+msgstr ""
+"Whether the notification has the secondary action, activated by the user"
+
+#: ../src/notification/gtd-notification.c:210
+msgid "Text of the secondary action button"
+msgstr "Text of the secondary action button"
+
+#: ../src/notification/gtd-notification.c:211
+msgid "The text of the secondary action button"
+msgstr "The text of the secondary action button"
+
+#: ../src/notification/gtd-notification.c:224
+msgid "Notification message"
+msgstr "Notification message"
+
+#: ../src/notification/gtd-notification.c:225
+msgid "The main message of the notification"
+msgstr "The main message of the notification"
+
+#: ../src/notification/gtd-notification.c:238
+msgid "Notification timeout"
+msgstr "Notification timeout"
+
+#: ../src/notification/gtd-notification.c:239
+msgid "The time the notification is displayed"
+msgstr "The time the notification is displayed"

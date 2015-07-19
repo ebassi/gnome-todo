@@ -38,7 +38,7 @@
         <property name="visible">True</property>
         <property name="has_subtitle">True</property>
         <property name="show_close_button">True</property>
-        <property name="title">Default storage location</property>
+        <property name="title" translatable="yes">Default storage location</property>
       </object>
     </child>
   </template>
