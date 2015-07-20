@@ -135,6 +135,8 @@ gtd_arrow_frame_finalize (GObject *object)
   GtdArrowFrame *self = (GtdArrowFrame *)object;
   GtdArrowFramePrivate *priv = gtd_arrow_frame_get_instance_private (self);
 
+  g_clear_object (&priv->pan_gesture);
+
   G_OBJECT_CLASS (gtd_arrow_frame_parent_class)->finalize (object);
 }
 
