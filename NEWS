@@ -1,4 +1,24 @@
 ================
+Version 3.17.4
+================
+
+Project:
+        * Fix wrong name throughout the application
+        * Better represent visually task priorities by changing the row's color
+        * Make edit panel resizable
+        * Add "Today" and "Scheduled" custom lists
+        * Improve notification system
+        * Initial support for search over list names
+
+Translations:
+        * Greek (Dimitris Spingos)
+        * Hebrew (Yosef Or Boczko)
+        * Polish (Piotr Drag)
+        * Spanish (Daniel Mustieles)
+        * Slovak (Dušan Kazik)
+        * Slovenian (Matej Urbančič)
+
+================
 Version 3.17.3.1
 ================
 
