@@ -26,7 +26,6 @@ typedef struct
   GtkGesture          *pan_gesture;
 
   GdkWindow           *handle_window;
-  gint                 drag_position;
   gdouble              offset;
   gint                 moving : 1;
 } GtdArrowFramePrivate;
@@ -84,15 +83,9 @@ on_drag_begin_cb (GtdArrowFrame *frame,
   priv->moving = FALSE;
 
   if (event->any.window == priv->handle_window)
-    {
-      priv->drag_position = x - get_handle_position (frame);
-
-      gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
-    }
+    gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
   else
-    {
-      gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_DENIED);
-    }
+    gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_DENIED);
 }
 
 static void
@@ -103,7 +96,6 @@ on_pan_cb (GtkWidget       *widget,
 {
   GtdArrowFramePrivate *priv;
   GtkTextDirection dir;
-  gdouble start_x;
   gdouble offset_x;
   gdouble new_offset;
 
@@ -112,20 +104,15 @@ on_pan_cb (GtkWidget       *widget,
 
   priv->moving = TRUE;
 
-  gtk_gesture_drag_get_start_point (GTK_GESTURE_DRAG (pan),
-                                    &start_x,
-                                    NULL);
-
   gtk_gesture_drag_get_offset (GTK_GESTURE_DRAG (pan),
                                &offset_x,
                                NULL);
 
   if (dir == GTK_TEXT_DIR_RTL)
-    new_offset = start_x + offset_x;
+    priv->offset = MAX (0, offset_x);
   else
-    new_offset = start_x + -1 * offset_x;
+    priv->offset = MAX (0, priv->offset + -1 * offset_x);
 
-  priv->offset = MAX (0, priv->offset + new_offset);
 
   gtk_widget_queue_resize (widget);
 }
@@ -595,7 +582,7 @@ gtd_arrow_frame_size_allocate (GtkWidget     *widget,
   if (gtk_widget_get_realized (widget))
     {
       gdk_window_move_resize (priv->handle_window,
-                              allocation->x,
+                              dir == GTK_TEXT_DIR_RTL ? allocation->width - HANDLE_GAP : allocation->x,
                               allocation->y,
                               HANDLE_GAP,
                               allocation->height);
