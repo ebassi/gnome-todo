@@ -22,6 +22,13 @@
 typedef struct
 {
   GtdTaskRow          *row;
+
+  GtkGesture          *pan_gesture;
+
+  GdkWindow           *handle_window;
+  gint                 drag_position;
+  gdouble              offset;
+  gint                 moving : 1;
 } GtdArrowFramePrivate;
 
 struct _GtdArrowFrame
@@ -34,6 +41,7 @@ struct _GtdArrowFrame
 
 #define ARROW_HEIGHT 28
 #define ARROW_WIDTH  8
+#define HANDLE_GAP   (ARROW_WIDTH + 5)
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtdArrowFrame, gtd_arrow_frame, GTK_TYPE_FRAME)
 
@@ -47,6 +55,91 @@ GtkWidget*
 gtd_arrow_frame_new (void)
 {
   return g_object_new (GTD_TYPE_ARROW_FRAME, NULL);
+}
+
+static gint
+get_handle_position (GtdArrowFrame *frame)
+{
+  GtkWidget *widget = GTK_WIDGET (frame);
+
+  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
+    return gtk_widget_get_allocated_width (widget) - HANDLE_GAP;
+  else
+    return 0;
+}
+
+static void
+on_drag_begin_cb (GtdArrowFrame *frame,
+                  gdouble        x,
+                  gdouble        y,
+                  GtkGesturePan *gesture)
+{
+  GtdArrowFramePrivate *priv = frame->priv;
+  GdkEventSequence *sequence;
+  const GdkEvent *event;
+
+  sequence = gtk_gesture_single_get_current_sequence (GTK_GESTURE_SINGLE (gesture));
+  event = gtk_gesture_get_last_event (GTK_GESTURE (gesture), sequence);
+
+  priv->moving = FALSE;
+
+  if (event->any.window == priv->handle_window)
+    {
+      priv->drag_position = x - get_handle_position (frame);
+
+      gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+    }
+  else
+    {
+      gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_DENIED);
+    }
+}
+
+static void
+on_pan_cb (GtkWidget       *widget,
+           GtkPanDirection  direction,
+           gdouble          offset,
+           GtkGesturePan   *pan)
+{
+  GtdArrowFramePrivate *priv;
+  GtkTextDirection dir;
+  gdouble start_x;
+  gdouble offset_x;
+  gdouble new_offset;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+  dir = gtk_widget_get_direction (widget);
+
+  priv->moving = TRUE;
+
+  gtk_gesture_drag_get_start_point (GTK_GESTURE_DRAG (pan),
+                                    &start_x,
+                                    NULL);
+
+  gtk_gesture_drag_get_offset (GTK_GESTURE_DRAG (pan),
+                               &offset_x,
+                               NULL);
+
+  if (dir == GTK_TEXT_DIR_RTL)
+    new_offset = start_x + offset_x;
+  else
+    new_offset = start_x + -1 * offset_x;
+
+  priv->offset = MAX (0, priv->offset + new_offset);
+
+  gtk_widget_queue_resize (widget);
+}
+
+static void
+on_drag_end_cb (GtdArrowFrame *frame,
+                gdouble        x,
+                gdouble        y,
+                GtkGesturePan *pan)
+{
+  GtdArrowFramePrivate *priv = frame->priv;
+
+  if (!priv->moving)
+    gtk_gesture_set_state (GTK_GESTURE (pan), GTK_EVENT_SEQUENCE_DENIED);
 }
 
 static void
@@ -235,6 +328,32 @@ G_GNUC_END_IGNORE_DEPRECATIONS
   cairo_restore (cr);
 }
 
+static GtkGesture*
+gtd_arrow_frame__create_pan_gesture (GtdArrowFrame  *frame)
+{
+  GtkGesture *gesture;
+
+  gesture = gtk_gesture_pan_new (GTK_WIDGET (frame), GTK_ORIENTATION_HORIZONTAL);
+
+  gtk_gesture_single_set_touch_only (GTK_GESTURE_SINGLE (gesture), FALSE);
+  gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (gesture), GTK_PHASE_CAPTURE);
+
+  g_signal_connect_swapped (gesture,
+                            "drag-begin",
+                            G_CALLBACK (on_drag_begin_cb),
+                            frame);
+  g_signal_connect_swapped (gesture,
+                            "pan",
+                            G_CALLBACK (on_pan_cb),
+                            frame);
+  g_signal_connect_swapped (gesture,
+                            "drag-end",
+                            G_CALLBACK (on_drag_end_cb),
+                            frame);
+
+  return gesture;
+}
+
 static void
 gtd_arrow_frame__draw_background (GtdArrowFrame    *frame,
                                   cairo_t          *cr,
@@ -334,11 +453,15 @@ static void
 gtd_arrow_frame_compute_child_allocation (GtkFrame      *frame,
                                           GtkAllocation *allocation)
 {
+  GtdArrowFramePrivate *priv;
+
+  priv = GTD_ARROW_FRAME (frame)->priv;
+
   GTK_FRAME_CLASS (gtd_arrow_frame_parent_class)->compute_child_allocation (frame, allocation);
 
   allocation->width -= ARROW_WIDTH;
 
-  if (gtk_widget_get_direction (GTK_WIDGET (frame)) == GTK_TEXT_DIR_LTR)
+  if (gtk_widget_get_direction (GTK_WIDGET (frame)) != GTK_TEXT_DIR_RTL)
     {
       allocation->x += ARROW_WIDTH;
     }
@@ -349,12 +472,136 @@ gtd_arrow_frame_get_preferred_width (GtkWidget *widget,
                                      gint      *minimum_width,
                                      gint      *natural_width)
 {
+  GtdArrowFramePrivate *priv;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+
   GTK_WIDGET_CLASS (gtd_arrow_frame_parent_class)->get_preferred_width (widget,
                                                                         minimum_width,
                                                                         natural_width);
 
   *minimum_width += ARROW_WIDTH;
   *natural_width += ARROW_WIDTH;
+
+  *natural_width = MAX (*minimum_width, *natural_width + priv->offset);
+}
+
+static void
+gtd_arrow_frame_realize (GtkWidget *widget)
+{
+  GtdArrowFramePrivate *priv;
+  GtkTextDirection dir;
+  GtkAllocation allocation;
+  GdkWindowAttr attributes = { 0 };
+  GdkDisplay *display;
+  GdkWindow *parent_window;
+  gint attributes_mask;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+  dir = gtk_widget_get_direction (widget);
+  display = gtk_widget_get_display (widget);
+  parent_window = gtk_widget_get_parent_window (widget);
+
+  gtk_widget_set_realized (widget, TRUE);
+
+  gtk_widget_set_window (widget, parent_window);
+  g_object_ref (parent_window);
+
+  gtk_widget_get_allocation (widget, &allocation);
+
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.wclass = GDK_INPUT_ONLY;
+  attributes.x = dir == GTK_TEXT_DIR_LTR ? allocation.x : allocation.height - HANDLE_GAP;
+  attributes.y = allocation.y;
+  attributes.width = HANDLE_GAP;
+  attributes.height = allocation.height;
+  attributes.visual = gtk_widget_get_visual (widget);
+  attributes.cursor = gdk_cursor_new_for_display (display, GDK_SB_H_DOUBLE_ARROW);
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
+                            GDK_BUTTON_RELEASE_MASK |
+                            GDK_ENTER_NOTIFY_MASK |
+                            GDK_LEAVE_NOTIFY_MASK |
+                            GDK_POINTER_MOTION_MASK);
+
+  attributes_mask = GDK_WA_CURSOR | GDK_WA_X | GDK_WA_Y;
+
+  priv->handle_window = gdk_window_new (parent_window,
+                                        &attributes,
+                                        attributes_mask);
+
+  gtk_widget_register_window (widget, priv->handle_window);
+
+  g_clear_object (&attributes.cursor);
+}
+
+static void
+gtd_arrow_frame_unrealize (GtkWidget *widget)
+{
+  GtdArrowFramePrivate *priv;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+
+  if (priv->handle_window)
+    {
+      gdk_window_hide (priv->handle_window);
+      gtk_widget_unregister_window (widget, priv->handle_window);
+      g_clear_pointer (&priv->handle_window, gdk_window_destroy);
+    }
+
+  GTK_WIDGET_CLASS (gtd_arrow_frame_parent_class)->unrealize (widget);
+}
+
+static void
+gtd_arrow_frame_map (GtkWidget *widget)
+{
+  GtdArrowFramePrivate *priv;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+
+  if (priv->handle_window)
+    gdk_window_show (priv->handle_window);
+
+  GTK_WIDGET_CLASS (gtd_arrow_frame_parent_class)->map (widget);
+}
+
+static void
+gtd_arrow_frame_unmap (GtkWidget *widget)
+{
+  GtdArrowFramePrivate *priv;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+
+  if (priv->handle_window)
+    gdk_window_hide (priv->handle_window);
+
+  GTK_WIDGET_CLASS (gtd_arrow_frame_parent_class)->unmap (widget);
+}
+
+static void
+gtd_arrow_frame_size_allocate (GtkWidget     *widget,
+                               GtkAllocation *allocation)
+{
+  GtdArrowFramePrivate *priv;
+  GtkTextDirection dir;
+
+  priv = GTD_ARROW_FRAME (widget)->priv;
+  dir = gtk_widget_get_direction (widget);
+
+  GTK_WIDGET_CLASS (gtd_arrow_frame_parent_class)->size_allocate (widget, allocation);
+
+  gtk_widget_set_allocation (widget, allocation);
+
+  if (gtk_widget_get_realized (widget))
+    {
+      gdk_window_move_resize (priv->handle_window,
+                              allocation->x,
+                              allocation->y,
+                              HANDLE_GAP,
+                              allocation->height);
+
+      gdk_window_raise (priv->handle_window);
+    }
 }
 
 static void
@@ -370,6 +617,11 @@ gtd_arrow_frame_class_init (GtdArrowFrameClass *klass)
 
   widget_class->draw = gtd_arrow_frame_draw;
   widget_class->get_preferred_width = gtd_arrow_frame_get_preferred_width;
+  widget_class->map = gtd_arrow_frame_map;
+  widget_class->unmap = gtd_arrow_frame_unmap;
+  widget_class->realize = gtd_arrow_frame_realize;
+  widget_class->unrealize = gtd_arrow_frame_unrealize;
+  widget_class->size_allocate = gtd_arrow_frame_size_allocate;
 
   frame_class->compute_child_allocation = gtd_arrow_frame_compute_child_allocation;
 }
@@ -378,6 +630,8 @@ static void
 gtd_arrow_frame_init (GtdArrowFrame *self)
 {
   self->priv = gtd_arrow_frame_get_instance_private (self);
+
+  self->priv->pan_gesture = gtd_arrow_frame__create_pan_gesture (self);
 }
 
 void
