@@ -87,12 +87,13 @@ echo "
         gnome-todo $VERSION
         ==================
 
-        source at: ${srcdir}
-        prefix:    ${prefix}
-        compiler:  ${CC}
-	flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
-	flags:     ${MAINTAINER_COMPILER_FLAGS}
-	flags:     ${GNOME_TODO_CFLAGS} ${GNOME_TODO_LIBS} ${LIBS}
+        source at:     ${srcdir}
+        prefix:        ${prefix}
+        compiler:      ${CC}
+	global flags:  ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
+	project flags: ${GNOME_TODO_CFLAGS} ${GNOME_TODO_LIBS} ${LIBS}
+        warning flags: ${GNOME_TODO_WARN_CFLAGS} ${GNOME_TODO_WARN_LDFLAGS}
+        release:       ${ax_is_release}
 
         Now type 'make' to build $PACKAGE
 "
