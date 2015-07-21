@@ -2,7 +2,7 @@
 data/appdata/org.gnome.Todo.appdata.xml.in
 [type: gettext/glade]data/gtk/menus.ui
 data/org.gnome.Todo.desktop.in.in
-data/org.gnome.todo.gschema.xml.in
+data/org.gnome.todo.gschema.xml
 [type: gettext/glade]data/ui/edit-pane.ui
 [type: gettext/glade]data/ui/initial-setup.ui
 [type: gettext/glade]data/ui/list-view.ui

@@ -12,14 +12,9 @@ appdata_in_files = $(srcdir)/appdata/org.gnome.Todo.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 
+gsettings_SCHEMAS = org.gnome.todo.gschema.xml 
+
 @GSETTINGS_RULES@
-
-%.gschema.xml: %.gschema.xml.in
-	$(AM_V_GEN) $(INTLTOOL_MERGE) -x -u --no-translations $< $@
-
-gsettingsschema_in_files = org.gnome.todo.gschema.xml.in
-gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
-.PRECIOUS: $(gsettings_SCHEMAS)
 
 EXTRA_DIST=                     \
   appdata/org.gnome.Todo.appdata.xml \
@@ -42,13 +37,12 @@ EXTRA_DIST=                     \
   theme/bg.svg \
   $(appdata_in_files) \
   $(desktop_in_files) \
-  $(gsettingsschema_in_files)
+  $(gsettings_SCHEMAS)
 
 CLEANFILES =                    \
   $(service_DATA)               \
   $(desktop_DATA)               \
   $(searchprovider_DATA)        \
-  $(gsettings_SCHEMAS)          \
   $(appdata_DATA)
 
 -include $(top_srcdir)/git.mk
