@@ -14,21 +14,20 @@ AM_SILENT_RULES([yes])
 # Releases do not have git directories
 AX_IS_RELEASE([git-directory])
 
-dnl ***************************************************************************
-dnl Internationalization
-dnl ***************************************************************************
-IT_PROG_INTLTOOL([0.40.6])
-PKG_PROG_PKG_CONFIG([0.22])
-
-GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
-
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
-AM_PROG_CC_C_O
-AC_PROG_CXX
+# We require additional macros later on
+AX_REQUIRE_DEFINED([APPSTREAM_XML])
+AX_REQUIRE_DEFINED([IT_PROG_INTLTOOL])
+
+# Add debug symbol
+AX_CHECK_ENABLE_DEBUG([yes], [GNOME_TODO_ENABLE_DEBUG])
+
+# Enable compiler warnings
+AX_COMPILER_FLAGS([GNOME_TODO_WARN_CFLAGS], [GNOME_TODO_WARN_LDFLAGS])
+
+AC_PROG_CC_C_O
 AC_PROG_INSTALL
 
 # enable libtool
@@ -38,32 +37,26 @@ LT_INIT([disable-static])
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
+PKG_PROG_PKG_CONFIG
+
 GLIB_GSETTINGS
 AM_GLIB_GNU_GETTEXT
 
-# We require additional macros
-AX_REQUIRE_DEFINED([APPSTREAM_XML])
+dnl ***************************************************************************
+dnl Internationalization
+dnl ***************************************************************************
+IT_PROG_INTLTOOL([0.40.6])
+
+GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 
 dnl ================================================================
 dnl Misc
 dnl ================================================================
-AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
-GNOME_COMPILE_WARNINGS(maximum)
-
-MAINTAINER_COMPILER_FLAGS="\
-  $MAINTAINER_COMPILER_FLAGS\
- -Wall -Wcast-align -Wuninitialized\
- -Wno-strict-aliasing -Wempty-body -Wformat\
- -Wformat-security -Wformat-nonliteral -Winit-self\
- -Wdeclaration-after-statement -Wvla\
- -Wpointer-arith -Wmissing-declarations\
- -Wcast-align -Wmissing-prototypes\
- -Wredundant-decls"
-
-# strip leading spaces
-MAINTAINER_COMPILER_FLAGS=${MAINTAINER_COMPILER_FLAGS#*  }
-AC_SUBST(MAINTAINER_COMPILER_FLAGS)
+GLIB_COMPILE_RESOURCES=`$PKG_CONFIG --variable glib_compile_resources gio-2.0`
+AC_SUBST([GLIB_COMPILE_RESOURCES])
 
 PKG_CHECK_MODULES(GNOME_TODO,
                   gmodule-export-2.0

@@ -5,14 +5,13 @@ AM_CPPFLAGS = \
 	-DUI_DATA_DIR=\""$(pkgdatadir)/style"\" \
 	-DGOA_API_IS_SUBJECT_TO_CHANGE \
 	-I$(srcdir)/storage \
-	-I$(srcdir)/notification \
-	$(GNOME_TODO_CFLAGS)
+	-I$(srcdir)/notification
 
 bin_PROGRAMS = gnome-todo
 
 BUILT_SOURCES = \
-    gtd-resources.c \
-    gtd-resources.h
+	gtd-resources.c \
+	gtd-resources.h
 
 gnome_todo_SOURCES = \
 	$(BUILT_SOURCES) \
@@ -58,18 +57,22 @@ gnome_todo_SOURCES = \
 	gtd-window.h \
 	main.c
 
+gnome_todo_CFLAGS = \
+	$(GNOME_TODO_CFLAGS) \
+	$(GNOME_TODO_WARN_CFLAGS)
+
 gnome_todo_LDFLAGS = \
-	-Wl,--export-dynamic
+	-Wl,--export-dynamic \
+	$(GNOME_TODO_WARN_LDFLAGS)
 
 gnome_todo_LDADD = \
-	-lm \
 	$(GNOME_TODO_LIBS)
 
-resource_files = $(shell glib-compile-resources --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/todo.gresource.xml)
+resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/todo.gresource.xml)
 gtd-resources.c: $(top_srcdir)/data/todo.gresource.xml $(resource_files)
-	glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate-source --c-name todo $(top_srcdir)/data/todo.gresource.xml
+	$(AM_V_GEN)$(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-source --c-name todo $(top_srcdir)/data/todo.gresource.xml
 gtd-resources.h: $(top_srcdir)/data/todo.gresource.xml $(resource_files)
-	glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate-header --c-name todo $(top_srcdir)/data/todo.gresource.xml
+	$(AM_V_GEN)$(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-header --c-name todo $(top_srcdir)/data/todo.gresource.xml
 
 CLEANFILES = \
 	$(BUILT_SOURCES)
