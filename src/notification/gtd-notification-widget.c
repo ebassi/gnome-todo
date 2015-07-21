@@ -280,7 +280,6 @@ gtd_notification_widget_cancel (GtdNotificationWidget *widget,
                                 GtdNotification       *notification)
 {
   GtdNotificationWidgetPrivate *priv;
-  GList *l;
 
   g_return_if_fail (GTD_IS_NOTIFICATION_WIDGET (widget));
 

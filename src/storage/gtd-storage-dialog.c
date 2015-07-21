@@ -66,9 +66,6 @@ gtd_storage_dialog__storage_selected (GtdStorageDialog *dialog,
 static void
 gtd_storage_dialog_finalize (GObject *object)
 {
-  GtdStorageDialog *self = (GtdStorageDialog *)object;
-  GtdStorageDialogPrivate *priv = gtd_storage_dialog_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_storage_dialog_parent_class)->finalize (object);
 }
 

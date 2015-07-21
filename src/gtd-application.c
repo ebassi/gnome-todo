@@ -73,17 +73,17 @@ gtd_application_show_about (GSimpleAction *simple,
   GDateTime *date;
   int created_year = 2015;
 
-  date = g_date_time_new_now_local ();
-
-  const gchar *authors[] = {
+  static const gchar *authors[] = {
     "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
     NULL
   };
 
-  const gchar *artists[] = {
+  static const gchar *artists[] = {
     "Allan Day <allanpday@gmail.com>",
     NULL
   };
+
+  date = g_date_time_new_now_local ();
 
   if (g_date_time_get_year (date) == created_year)
     {
@@ -233,8 +233,6 @@ gtd_application_activate (GApplication *application)
 static void
 gtd_application_finalize (GObject *object)
 {
-  GtdApplication *self = GTD_APPLICATION (object);
-
   G_OBJECT_CLASS (gtd_application_parent_class)->finalize (object);
 }
 

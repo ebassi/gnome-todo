@@ -176,9 +176,6 @@ gtd_storage_popover__storage_selected (GtdStoragePopover *popover,
 static void
 gtd_storage_popover_finalize (GObject *object)
 {
-  GtdStoragePopover *self = (GtdStoragePopover *)object;
-  GtdStoragePopoverPrivate *priv = gtd_storage_popover_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_storage_popover_parent_class)->finalize (object);
 }
 

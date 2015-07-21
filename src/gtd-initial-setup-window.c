@@ -100,9 +100,6 @@ gtd_initial_setup_window__button_clicked (GtdInitialSetupWindow *window,
 static void
 gtd_initial_setup_window_finalize (GObject *object)
 {
-  GtdInitialSetupWindow *self = (GtdInitialSetupWindow *)object;
-  GtdInitialSetupWindowPrivate *priv = gtd_initial_setup_window_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_initial_setup_window_parent_class)->finalize (object);
 }
 

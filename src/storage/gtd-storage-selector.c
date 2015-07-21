@@ -69,11 +69,11 @@ enum {
 static guint signals[LAST_SIGNAL] = { 0, };
 
 static void
-spawn (gchar *action,
-       gchar *arg)
+spawn (const gchar *action,
+       const gchar *arg)
 {
-  gchar *command[] = {"gnome-control-center", "online-accounts", action, arg, NULL};
-  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL, NULL, NULL, NULL, NULL);
+  const gchar *command[] = {"gnome-control-center", "online-accounts", action, arg, NULL};
+  g_spawn_async (NULL, (gchar **) command, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL, NULL, NULL, NULL, NULL);
 }
 
 /**
@@ -240,7 +240,6 @@ gtd_storage_selector__remove_storage (GtdStorageSelector *selector,
                                       GtdStorage         *storage)
 {
   GtdStorageSelectorPrivate *priv;
-  GtkWidget *row;
   GList *children;
   GList *l;
   gint exchange;
@@ -354,11 +353,8 @@ sort_func (GtkListBoxRow *row1,
            GtkListBoxRow *row2,
            gpointer       user_data)
 {
-  GtdStorageRow *r1;
-  GtdStorageRow *r2;
   GtdStorage *storage1;
   GtdStorage *storage2;
-  gint retval;
 
   if (!GTD_IS_STORAGE_ROW (row1))
     return 1;
@@ -393,9 +389,6 @@ gtd_storage_selector_constructed (GObject *object)
 static void
 gtd_storage_selector_finalize (GObject *object)
 {
-  GtdStorageSelector *self = (GtdStorageSelector *)object;
-  GtdStorageSelectorPrivate *priv = gtd_storage_selector_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_storage_selector_parent_class)->finalize (object);
 }
 

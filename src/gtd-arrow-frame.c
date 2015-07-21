@@ -56,17 +56,6 @@ gtd_arrow_frame_new (void)
   return g_object_new (GTD_TYPE_ARROW_FRAME, NULL);
 }
 
-static gint
-get_handle_position (GtdArrowFrame *frame)
-{
-  GtkWidget *widget = GTK_WIDGET (frame);
-
-  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
-    return gtk_widget_get_allocated_width (widget) - HANDLE_GAP;
-  else
-    return 0;
-}
-
 static void
 on_drag_begin_cb (GtdArrowFrame *frame,
                   gdouble        x,
@@ -97,7 +86,6 @@ on_pan_cb (GtkWidget       *widget,
   GtdArrowFramePrivate *priv;
   GtkTextDirection dir;
   gdouble offset_x;
-  gdouble new_offset;
 
   priv = GTD_ARROW_FRAME (widget)->priv;
   dir = gtk_widget_get_direction (widget);
@@ -179,14 +167,9 @@ gtd_arrow_frame_set_property (GObject      *object,
 }
 
 static void
-gtd_arrow_frame__row_destroyed (GtdTaskRow *row,
-                                gpointer    user_data)
+gtd_arrow_frame__row_destroyed (GtdArrowFrame *frame)
 {
-  GtdArrowFramePrivate *priv;
-
-  g_return_if_fail (GTD_IS_ARROW_FRAME (user_data));
-
-  gtd_arrow_frame_set_row (GTD_ARROW_FRAME (user_data), NULL);
+  gtd_arrow_frame_set_row (frame, NULL);
 }
 
 static gint
@@ -442,10 +425,6 @@ static void
 gtd_arrow_frame_compute_child_allocation (GtkFrame      *frame,
                                           GtkAllocation *allocation)
 {
-  GtdArrowFramePrivate *priv;
-
-  priv = GTD_ARROW_FRAME (frame)->priv;
-
   GTK_FRAME_CLASS (gtd_arrow_frame_parent_class)->compute_child_allocation (frame, allocation);
 
   allocation->width -= ARROW_WIDTH;
@@ -638,10 +617,10 @@ gtd_arrow_frame_set_row (GtdArrowFrame *frame,
 
   if (row)
     {
-      g_signal_connect (row,
-                        "destroy",
-                        G_CALLBACK (gtd_arrow_frame__row_destroyed),
-                        frame);
+      g_signal_connect_swapped (row,
+                                "destroy",
+                                G_CALLBACK (gtd_arrow_frame__row_destroyed),
+                                frame);
 
       gtk_widget_queue_draw (GTK_WIDGET (frame));
     }

@@ -508,8 +508,6 @@ gtd_task_list_view__task_added (GtdTaskList *list,
                                 GtdTask     *task,
                                 gpointer     user_data)
 {
-  GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
-
   g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
   g_return_if_fail (GTD_IS_TASK_LIST (list));
   g_return_if_fail (GTD_IS_TASK (task));
@@ -529,7 +527,6 @@ gtd_task_list_view__create_task (GtdTaskRow *row,
                                  gpointer    user_data)
 {
   GtdTaskListViewPrivate *priv = GTD_TASK_LIST_VIEW (user_data)->priv;
-  GtkWidget *new_row;
 
   g_return_if_fail (GTD_IS_TASK_LIST_VIEW (user_data));
   g_return_if_fail (GTD_IS_TASK_ROW (row));
@@ -550,9 +547,6 @@ gtd_task_list_view__create_task (GtdTaskRow *row,
 static void
 gtd_task_list_view_finalize (GObject *object)
 {
-  GtdTaskListView *self = (GtdTaskListView *)object;
-  GtdTaskListViewPrivate *priv = gtd_task_list_view_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_task_list_view_parent_class)->finalize (object);
 }
 
@@ -956,7 +950,6 @@ gtd_task_list_view_set_task_list (GtdTaskListView *view,
       gchar *color_str;
       gchar *parsed_css;
       GList *task_list;
-      GList *l;
 
       /*
        * Disconnect the old GtdTaskList signals.

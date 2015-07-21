@@ -23,8 +23,6 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
-#include <math.h>
-
 typedef struct
 {
   GtkRevealer               *revealer;
@@ -81,13 +79,11 @@ gtd_task_row__priority_changed_cb (GtdTaskRow *row,
                                    GParamSpec *spec,
                                    GObject    *object)
 {
-  GtdTaskRowPrivate *priv;
   GtkStyleContext *context;
   gint priority;
 
   g_return_if_fail (GTD_IS_TASK_ROW (row));
 
-  priv = row->priv;
   context = gtk_widget_get_style_context (GTK_WIDGET (row));
   priority = gtd_task_get_priority (GTD_TASK (object));
 
@@ -124,13 +120,11 @@ gtd_task_row__date_changed_binding (GBinding     *binding,
                                     GValue       *to_value,
                                     gpointer      user_data)
 {
-  GtdTaskRowPrivate *priv;
   GDateTime *dt;
   gchar *new_label = NULL;
 
   g_return_val_if_fail (GTD_IS_TASK_ROW (user_data), FALSE);
 
-  priv = GTD_TASK_ROW (user_data)->priv;
   dt = g_value_get_boxed (from_value);
 
   if (dt)
@@ -287,9 +281,6 @@ gtd_task_row__entry_activated (GtkEntry *entry,
 static void
 gtd_task_row_finalize (GObject *object)
 {
-  GtdTaskRow *self = (GtdTaskRow *)object;
-  GtdTaskRowPrivate *priv = gtd_task_row_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_task_row_parent_class)->finalize (object);
 }
 

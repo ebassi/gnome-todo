@@ -57,7 +57,7 @@ enum {
   LAST_PROP
 };
 
-GdkPixbuf*
+static GdkPixbuf*
 gtd_task_list_item__render_thumbnail (GtdTaskListItem *item)
 {
   PangoFontDescription *font_desc;
@@ -317,9 +317,6 @@ gtd_task_list_item_state_flags_changed (GtkWidget     *item,
 static void
 gtd_task_list_item_finalize (GObject *object)
 {
-  GtdTaskListItem *self = (GtdTaskListItem *)object;
-  GtdTaskListItemPrivate *priv = gtd_task_list_item_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_task_list_item_parent_class)->finalize (object);
 }
 

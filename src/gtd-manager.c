@@ -100,7 +100,7 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-TaskData*
+static TaskData*
 task_data_new (GtdManager *manager,
                gpointer   *data)
 {
@@ -113,7 +113,7 @@ task_data_new (GtdManager *manager,
   return tdata;
 }
 
-gboolean
+static gboolean
 is_today (GDateTime *dt)
 {
   GDateTime *today;
@@ -156,7 +156,6 @@ gtd_manager__setup_url (GtdManager *manager,
 
   for (l = sources; l != NULL; l = l->next)
     {
-      const gchar *parent_uid;
       ESource *source;
       ESource *goa_source;
 
@@ -388,7 +387,6 @@ gtd_manager__commit_source_finished (GObject      *registry,
                                      GAsyncResult *result,
                                      gpointer      user_data)
 {
-  GtdManagerPrivate *priv = GTD_MANAGER (user_data)->priv;
   GError *error = NULL;
 
   g_return_if_fail (GTD_IS_MANAGER (user_data));
@@ -448,15 +446,14 @@ gtd_manager__create_task_finished (GObject      *client,
 {
   GtdManagerPrivate *priv;
   TaskData *data = user_data;
-  gboolean success;
   gchar *new_uid = NULL;
   GError *error = NULL;
 
   priv = data->manager->priv;
-  success = e_cal_client_create_object_finish (E_CAL_CLIENT (client),
-                                               result,
-                                               &new_uid,
-                                               &error);
+  e_cal_client_create_object_finish (E_CAL_CLIENT (client),
+                                     result,
+                                     &new_uid,
+                                     &error);
 
   gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
 
@@ -507,13 +504,12 @@ gtd_manager__remove_task_finished (GObject      *client,
 {
   GtdManagerPrivate *priv;
   TaskData *data = user_data;
-  gboolean success;
   GError *error = NULL;
 
   priv = data->manager->priv;
-  success = e_cal_client_remove_object_finish (E_CAL_CLIENT (client),
-                                               result,
-                                               &error);
+  e_cal_client_remove_object_finish (E_CAL_CLIENT (client),
+                                     result,
+                                     &error);
 
   gtd_object_set_ready (GTD_OBJECT (data->data), TRUE);
 
@@ -545,14 +541,13 @@ gtd_manager__update_task_finished (GObject      *client,
   GDateTime *dt;
   TaskData *data = user_data;
   GtdTask *task;
-  gboolean success;
   GError *error = NULL;
 
   priv = data->manager->priv;
   task = GTD_TASK (data->data);
-  success = e_cal_client_modify_object_finish (E_CAL_CLIENT (client),
-                                               result,
-                                               &error);
+  e_cal_client_modify_object_finish (E_CAL_CLIENT (client),
+                                     result,
+                                     &error);
 
   /* Check if the task still fits internal lists */
   dt = gtd_task_get_due_date (task);
@@ -717,10 +712,7 @@ gtd_manager__fill_task_list (GObject      *client,
 
   if (!error)
     {
-      GDateTime *today;
       GSList *l;
-
-      today = g_date_time_new_now_local ();
 
       for (l = component_list; l != NULL; l = l->next)
         {
@@ -978,8 +970,6 @@ gtd_manager_get_property (GObject    *object,
                           GValue     *value,
                           GParamSpec *pspec)
 {
-  GtdManager *self = GTD_MANAGER (object);
-
   switch (prop_id)
     {
     default:
@@ -993,8 +983,6 @@ gtd_manager_set_property (GObject      *object,
                           const GValue *value,
                           GParamSpec   *pspec)
 {
-  GtdManager *self = GTD_MANAGER (object);
-
   switch (prop_id)
     {
     default:
@@ -1495,7 +1483,6 @@ gtd_manager_get_default_storage (GtdManager *manager)
 {
   GtdManagerPrivate *priv;
   GtdStorage *storage;
-  GList *l;
   gchar *storage_id;
 
   g_return_val_if_fail (GTD_IS_MANAGER (manager), NULL);

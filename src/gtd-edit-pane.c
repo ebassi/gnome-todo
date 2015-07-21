@@ -177,9 +177,6 @@ gtd_edit_pane__date_selected (GtkCalendar *calendar,
 static void
 gtd_edit_pane_finalize (GObject *object)
 {
-  GtdEditPane *self = (GtdEditPane *)object;
-  GtdEditPanePrivate *priv = gtd_edit_pane_get_instance_private (self);
-
   G_OBJECT_CLASS (gtd_edit_pane_parent_class)->finalize (object);
 }
 
