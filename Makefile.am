@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ACLOCAL_AMFLAGS = --install -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = src data po
 DIST_SUBDIRS = src data po
