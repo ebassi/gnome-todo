@@ -26,13 +26,9 @@ AM_GLIB_GNU_GETTEXT
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
-AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_INSTALL
-AC_PROG_INSTALL
-AC_SEARCH_LIBS([strerror],[cposix])
-AC_HEADER_STDC
 
 # enable libtool
 LT_PREREQ([2.2.6])
