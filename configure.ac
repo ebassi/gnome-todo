@@ -11,6 +11,9 @@ AM_INIT_AUTOMAKE([1.11.1 foreign -Wno-portability dist-xz no-dist-gzip tar-ustar
 AM_MAINTAINER_MODE([enable])
 AM_SILENT_RULES([yes])
 
+# Releases do not have git directories
+AX_IS_RELEASE([git-directory])
+
 dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
