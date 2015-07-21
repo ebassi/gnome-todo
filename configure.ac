@@ -21,8 +21,6 @@ GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 
-AM_GLIB_GNU_GETTEXT
-
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
@@ -38,6 +36,10 @@ LT_INIT([disable-static])
 AC_CACHE_SAVE
 
 GLIB_GSETTINGS
+AM_GLIB_GNU_GETTEXT
+
+# We require additional macros
+AX_REQUIRE_DEFINED([APPSTREAM_XML])
 
 dnl ================================================================
 dnl Misc
