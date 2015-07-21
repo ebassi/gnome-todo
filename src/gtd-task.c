@@ -54,7 +54,7 @@ enum
   LAST_PROP
 };
 
-GDateTime*
+static GDateTime*
 gtd_task__convert_icaltime (const icaltimetype *date)
 {
   GTimeZone *tz;
@@ -422,7 +422,6 @@ gtd_task_set_complete (GtdTask  *task,
       if (complete)
         {
           GDateTime *now = g_date_time_new_now_local ();
-          icaltimezone *tz;
 
           percent = 100;
           status = ICAL_STATUS_COMPLETED;
@@ -437,9 +436,13 @@ gtd_task_set_complete (GtdTask  *task,
           dt->is_date = 0;
           dt->is_utc = 1;
 
-          /* convert timezone */
+          /* convert timezone
+           *
+           * FIXME: This does not do anything until we have an ical
+           * timezone associated with the task
+           */
           icaltimezone_convert_time (dt,
-                                     tz,
+                                     NULL,
                                      icaltimezone_get_utc_timezone ());
 
         }
