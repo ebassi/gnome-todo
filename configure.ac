@@ -41,9 +41,6 @@ LT_INIT([disable-static])
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
-## checks
-AC_CHECK_HEADERS([string.h])
-
 AC_CHECK_FUNCS([floor])
 AC_CHECK_FUNCS([memset])
 AC_CHECK_FUNCS([pow])
