@@ -41,11 +41,6 @@ LT_INIT([disable-static])
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
-AC_CHECK_FUNCS([floor])
-AC_CHECK_FUNCS([memset])
-AC_CHECK_FUNCS([pow])
-AC_CHECK_FUNCS([strstr])
-
 GLIB_GSETTINGS
 
 dnl ================================================================
