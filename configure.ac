@@ -34,12 +34,9 @@ AC_PROG_INSTALL
 AC_SEARCH_LIBS([strerror],[cposix])
 AC_HEADER_STDC
 
-# no stupid static libraries
-AC_DISABLE_STATIC([])
-
 # enable libtool
 LT_PREREQ([2.2.6])
-LT_INIT
+LT_INIT([disable-static])
 
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
