@@ -1,14 +1,18 @@
 #!/bin/sh
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+test -n "$srcdir" || srcdir=`dirname "$0"`
+test -n "$srcdir" || srcdir=.
 
-(test -f "$srcdir/configure.ac") || {
+olddir=`pwd`
+
+cd $srcdir
+
+(test -f configure.ac) || {
         echo "*** ERROR: Directory '$srcdir' does not look like the top-level directory of the project ***"
         exit 1
 }
 
-PKG_NAME=`autoconf --trace 'AC_INIT:$1' "$srcdir/configure.ac"`
+PKG_NAME=`autoconf --trace 'AC_INIT:$1' configure.ac`
 
 if [ "$#" = 0 -a "x$NOCONFIGURE" = "x" ]; then
         echo "*** WARNING: I am going to run \`configure' with no arguments." >&2
@@ -22,6 +26,8 @@ aclocal --install || exit $?
 glib-gettextize --force --copy || exit $?
 intltoolize --force --copy --automake || exit $?
 autoreconf --verbose --force --install -Wno-portability || exit $?
+
+cd $olddir
 
 if [ "x$NOCONFIGURE" = x ]; then
         $srcdir/configure "$@" || exit $?
